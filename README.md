@@ -1,6 +1,10 @@
 # Coda
 
+![express](https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white) ![jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white) ![node](https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white) ![postgresql](https://img.shields.io/badge/PostgreSQL-green?style=for-the-badge) ![react](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) ![spotify](https://img.shields.io/badge/Spotify-1ED760?&style=for-the-badge&logo=spotify&logoColor=white)
+
 This is a personalized playlist creation app for Techtonica's 2025h1 cohort final project.
+
+*This project also utilizes Pico CSS and React Testing Library.*
 
 ## Installation
 
