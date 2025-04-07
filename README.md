@@ -41,3 +41,12 @@ This project is not currently usable.
   - ...the added personalization
   - ...an imbedded music player
   - ...a small link to the main page
+
+  ## Testing
+
+  This project does not yet have any testing. Planned tests are as follows:
+
+- Test every component for basic rendering
+- Mock API call and test that data is rendered correctly, and that error message displays correctly if API responds with an error
+- Test that forms submit correctly and do not allow submission without required fields
+- Test that dragging and dropping songs reorders them correctly
