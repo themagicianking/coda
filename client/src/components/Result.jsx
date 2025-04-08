@@ -1,7 +1,10 @@
-export default function Result({ id, artist, title }) {
+export default function Result({ artist, title }) {
   return (
-    <li>
-      {title} by {artist}
-    </li>
+    <div>
+      <li>
+        {title} by {artist}
+        <input type="checkbox"></input>
+      </li>
+    </div>
   )
 }

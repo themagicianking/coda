@@ -35,7 +35,7 @@ export function Search() {
   }
 
   return (
-    <>
+    <article>
       <input
         type="search"
         name="search"
@@ -44,14 +44,14 @@ export function Search() {
         onChange={handleChange}
       />
       {results.length > 0 ? (
-        <ul>
+        <ol>
           {results.map((song) => (
             <Result key={song.id} artist={song.artist} title={song.title} />
           ))}
-        </ul>
+        </ol>
       ) : (
         <></>
       )}
-    </>
+    </article>
   )
 }
