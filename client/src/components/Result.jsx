@@ -1,9 +1,17 @@
-export default function Result({ artist, title }) {
+export default function Result({ song, handleSelectionChange }) {
+  const onChange = (event) => {
+    let isChecked = event.target.checked
+    handleSelectionChange(isChecked, song)
+  }
   return (
     <div>
       <li>
-        {title} by {artist}
-        <input type="checkbox" style={{ marginLeft: '10px' }}></input>
+        {song.title} by {song.artist}
+        <input
+          type="checkbox"
+          style={{ marginLeft: '10px' }}
+          onChange={onChange}
+        ></input>
       </li>
     </div>
   )

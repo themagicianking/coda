@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Result from './Result.jsx'
 
-export default function Search() {
+export default function Search({ addToSelected, removeFromSelected }) {
   const [results, setResults] = useState([])
   const sampleItems = [
     { id: 0, artist: 'Indigo Girls', title: 'Closer to Fine' },
@@ -34,6 +34,14 @@ export default function Search() {
     setResults(sampleItems)
   }
 
+  const handleSelectionChange = (isChecked, song) => {
+    if (isChecked == true) {
+      addToSelected(song)
+    } else {
+      removeFromSelected(song.id)
+    }
+  }
+
   return (
     <article>
       <input
@@ -46,7 +54,11 @@ export default function Search() {
       {results.length > 0 ? (
         <ol>
           {results.map((song) => (
-            <Result key={song.id} artist={song.artist} title={song.title} />
+            <Result
+              key={song.id}
+              song={song}
+              handleSelectionChange={handleSelectionChange}
+            />
           ))}
         </ol>
       ) : (
