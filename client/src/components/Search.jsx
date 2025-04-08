@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Result from './Result.jsx'
 
 export function Search() {
   const [results, setResults] = useState([])
@@ -42,13 +43,15 @@ export function Search() {
         aria-label="Search"
         onChange={handleChange}
       />
-      <ul>
-        {results.map((item) => (
-          <li key={item.id}>
-            {item.title} by {item.artist}
-          </li>
-        ))}
-      </ul>
+      {results.length > 0 ? (
+        <ul>
+          {results.map((song) => (
+            <Result key={song.id} artist={song.artist} title={song.title} />
+          ))}
+        </ul>
+      ) : (
+        <></>
+      )}
     </>
   )
 }
