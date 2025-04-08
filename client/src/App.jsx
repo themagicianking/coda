@@ -1,6 +1,6 @@
-import { Search } from './components/Search'
+import { Selection } from './components/Selection'
 function App() {
-  return <Search />
+  return <Selection />
 }
 
 export default App

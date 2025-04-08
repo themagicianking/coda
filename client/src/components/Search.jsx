@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Result from './Result.jsx'
 
-export function Search() {
+export default function Search() {
   const [results, setResults] = useState([])
   const sampleItems = [
     { id: 0, artist: 'Indigo Girls', title: 'Closer to Fine' },
