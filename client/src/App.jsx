@@ -1,5 +1,6 @@
+import { Search } from './components/Search'
 function App() {
-  return <>Hello, World!</>
+  return <Search />
 }
 
 export default App
