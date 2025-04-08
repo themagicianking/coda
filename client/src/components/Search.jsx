@@ -2,6 +2,13 @@ import { useState } from 'react'
 
 export function Search() {
   const [results, setResults] = useState([])
+  const sampleItems = [
+    { id: 0, artist: 'Indigo Girls', title: 'Closer to Fine' },
+    { id: 1, artist: 'CHVRCHES', title: 'Empty Threat' },
+    { id: 2, artist: 'Twenty One Pilots', title: 'Stressed Out' },
+    { id: 3, artist: 'AJR', title: 'Bang' },
+    { id: 4, artist: 'cavetown', title: 'This is Home' }
+  ]
 
   async function getResults(input) {
     try {
@@ -21,8 +28,9 @@ export function Search() {
   }
 
   const handleChange = (event) => {
-    let input = event.target.value
-    getResults(input)
+    // let input = event.target.value
+    // getResults(input)
+    setResults(sampleItems)
   }
 
   return (
@@ -36,7 +44,9 @@ export function Search() {
       />
       <ul>
         {results.map((item) => (
-          <li>{item}</li>
+          <li key={item.id}>
+            {item.title} by {item.artist}
+          </li>
         ))}
       </ul>
     </>
