@@ -6,8 +6,8 @@ export function Selection() {
     console.log(selected)
   }
   const removeFromSelected = (id) => {
+    selected = selected.filter((song) => song.id != id)
     console.log(selected)
-    // filter through selected and delete song with matching id
   }
   return (
     <Search
