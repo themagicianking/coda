@@ -3,7 +3,7 @@ export default function Result({ artist, title }) {
     <div>
       <li>
         {title} by {artist}
-        <input type="checkbox"></input>
+        <input type="checkbox" style={{ marginLeft: '10px' }}></input>
       </li>
     </div>
   )
