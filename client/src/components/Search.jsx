@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Result from './Result.jsx'
 
-export default function Search({ addToSelected, removeFromSelected }) {
+export default function Search({ addToSelected }) {
   const [results, setResults] = useState([])
   const sampleItems = [
     { id: 0, artist: 'Indigo Girls', title: 'Closer to Fine' },
@@ -24,7 +24,9 @@ export default function Search({ addToSelected, removeFromSelected }) {
           setResults(json)
         })
     } catch (error) {
-      throw new Error('Could not connect to API.')
+      throw new Error(
+        `Could not connect to API. The following error occurred: ${error}`
+      )
     }
   }
 
@@ -34,12 +36,8 @@ export default function Search({ addToSelected, removeFromSelected }) {
     setResults(sampleItems)
   }
 
-  const handleSelectionChange = (isChecked, song) => {
-    if (isChecked == true) {
-      addToSelected(song)
-    } else {
-      removeFromSelected(song.id)
-    }
+  const handleSelection = (song) => {
+    addToSelected(song)
   }
 
   return (
@@ -57,7 +55,7 @@ export default function Search({ addToSelected, removeFromSelected }) {
             <Result
               key={song.id}
               song={song}
-              handleSelectionChange={handleSelectionChange}
+              handleSelection={handleSelection}
             />
           ))}
         </ol>
