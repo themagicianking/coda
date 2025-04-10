@@ -1,18 +1,20 @@
+import { useState } from 'react'
 import Search from './Search.jsx'
+import SongList from './SongList.jsx'
 export function Selection() {
-  let selected = []
+  const [selected, setSelected] = useState([])
   const addToSelected = (song) => {
-    selected.push(song)
-    console.log(selected)
+    setSelected([...selected, {...song, songID: crypto.randomUUID() }])
   }
-  // const removeFromSelected = (id) => {
-  //   selected = selected.filter((song) => song.id != id)
-  //   console.log(selected)
-  // }
+  const handleRemove = (songID) => {
+    let newList = selected.filter((song) => songID != song['songID'])
+    setSelected(newList)
+  }
+
   return (
-    <Search
-      addToSelected={addToSelected}
-      // removeFromSelected={removeFromSelected}
-    />
+    <>
+      <Search addToSelected={addToSelected} />
+      <SongList list={selected} handleRemove={handleRemove} />
+    </>
   )
 }

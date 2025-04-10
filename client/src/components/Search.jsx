@@ -4,11 +4,11 @@ import Result from './Result.jsx'
 export default function Search({ addToSelected }) {
   const [results, setResults] = useState([])
   const sampleItems = [
-    { id: 0, artist: 'Indigo Girls', title: 'Closer to Fine' },
-    { id: 1, artist: 'CHVRCHES', title: 'Empty Threat' },
-    { id: 2, artist: 'Twenty One Pilots', title: 'Stressed Out' },
-    { id: 3, artist: 'AJR', title: 'Bang' },
-    { id: 4, artist: 'cavetown', title: 'This is Home' }
+    { spotifyID: 0, artist: 'Indigo Girls', title: 'Closer to Fine' },
+    { spotifyID: 1, artist: 'CHVRCHES', title: 'Empty Threat' },
+    { spotifyID: 2, artist: 'Twenty One Pilots', title: 'Stressed Out' },
+    { spotifyID: 3, artist: 'AJR', title: 'Bang' },
+    { spotifyID: 4, artist: 'cavetown', title: 'This is Home' }
   ]
 
   async function getResults(input) {
@@ -53,7 +53,7 @@ export default function Search({ addToSelected }) {
         <ol>
           {results.map((song) => (
             <Result
-              key={song.id}
+              key={song.spotifyID}
               song={song}
               handleSelection={handleSelection}
             />
