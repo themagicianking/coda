@@ -1,15 +1,18 @@
+import { useState } from 'react'
 import Search from './Search.jsx'
 import SongList from './SongList.jsx'
 export function Selection() {
-  let selected = []
+  const [selected, setSelected] = useState([])
   const addToSelected = (song) => {
-    selected.push(song)
+    let newSelected = selected.concat([song])
+    setSelected(newSelected)
     console.log(selected)
   }
+
   return (
     <>
       <Search addToSelected={addToSelected} />
-      <SongList />
+      <SongList key={selected} list={selected} />
     </>
   )
 }
