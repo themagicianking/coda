@@ -6,7 +6,7 @@ export default function SongList({ list }) {
       {list ? (
         <ol>
           {list.map((song) => (
-            <Song song={song} />
+            <Song key={song.songID} song={song} />
           ))}
         </ol>
       ) : (

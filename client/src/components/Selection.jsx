@@ -4,15 +4,13 @@ import SongList from './SongList.jsx'
 export function Selection() {
   const [selected, setSelected] = useState([])
   const addToSelected = (song) => {
-    let newSelected = selected.concat([song])
-    setSelected(newSelected)
-    console.log(selected)
+    setSelected([...selected, song])
   }
 
   return (
     <>
       <Search addToSelected={addToSelected} />
-      <SongList key={selected} list={selected} />
+      <SongList list={selected} />
     </>
   )
 }
