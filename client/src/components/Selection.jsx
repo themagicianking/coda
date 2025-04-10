@@ -4,7 +4,7 @@ import SongList from './SongList.jsx'
 export function Selection() {
   const [selected, setSelected] = useState([])
   const addToSelected = (song) => {
-    setSelected([...selected, song])
+    setSelected([...selected, {...song, songID: crypto.randomUUID() }])
   }
 
   return (
