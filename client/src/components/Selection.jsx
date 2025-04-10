@@ -1,18 +1,15 @@
 import Search from './Search.jsx'
+import SongList from './SongList.jsx'
 export function Selection() {
   let selected = []
   const addToSelected = (song) => {
     selected.push(song)
     console.log(selected)
   }
-  // const removeFromSelected = (id) => {
-  //   selected = selected.filter((song) => song.id != id)
-  //   console.log(selected)
-  // }
   return (
-    <Search
-      addToSelected={addToSelected}
-      // removeFromSelected={removeFromSelected}
-    />
+    <>
+      <Search addToSelected={addToSelected} />
+      <SongList />
+    </>
   )
 }
