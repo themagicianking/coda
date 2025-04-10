@@ -1,5 +1,6 @@
+import { Selection } from './components/Selection'
 function App() {
-  return <>Hello, World!</>
+  return <Selection />
 }
 
 export default App
