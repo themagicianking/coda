@@ -6,8 +6,8 @@ export function Selection() {
   const addToSelected = (song) => {
     setSelected([...selected, {...song, songID: crypto.randomUUID() }])
   }
-  const handleRemove = (id) => {
-    let newList = selected.filter((song) => id != song['songID'])
+  const handleRemove = (songID) => {
+    let newList = selected.filter((song) => songID != song['songID'])
     setSelected(newList)
   }
 
