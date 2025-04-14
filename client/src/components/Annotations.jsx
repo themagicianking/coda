@@ -112,8 +112,12 @@ export function Annotations({ orderNum }) {
 
   return (
     <>
+      {/* this should link to selection page when routes are set up */}
+      <a role="button">Previous</a>
       <SongInfo song={song} />
       <NoteInput note={song.note} updateNote={updateNote} />
+      {/* this should link to personalization page when routes are set up */}
+      <a role="button">Next</a>
     </>
   )
 }
