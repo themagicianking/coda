@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react'
 import { NoteInput } from './NoteInput'
 import { SongInfo } from './SongInfo'
-export function Annotations({ orderNum }) {
+export function Annotations() {
+  const [orderNum, setOrderNum] = useState(0)
   const [song, setSong] = useState({})
   const [note, setNote] = useState('')
   const [hasPrevSong, setHasPrevSong] = useState(false)
   const [hasNextSong, setHasNextSong] = useState(false)
-  const prevOrderNum = orderNum - 1
 
-  if (prevOrderNum >= 0) {
-    setHasPrevSong(true)
+  const goToPrevSong = () => {
+    const prevOrderNum = orderNum - 1
+    setOrderNum(prevOrderNum)
+  }
+
+  const goToNextSong = () => {
+    const nextOrderNum = orderNum + 1
+    setOrderNum(nextOrderNum)
   }
 
   useEffect(() => {
@@ -72,8 +78,13 @@ export function Annotations({ orderNum }) {
       Closer I am to fine, yeah`,
       note: "hi i'm a sample note"
     }
-
     const nextOrderNum = orderNum + 1
+    const prevOrderNum = orderNum - 1
+
+    if (prevOrderNum >= 0) {
+      setHasPrevSong(true)
+    }
+
     async function getSong() {
       try {
         // fetch song from server
@@ -115,7 +126,9 @@ export function Annotations({ orderNum }) {
       {/* this should link to selection page when routes are set up */}
       <a role="button">Previous</a>
       <SongInfo song={song} />
-      <NoteInput note={song.note} updateNote={updateNote} />
+      <NoteInput note={note} updateNote={updateNote} />
+      {hasPrevSong ? <a role="button" onClick={goToPrevSong}>Previous Song</a> : <></>}
+      {hasNextSong ? <a role="button" onClick={goToNextSong}>Next Song</a> : <></>}
       {/* this should link to personalization page when routes are set up */}
       <a role="button">Next</a>
     </>
