@@ -1,12 +1,12 @@
-export default function Result({ song, handleSelection }) {
-  const onClick = () => {
-    handleSelection(song)
+export default function Result({ song, handleSelect }) {
+  const updateSelections = () => {
+    handleSelect(song)
   }
   return (
     <div>
       <li>
         {song.title} by {song.artist}
-        <button style={{ marginLeft: '10px' }} onClick={onClick}>
+        <button style={{ marginLeft: '10px' }} onClick={updateSelections}>
           Add
         </button>
       </li>

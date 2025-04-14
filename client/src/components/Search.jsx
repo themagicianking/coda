@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Result from './Result.jsx'
 
-export default function Search({ addToSelected }) {
+export default function Search({ handleSelect }) {
   const [results, setResults] = useState([])
   const sampleItems = [
     { spotifyID: 0, artist: 'Indigo Girls', title: 'Closer to Fine' },
@@ -11,33 +11,29 @@ export default function Search({ addToSelected }) {
     { spotifyID: 4, artist: 'cavetown', title: 'This is Home' }
   ]
 
-  async function getResults(input) {
-    try {
-      await fetch(`https://api.spotify.com/v1/search${input}`)
-        .then((res) => {
-          if (res.status >= 400) {
-            throw res.status
-          }
-          return res.json()
-        })
-        .then((json) => {
-          setResults(json)
-        })
-    } catch (error) {
-      throw new Error(
-        `Could not connect to API. The following error occurred: ${error}`
-      )
-    }
-  }
+  // async function getResults(input) {
+  //   try {
+  //     await fetch(`https://api.spotify.com/v1/search${input}`)
+  //       .then((res) => {
+  //         if (res.status >= 400) {
+  //           throw res.status
+  //         }
+  //         return res.json()
+  //       })
+  //       .then((json) => {
+  //         setResults(json)
+  //       })
+  //   } catch (error) {
+  //     throw new Error(
+  //       `Could not connect to API. The following error occurred: ${error}`
+  //     )
+  //   }
+  // }
 
-  const handleChange = (event) => {
+  const handleSearch = () => {
     // let input = event.target.value
     // getResults(input)
     setResults(sampleItems)
-  }
-
-  const handleSelection = (song) => {
-    addToSelected(song)
   }
 
   return (
@@ -47,7 +43,7 @@ export default function Search({ addToSelected }) {
         name="search"
         placeholder="Search"
         aria-label="Search"
-        onChange={handleChange}
+        onChange={handleSearch}
       />
       {results.length > 0 ? (
         <ol>
@@ -55,7 +51,7 @@ export default function Search({ addToSelected }) {
             <Result
               key={song.spotifyID}
               song={song}
-              handleSelection={handleSelection}
+              handleSelect={handleSelect}
             />
           ))}
         </ol>

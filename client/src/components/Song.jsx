@@ -1,12 +1,12 @@
 export default function Song({ song, handleRemove }) {
-  const onClick = () => {
+  const updateSelections = () => {
     handleRemove(song.songID)
   }
   return (
     <div>
       <li>
         {song.title} by {song.artist}
-        <button style={{ marginLeft: '10px' }} onClick={onClick}>
+        <button style={{ marginLeft: '10px' }} onClick={updateSelections}>
           Remove
         </button>
       </li>
