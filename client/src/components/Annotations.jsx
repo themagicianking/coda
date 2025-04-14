@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { NoteInput } from './NoteInput'
 import { SongInfo } from './SongInfo'
 export function Annotations({ orderNum }) {
   const [song, setSong] = useState({})
+  const [note, setNote] = useState('')
   const [hasPrevSong, setHasPrevSong] = useState(false)
   const [hasNextSong, setHasNextSong] = useState(false)
   const prevOrderNum = orderNum - 1
@@ -67,7 +69,8 @@ export function Annotations({ orderNum }) {
       (The less I seek my source)
       Closer I am to fine
       Closer I am to fine
-      Closer I am to fine, yeah`
+      Closer I am to fine, yeah`,
+      note: "hi i'm a sample note"
     }
 
     const nextOrderNum = orderNum + 1
@@ -77,6 +80,7 @@ export function Annotations({ orderNum }) {
         console.log('This is when the song will be fetched from the server.')
         console.log(`It should be #${orderNum} in order.`)
         setSong(sampleSong)
+        setNote(sampleSong.note)
       } catch (error) {
         throw new Error(
           `Could not fetch song data from server. The following error occurred: ${error}`
@@ -102,5 +106,14 @@ export function Annotations({ orderNum }) {
     updateNext()
   }, [orderNum])
 
-  return <SongInfo song={song} />
+  const updateNote = (newNote) => {
+    setNote(newNote)
+  }
+
+  return (
+    <>
+      <SongInfo song={song} />
+      <NoteInput note={song.note} updateNote={updateNote} />
+    </>
+  )
 }
