@@ -4,15 +4,15 @@ CREATE TABLE songs (
   id SERIAL PRIMARY KEY,
   songid VARCHAR(255) NOT NULL,
   spotifyid VARCHAR(255) NOT NULL,
-  order INTEGER NOT NULL,
+  songorder INTEGER NOT NULL,
   artist VARCHAR(255) NOT NULL,
   title VARCHAR(255) NOT NULL,
-  lyrics VARCHAR,
-  note VARCHAR,
+  lyrics VARCHAR(5000),
+  note VARCHAR(5000),
 );
 
 INSERT INTO
-  songs (songid, spotifyid, order, artist, title)
+  songs (songid, spotifyid, songorder, artist, title)
 VALUES
   (5, 0, 0, 'Indigo Girls', 'Closer to Fine'),
   (1, 1, 2, 'CHVRCHES', 'Empty Threat'),
