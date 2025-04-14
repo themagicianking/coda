@@ -16,6 +16,13 @@ const pool = new Pool({
 APP.use(cors())
 APP.use(express())
 
+APP.get('/allsongs', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  const SONGS = await DATABASE.query('SELECT * FROM songs;')
+  res.json(SONGS.rows)
+})
+
 APP.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)
 })
