@@ -10,12 +10,25 @@ export function Annotations() {
 
   const goToPrevSong = () => {
     const prevOrderNum = orderNum - 1
-    setOrderNum(prevOrderNum)
+    putNote().then(setOrderNum(prevOrderNum))
   }
 
   const goToNextSong = () => {
     const nextOrderNum = orderNum + 1
-    setOrderNum(nextOrderNum)
+    putNote().then(setOrderNum(nextOrderNum))
+  }
+
+  async function putNote() {
+    try {
+      console.log(
+        "This will send a request to the server to update the song's note."
+      )
+      console.log(`The note should look like this: ${note}`)
+    } catch (error) {
+      throw new Error(
+        `Could not update server. The following error occurred: ${error}`
+      )
+    }
   }
 
   useEffect(() => {
@@ -124,13 +137,29 @@ export function Annotations() {
   return (
     <>
       {/* this should link to selection page when routes are set up */}
-      <a role="button">Previous</a>
+      <a role="button" onClick={putNote}>
+        Previous
+      </a>
       <SongInfo song={song} />
       <NoteInput note={note} updateNote={updateNote} />
-      {hasPrevSong ? <a role="button" onClick={goToPrevSong}>Previous Song</a> : <></>}
-      {hasNextSong ? <a role="button" onClick={goToNextSong}>Next Song</a> : <></>}
+      {hasPrevSong ? (
+        <a role="button" onClick={goToPrevSong}>
+          Previous Song
+        </a>
+      ) : (
+        <></>
+      )}
+      {hasNextSong ? (
+        <a role="button" onClick={goToNextSong}>
+          Next Song
+        </a>
+      ) : (
+        <></>
+      )}
       {/* this should link to personalization page when routes are set up */}
-      <a role="button">Next</a>
+      <a role="button" onClick={putNote}>
+        Next
+      </a>
     </>
   )
 }
