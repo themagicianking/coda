@@ -55,6 +55,28 @@ APP.put('/note', async (req, res) => {
   res.send(200)
 })
 
+APP.post('/addsongs', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  const SONGS = req.body.songs
+  await SONGS.forEach((song) => {
+    console.log(song)
+    DATABASE.query(
+      `INSERT INTO songs (songid, spotifyid, songorder, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6,$7)`,
+      [
+        song.songid,
+        song.spotifyid,
+        song.songorder,
+        song.artist,
+        song.title,
+        song.lyrics,
+        song.note
+      ]
+    )
+  })
+  res.send(200)
+})
+
 APP.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)
 })
