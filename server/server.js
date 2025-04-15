@@ -23,6 +23,16 @@ APP.get('/allsongs', async (req, res) => {
   res.json(SONGS.rows)
 })
 
+APP.get('/song', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  const SONGORDER = req.query.songorder
+  const SONG = await DATABASE.query(
+    `SELECT * FROM songs WHERE songorder = ${SONGORDER}`
+  )
+  res.json(SONG.rows)
+})
+
 APP.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)
 })
