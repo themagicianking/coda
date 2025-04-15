@@ -58,14 +58,13 @@ APP.put('/note', async (req, res) => {
 APP.post('/addsongs', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
-  const SONGS = req.body.songs
+  const SONGS = req.body
   await SONGS.forEach((song) => {
-    console.log(song)
     DATABASE.query(
       `INSERT INTO songs (songid, spotifyid, songorder, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6,$7)`,
       [
-        song.songid,
-        song.spotifyid,
+        song.songID,
+        song.spotifyID,
         song.songorder,
         song.artist,
         song.title,

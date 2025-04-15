@@ -1,7 +1,8 @@
-import {Annotations} from "./components/Annotations"
-// import { Selection } from './components/Selection'
+// import {Annotations} from "./components/Annotations"
+import { Selection } from './components/Selection'
 function App() {
-  return <Annotations />
+  return <Selection />
+  // return <Annotations />
 }
 
 export default App
