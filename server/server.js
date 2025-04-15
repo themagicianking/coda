@@ -70,6 +70,7 @@ APP.put('/note', async (req, res) => {
       NOTE,
       SONGID
     ])
+    console.log(`Updated annotation for song with id of ${SONGID}`)
     res.send(201)
   } catch (error) {
     res.status(500).send(error)

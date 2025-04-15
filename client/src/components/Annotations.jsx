@@ -20,10 +20,15 @@ export function Annotations() {
 
   async function putNote() {
     try {
-      console.log(
-        "This will send a request to the server to update the song's note."
-      )
-      console.log(`The note should look like this: ${note}`)
+      await fetch('http://localhost:5000/note', {
+        method: 'PUT',
+        body: JSON.stringify({ note: note, songid: song.songID }),
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then((res) => {
+          return res.json()
+        })
+        .then((json) => console.log(`Server response: ${json}`))
     } catch (error) {
       throw new Error(
         `Could not update server. The following error occurred: ${error}`
