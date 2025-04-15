@@ -14,7 +14,7 @@ const pool = new Pool({
 })
 
 APP.use(cors())
-APP.use(express())
+APP.use(express.json())
 
 APP.get('/allsongs', async (req, res) => {
   const DATABASE = await pool.connect()
@@ -31,6 +31,18 @@ APP.get('/song', async (req, res) => {
     `SELECT * FROM songs WHERE songorder = ${SONGORDER}`
   )
   res.json(SONG.rows)
+})
+
+APP.put('/note', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  const SONGID = req.body.songid
+  const NOTE = req.body.note
+  await DATABASE.query(
+    `UPDATE songs SET note=$1 WHERE songid=$2;`,
+    [NOTE, SONGID]
+  )
+  res.send(200)
 })
 
 APP.listen(PORT, () => {
