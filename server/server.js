@@ -33,15 +33,25 @@ APP.get('/song', async (req, res) => {
   res.json(SONG.rows)
 })
 
+APP.get('/songexists', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  const SONGORDER = req.query.songorder
+  const SONGS = await DATABASE.query(
+    `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder = ${SONGORDER}) AS "exists"`
+  )
+  res.json(SONGS.rows)
+})
+
 APP.put('/note', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   const SONGID = req.body.songid
   const NOTE = req.body.note
-  await DATABASE.query(
-    `UPDATE songs SET note=$1 WHERE songid=$2;`,
-    [NOTE, SONGID]
-  )
+  await DATABASE.query(`UPDATE songs SET note=$1 WHERE songid=$2;`, [
+    NOTE,
+    SONGID
+  ])
   res.send(200)
 })
 
