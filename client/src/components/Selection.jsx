@@ -1,8 +1,10 @@
+import { Link, useNavigate} from 'react-router-dom'
 import { useState } from 'react'
 import Search from './Search.jsx'
 import SongList from './SongList.jsx'
 export function Selection() {
   const [selected, setSelected] = useState([])
+  const navigate = useNavigate()
   const addSong = (song) => {
     // crypto.randomUUID generates a unique index to use as a key.
     // this is necessary if the same song is selected multiple times:
@@ -18,6 +20,7 @@ export function Selection() {
   }
 
   async function postSongs() {
+    console.log("posting songs")
     try {
       fetch('http://localhost:5000/addsongs', {
         method: 'POST',
@@ -31,14 +34,21 @@ export function Selection() {
     }
   }
 
+  const handleNextPage = () => {
+    postSongs()
+    navigate('/annotations')
+  }
+
   return (
     <>
       <Search handleSelect={addSong} />
       <SongList list={selected} handleRemove={removeSong} />
       {/* this should link to annotations page when routes are set up */}
-      <a role="button" onClick={postSongs}>
+      {/* <a role="button"  */}
+      <Link role="button" to="/annotations" onClick={handleNextPage}>
         Next
-      </a>
+      </Link>
+      {/* </a> */}
     </>
   )
 }
