@@ -22,7 +22,7 @@ APP.get('/allsongs', async (req, res) => {
   try {
     const SONGS = await DATABASE.query('SELECT * FROM songs;')
     console.log('Sending all songs to the client.')
-    res.json(SONGS.rows)
+    res.send(SONGS.rows)
   } catch (error) {
     res.status(404).send(error)
   }
@@ -37,9 +37,9 @@ APP.get('/song', async (req, res) => {
       `SELECT * FROM songs WHERE songorder = ${SONGORDER}`
     )
     console.log(`Sending song with order of ${SONGORDER} to the client`)
-    res.json(SONG.rows)
+    res.json(SONG.rows[0])
   } catch (error) {
-    res.status(404).send(error)
+    res.status(404).json(error)
   }
 })
 
@@ -54,7 +54,7 @@ APP.get('/songexists', async (req, res) => {
     console.log(
       `Sending existence status of song with songorder of ${SONGORDER} to client.`
     )
-    res.json(SONGS.rows)
+    res.send(SONGS.rows[0])
   } catch (error) {
     res.status(404).send(error)
   }
