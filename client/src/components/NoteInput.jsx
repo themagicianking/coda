@@ -1,4 +1,4 @@
-export function NoteInput({ note, updateNote }) {
+export function NoteInput({ song, updateNote }) {
   const getNoteValue = (event) => {
     updateNote(event.target.value)
   }
@@ -7,7 +7,7 @@ export function NoteInput({ note, updateNote }) {
     <input
       type="text"
       name="note"
-      defaultValue={note}
+      value={song.note}
       onChange={getNoteValue}
     />
   )

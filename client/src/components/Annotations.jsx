@@ -4,25 +4,24 @@ import { SongInfo } from './SongInfo'
 export function Annotations() {
   const [orderNum, setOrderNum] = useState(0)
   const [song, setSong] = useState()
-  const [note, setNote] = useState('')
   const [hasPrevSong, setHasPrevSong] = useState(false)
   const [hasNextSong, setHasNextSong] = useState(false)
 
   const goToPrevSong = () => {
     const prevOrderNum = orderNum - 1
-    putNote().then(setOrderNum(prevOrderNum))
+    putNote().then(() => setOrderNum(prevOrderNum))
   }
 
   const goToNextSong = () => {
     const nextOrderNum = orderNum + 1
-    putNote().then(setOrderNum(nextOrderNum))
+    putNote().then(() => setOrderNum(nextOrderNum))
   }
 
   async function putNote() {
     try {
       await fetch('http://localhost:5000/note', {
         method: 'PUT',
-        body: JSON.stringify({ note: note, songid: song.songID }),
+        body: JSON.stringify({ note: song.note, songid: song.songid }),
         headers: { 'Content-Type': 'application/json' }
       })
         .then((res) => {
@@ -40,7 +39,7 @@ export function Annotations() {
   }
 
   const updateNote = (newNote) => {
-    setNote(newNote)
+    setSong({ ...song, note: newNote })
   }
 
   useEffect(() => {
@@ -55,12 +54,12 @@ export function Annotations() {
           })
           .then((json) => {
             setSong(json)
-            setNote(json.note)
             if (json.songorder > 0) {
               setHasPrevSong(true)
             }
           })
       } catch (error) {
+        setSong(false)
         throw new Error(
           `Could not fetch song data from server. The following error occurred: ${error}`
         )
@@ -103,7 +102,7 @@ export function Annotations() {
       {song ? (
         <>
           <SongInfo song={song} />
-          <NoteInput note={note} updateNote={updateNote} />
+          <NoteInput song={song} updateNote={updateNote} />
         </>
       ) : (
         <></>
