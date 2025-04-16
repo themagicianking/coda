@@ -68,7 +68,7 @@ export function Annotations() {
 
     async function updateNext() {
       try {
-        await fetch(`http://localhost:5000/songexists?songorder=${orderNum}`)
+        await fetch(`http://localhost:5000/songexists?songorder=${orderNum + 1}`)
           .then((res) => {
             if (res.status >= 400) {
               throw res.status
