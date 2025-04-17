@@ -96,6 +96,7 @@ APP.post('/addsongs', async (req, res) => {
         ]
       )
     })
+    console.log(`Posted the following songs to the database: ${SONGS}`)
     res.send(200)
   } catch (error) {
     res.status(500).send(error)

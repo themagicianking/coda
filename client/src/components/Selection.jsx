@@ -1,4 +1,4 @@
-import { Link, useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import Search from './Search.jsx'
 import SongList from './SongList.jsx'
@@ -20,12 +20,13 @@ export function Selection() {
   }
 
   async function postSongs() {
-    console.log("posting songs")
     try {
       fetch('http://localhost:5000/addsongs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(selected)
+      }).then((res) => {
+        console.log(`Songs posted successfully, server sent response ${res}`)
       })
     } catch (error) {
       throw new Error(
