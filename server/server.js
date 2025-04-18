@@ -77,26 +77,26 @@ APP.put('/note', async (req, res) => {
   }
 })
 
-APP.post('/addsongs', async (req, res) => {
+APP.post('/song', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
-  const SONGS = req.body
+  const SONG = req.body
   try {
-    await SONGS.forEach((song) => {
-      DATABASE.query(
-        `INSERT INTO songs (songid, spotifyid, songorder, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6,$7)`,
-        [
-          song.songID,
-          song.spotifyID,
-          song.songorder,
-          song.artist,
-          song.title,
-          song.lyrics,
-          song.note
-        ]
-      )
-    })
-    console.log(`Posted the following songs to the database: ${SONGS}`)
+    await DATABASE.query(
+      `INSERT INTO songs (songid, spotifyid, songorder, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6,$7)`,
+      [
+        SONG.songID,
+        SONG.spotifyID,
+        SONG.songorder,
+        SONG.artist,
+        SONG.title,
+        SONG.lyrics,
+        SONG.note
+      ]
+    )
+    console.log(
+      `Posted the following song to the database: ${JSON.stringify(SONG)}`
+    )
     res.send(200)
   } catch (error) {
     res.status(500).send(error)

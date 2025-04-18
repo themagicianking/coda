@@ -13,20 +13,27 @@ export function Selection() {
       ...selected,
       { ...song, songID: crypto.randomUUID(), songorder: selected.length }
     ])
+    postSong({
+      ...song,
+      songID: crypto.randomUUID(),
+      songorder: selected.length
+    })
   }
   const removeSong = (songID) => {
     let newList = selected.filter((song) => songID != song['songID'])
     setSelected(newList)
   }
 
-  async function postSongs() {
+  async function postSong(song) {
     try {
-      fetch('http://localhost:5000/addsongs', {
+      fetch('http://localhost:5000/song', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(selected)
+        body: JSON.stringify(song)
       }).then((res) => {
-        console.log(`Songs posted successfully, server sent response ${res}`)
+        console.log(
+          `Song posted successfully, server sent response ${res.status}`
+        )
       })
     } catch (error) {
       throw new Error(
@@ -36,7 +43,6 @@ export function Selection() {
   }
 
   const handleNextPage = () => {
-    postSongs()
     navigate('/annotations')
   }
 
