@@ -20,11 +20,12 @@ APP.get('/allsongs', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   try {
-    const SONGS = await DATABASE.query('SELECT * FROM songs;')
-    console.log('Sending all songs to the client.')
-    res.send(SONGS.rows)
+    await DATABASE.query('SELECT * FROM songs;').then((songs) => {
+      console.log('Sending all songs to the client.')
+      res.send(songs.rows)
+    })
   } catch (error) {
-    res.status(404).send(error)
+    res.status(500).send(error)
   }
 })
 
@@ -33,13 +34,14 @@ APP.get('/song', async (req, res) => {
   DATABASE.release()
   const SONGORDER = req.query.songorder
   try {
-    const SONG = await DATABASE.query(
+    await DATABASE.query(
       `SELECT * FROM songs WHERE songorder = ${SONGORDER}`
-    )
-    console.log(`Sending song with order of ${SONGORDER} to the client`)
-    res.json(SONG.rows[0])
+    ).then((song) => {
+      console.log(`Sending song with order of ${SONGORDER} to the client`)
+      res.json(song.rows[0])
+    })
   } catch (error) {
-    res.status(404).json(error)
+    res.status(500).json(error)
   }
 })
 
@@ -48,15 +50,16 @@ APP.get('/songexists', async (req, res) => {
   DATABASE.release()
   const SONGORDER = req.query.songorder
   try {
-    const SONGS = await DATABASE.query(
+    await DATABASE.query(
       `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder = ${SONGORDER}) AS "exists"`
-    )
-    console.log(
-      `Sending existence status of song with songorder of ${SONGORDER} to client.`
-    )
-    res.send(SONGS.rows[0])
+    ).then((songs) => {
+      console.log(
+        `Sending existence status of song with songorder of ${SONGORDER} to client.`
+      )
+      res.send(songs.rows[0])
+    })
   } catch (error) {
-    res.status(404).send(error)
+    res.status(500).send(error)
   }
 })
 
@@ -69,11 +72,12 @@ APP.put('/note', async (req, res) => {
     await DATABASE.query(`UPDATE songs SET note=$1 WHERE songorder=$2;`, [
       NOTE,
       SONGORDER
-    ])
-    console.log(`Updated annotation for song with order of ${SONGORDER}`)
-    res.send(201)
+    ]).then(() => {
+      console.log(`Updated annotation for song with order of ${SONGORDER}`)
+      res.send(201)
+    })
   } catch (error) {
-    res.status(500).send(error)
+    res.status(501).send(error)
   }
 })
 
@@ -84,11 +88,12 @@ APP.put('/lowerorder', async (req, res) => {
   try {
     await DATABASE.query(
       `UPDATE songs SET songorder = songorder - 1 WHERE songorder > ${ORDER};`
-    )
-    console.log(`Lowered order for all songs higher than ${ORDER}`)
-    res.send(201)
+    ).then(() => {
+      console.log(`Lowered order for all songs higher than ${ORDER}`)
+      res.send(201)
+    })
   } catch (error) {
-    res.status(500).send(error)
+    res.status(501).send(error)
   }
 })
 
@@ -98,7 +103,7 @@ APP.post('/song', async (req, res) => {
   const SONG = req.body
   try {
     await DATABASE.query(
-      `INSERT INTO songs (spotifyid, songorder, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6,$7)`,
+      `INSERT INTO songs (spotifyid, songorder, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6)`,
       [
         SONG.spotifyid,
         SONG.songorder,
@@ -107,27 +112,32 @@ APP.post('/song', async (req, res) => {
         SONG.lyrics,
         SONG.note
       ]
-    )
-    console.log(
-      `Posted the following song to the database: ${JSON.stringify(SONG)}`
-    )
-    res.send(200)
+    ).then(() => {
+      console.log(
+        `Posted the following song to the database: ${JSON.stringify(SONG)}`
+      )
+      res.send(200)
+    })
   } catch (error) {
-    res.status(500).send(error)
+    res.status(501).send(error)
   }
 })
 
 APP.delete('/song', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
-  console.log(req.body)
   const SONGORDER = req.body.songorder
   try {
-    await DATABASE.query(`DELETE FROM songs WHERE songorder = $1`, [SONGORDER])
-    console.log(`Deleted song from the database where song order = ${SONGORDER}.`)
-    res.send(200)
+    await DATABASE.query(`DELETE FROM songs WHERE songorder = $1`, [
+      SONGORDER
+    ]).then(() => {
+      console.log(
+        `Deleted song from the database where song order = ${SONGORDER}.`
+      )
+      res.send(200)
+    })
   } catch (error) {
-    res.status(500).send(error)
+    res.status(501).send(error)
   }
 })
 

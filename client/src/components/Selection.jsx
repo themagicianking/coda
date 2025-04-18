@@ -17,7 +17,6 @@ export function Selection() {
         })
         .then((json) => {
           setSelected(json)
-          console.log(json)
         })
     } catch (error) {
       throw new Error(
@@ -25,21 +24,29 @@ export function Selection() {
       )
     }
   }
+
   useEffect(() => {
     getAllSongs()
   }, [])
 
+  useEffect(() => {}, [selected])
+
   const addSong = (song) => {
-    setSelected([...selected, { ...song, songorder: selected.length }])
     postSong({
       ...song,
       songorder: selected.length
+    }).then(() => {
+      getAllSongs()
     })
   }
   const removeSong = (songorder) => {
     deleteSong(songorder)
-    getAllSongs()
-    updateOrder(songorder)
+      .then(() => {
+        updateOrder(songorder)
+      })
+      .then(() => {
+        getAllSongs()
+      })
   }
 
   async function postSong(song) {
