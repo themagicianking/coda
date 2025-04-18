@@ -31,6 +31,9 @@ export function Selection() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(song)
       }).then((res) => {
+        if (res.status >= 400) {
+          throw res.status
+        }
         console.log(
           `Song posted successfully, server sent response ${res.status}`
         )
@@ -49,6 +52,9 @@ export function Selection() {
         headers: { 'Content-Type': 'application/json' },
         body: { songid: song.songID }
       }).then((res) => {
+        if (res.status >= 400) {
+          throw res.status
+        }
         console.log(
           `Song deleted successfully, server sent response ${res.status}`
         )
@@ -56,6 +62,27 @@ export function Selection() {
     } catch (error) {
       throw new Error(
         `Could not delete song from database. The following error occurred: ${error}`
+      )
+    }
+  }
+
+  async function updateOrder(order) {
+    try {
+      fetch('http://localhost:5000/lowerorder', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: { ordernum: order }
+      }).then((res) => {
+        if (res.status >= 400) {
+          throw res.status
+        }
+        console.log(
+          `Song order updated successfully, server sent response ${res.status}`
+        )
+      })
+    } catch (error) {
+      throw new Error(
+        `Could not update song order. The following error occured: ${error}`
       )
     }
   }
