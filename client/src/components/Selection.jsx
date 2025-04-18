@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import Search from './Search.jsx'
 import SongList from './SongList.jsx'
@@ -13,6 +13,7 @@ export function Selection() {
           if (res.status >= 400) {
             throw res.status
           }
+          console.log('Got all songs from the server.')
           return res.json()
         })
         .then((json) => {
@@ -29,24 +30,15 @@ export function Selection() {
     getAllSongs()
   }, [])
 
-  useEffect(() => {}, [selected])
+  useEffect(() => {
+    console.log('THE SELECTED SONGS CHANGED')
+  }, [selected])
 
   const addSong = (song) => {
-    postSong({
-      ...song,
-      songorder: selected.length
-    }).then(() => {
-      getAllSongs()
-    })
+    postSong(song)
   }
   const removeSong = (songorder) => {
     deleteSong(songorder)
-      .then(() => {
-        updateOrder(songorder)
-      })
-      .then(() => {
-        getAllSongs()
-      })
   }
 
   async function postSong(song) {
@@ -55,17 +47,21 @@ export function Selection() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(song)
-      }).then((res) => {
-        if (res.status >= 400) {
-          throw res.status
-        }
-        console.log(
-          `Song posted successfully, server sent response ${res.status}`
-        )
       })
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          console.log(
+            `Song posted successfully, server sent response ${res.status}`
+          )
+        })
+        .then(() => {
+          getAllSongs()
+        })
     } catch (error) {
       throw new Error(
-        `Could not add songs to server. The following error occurred: ${error}`
+        `Could not add song to server. The following error occurred: ${error}`
       )
     }
   }
@@ -76,38 +72,21 @@ export function Selection() {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ songorder: songorder })
-      }).then((res) => {
-        if (res.status >= 400) {
-          throw res.status
-        }
-        console.log(
-          `Song deleted successfully, server sent response ${res.status}`
-        )
       })
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          console.log(
+            `Song deleted successfully, server sent response ${res.status}`
+          )
+        })
+        .then(() => {
+          getAllSongs()
+        })
     } catch (error) {
       throw new Error(
         `Could not delete song from database. The following error occurred: ${error}`
-      )
-    }
-  }
-
-  async function updateOrder(order) {
-    try {
-      fetch('http://localhost:5000/lowerorder', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ordernum: order })
-      }).then((res) => {
-        if (res.status >= 400) {
-          throw res.status
-        }
-        console.log(
-          `Song order updated successfully, server sent response ${res.status}`
-        )
-      })
-    } catch (error) {
-      throw new Error(
-        `Could not update song order. The following error occured: ${error}`
       )
     }
   }

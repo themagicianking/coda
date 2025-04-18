@@ -81,32 +81,15 @@ APP.put('/note', async (req, res) => {
   }
 })
 
-APP.put('/lowerorder', async (req, res) => {
-  const DATABASE = await pool.connect()
-  DATABASE.release()
-  const ORDER = req.body.ordernum
-  try {
-    await DATABASE.query(
-      `UPDATE songs SET songorder = songorder - 1 WHERE songorder > ${ORDER};`
-    ).then(() => {
-      console.log(`Lowered order for all songs higher than ${ORDER}`)
-      res.send(201)
-    })
-  } catch (error) {
-    res.status(501).send(error)
-  }
-})
-
 APP.post('/song', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   const SONG = req.body
   try {
     await DATABASE.query(
-      `INSERT INTO songs (spotifyid, songorder, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6)`,
+      `INSERT INTO songs (spotifyid, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5)`,
       [
         SONG.spotifyid,
-        SONG.songorder,
         SONG.artist,
         SONG.title,
         SONG.lyrics,
