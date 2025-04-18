@@ -47,7 +47,23 @@ APP.get('/prevsong', async (req, res) => {
   }
 })
 
-
+APP.get('/prevsongexists', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  const SONGORDER = req.query.songorder
+  try {
+    await DATABASE.query(
+      `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder <= ${SONGORDER}) AS "exists"`
+    ).then((songs) => {
+      console.log(
+        `Sending existence status of song with songorder less than or equal to ${SONGORDER} to client.`
+      )
+      res.send(songs.rows[0])
+    })
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
 
 APP.get('/nextsong', async (req, res) => {
   const DATABASE = await pool.connect()
