@@ -63,14 +63,14 @@ APP.get('/songexists', async (req, res) => {
 APP.put('/note', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
-  const SONGID = req.body.songid
+  const SONGORDER = req.body.songorder
   const NOTE = req.body.note
   try {
-    await DATABASE.query(`UPDATE songs SET note=$1 WHERE songid=$2;`, [
+    await DATABASE.query(`UPDATE songs SET note=$1 WHERE songorder=$2;`, [
       NOTE,
-      SONGID
+      SONGORDER
     ])
-    console.log(`Updated annotation for song with id of ${SONGID}`)
+    console.log(`Updated annotation for song with order of ${SONGORDER}`)
     res.send(201)
   } catch (error) {
     res.status(500).send(error)
@@ -84,10 +84,9 @@ APP.post('/addsongs', async (req, res) => {
   try {
     await SONGS.forEach((song) => {
       DATABASE.query(
-        `INSERT INTO songs (songid, spotifyid, songorder, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6,$7)`,
+        `INSERT INTO songs (spotifyid, songorder, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6,$7)`,
         [
-          song.songID,
-          song.spotifyID,
+          song.spotifyid,
           song.songorder,
           song.artist,
           song.title,

@@ -48,7 +48,7 @@ export function Annotations() {
     try {
       await fetch('http://localhost:5000/note', {
         method: 'PUT',
-        body: JSON.stringify({ note: song.note, songid: song.songid }),
+        body: JSON.stringify({ note: song.note, songorder: song.songorder }),
         headers: { 'Content-Type': 'application/json' }
       })
         .then((res) => {
