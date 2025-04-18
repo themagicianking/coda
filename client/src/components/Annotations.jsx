@@ -9,22 +9,22 @@ export function Annotations() {
   const navigate = useNavigate()
 
   const goToPrevSong = () => {
-    const prevOrderNum = orderNum - 1
-    putNote().then(() => setOrderNum(prevOrderNum))
+    putNote()
+    getPrevSong()
   }
 
   const goToNextSong = () => {
-    const nextOrderNum = orderNum + 1
-    putNote().then(() => setOrderNum(nextOrderNum))
+    putNote()
+    getNextSong()
   }
 
   const updateNote = (newNote) => {
     setSong({ ...song, note: newNote })
   }
 
-  async function getSong() {
+  async function getNextSong() {
     try {
-      await fetch(`http://localhost:5000/song?songorder=${orderNum}`)
+      await fetch(`http://localhost:5000/nextsong?songorder=${orderNum}`)
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
@@ -33,11 +33,41 @@ export function Annotations() {
         })
         .then((json) => {
           setSong(json)
+          setOrderNum(json.songorder)
+          return json.songorder + 1
+        })
+        .then((nextOrderNum) => {
+          console.log(
+            `updating next, next order number should be ${nextOrderNum}`
+          )
+          updateNext(nextOrderNum)
         })
     } catch (error) {
       setSong(false)
       throw new Error(
-        `Could not fetch song data from server. The following error occurred: ${error}`
+        `Could not fetch next song data from server. The following error occurred: ${error}`
+      )
+    }
+  }
+
+  async function getPrevSong() {
+    try {
+      await fetch(`http://localhost:5000/prevsong?songorder=${orderNum}`)
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          return res.json()
+        })
+        .then((json) => {
+          setSong(json)
+          setOrderNum(json.songorder)
+          setHasNextSong(true)
+        })
+    } catch (error) {
+      setSong(false)
+      throw new Error(
+        `Could not fetch previous song data from server. The following error occurred: ${error}`
       )
     }
   }
@@ -63,10 +93,10 @@ export function Annotations() {
     }
   }
 
-  async function updateNext() {
+  async function updateNext(nextOrderNum) {
     try {
       await fetch(
-        `http://localhost:5000/songexists?songorder=${orderNum + 1}`
+        `http://localhost:5000/nextsongexists?songorder=${nextOrderNum}`
       )
         .then((res) => {
           if (res.status >= 400) {
@@ -75,6 +105,7 @@ export function Annotations() {
           return res.json()
         })
         .then((json) => {
+          console.log(json.exists)
           if (json.exists) {
             setHasNextSong(true)
           } else {
@@ -89,11 +120,11 @@ export function Annotations() {
   }
 
   useEffect(() => {
+    getNextSong()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-    getSong()
-    updateNext()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderNum])
+  useEffect(() => {}, [orderNum])
 
   const handlePrevPage = () => {
     putNote()

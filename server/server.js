@@ -29,15 +29,17 @@ APP.get('/allsongs', async (req, res) => {
   }
 })
 
-APP.get('/song', async (req, res) => {
+APP.get('/prevsong', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   const SONGORDER = req.query.songorder
   try {
     await DATABASE.query(
-      `SELECT * FROM songs WHERE songorder = ${SONGORDER}`
+      `SELECT * FROM songs WHERE songorder < ${SONGORDER} ORDER BY songorder DESC LIMIT 1`
     ).then((song) => {
-      console.log(`Sending song with order of ${SONGORDER} to the client`)
+      console.log(
+        `Sending song previous in the order from ${SONGORDER} to the client`
+      )
       res.json(song.rows[0])
     })
   } catch (error) {
@@ -45,16 +47,36 @@ APP.get('/song', async (req, res) => {
   }
 })
 
-APP.get('/songexists', async (req, res) => {
+
+
+APP.get('/nextsong', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   const SONGORDER = req.query.songorder
   try {
     await DATABASE.query(
-      `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder = ${SONGORDER}) AS "exists"`
+      `SELECT * FROM songs WHERE songorder > ${SONGORDER} ORDER BY songorder LIMIT 1`
+    ).then((song) => {
+      console.log(
+        `Sending song next in the order from ${SONGORDER} to the client`
+      )
+      res.json(song.rows[0])
+    })
+  } catch (error) {
+    res.status(500).json(error)
+  }
+})
+
+APP.get('/nextsongexists', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  const SONGORDER = req.query.songorder
+  try {
+    await DATABASE.query(
+      `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder >= ${SONGORDER}) AS "exists"`
     ).then((songs) => {
       console.log(
-        `Sending existence status of song with songorder of ${SONGORDER} to client.`
+        `Sending existence status of song with songorder more than or equal to ${SONGORDER} to client.`
       )
       res.send(songs.rows[0])
     })
@@ -88,13 +110,7 @@ APP.post('/song', async (req, res) => {
   try {
     await DATABASE.query(
       `INSERT INTO songs (spotifyid, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5)`,
-      [
-        SONG.spotifyid,
-        SONG.artist,
-        SONG.title,
-        SONG.lyrics,
-        SONG.note
-      ]
+      [SONG.spotifyid, SONG.artist, SONG.title, SONG.lyrics, SONG.note]
     ).then(() => {
       console.log(
         `Posted the following song to the database: ${JSON.stringify(SONG)}`
