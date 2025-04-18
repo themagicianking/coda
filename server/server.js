@@ -85,6 +85,8 @@ APP.put('/lowerorder', async (req, res) => {
     await DATABASE.query(
       `UPDATE songs SET songorder = songorder - 1 WHERE songorder > ${ORDER};`
     )
+    console.log(`Lowered order for all songs higher than ${ORDER}`)
+    res.send(201)
   } catch (error) {
     res.status(500).send(error)
   }
@@ -115,6 +117,8 @@ APP.post('/song', async (req, res) => {
     res.status(500).send(error)
   }
 })
+
+// APP.delete('/song')
 
 APP.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)
