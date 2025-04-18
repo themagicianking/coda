@@ -9,13 +9,14 @@ export function Selection() {
     // crypto.randomUUID generates a unique index to use as a key.
     // this is necessary if the same song is selected multiple times:
     // the id given to it from spotify is no longer unique.
+    const ID = crypto.randomUUID()
     setSelected([
       ...selected,
-      { ...song, songID: crypto.randomUUID(), songorder: selected.length }
+      { ...song, songID: ID, songorder: selected.length }
     ])
     postSong({
       ...song,
-      songID: crypto.randomUUID(),
+      songID: ID,
       songorder: selected.length
     })
   }
@@ -52,7 +53,7 @@ export function Selection() {
       fetch('http://localhost:5000/song', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: { songid: songID }
+        body: JSON.stringify({ songid: songID })
       }).then((res) => {
         if (res.status >= 400) {
           throw res.status
@@ -73,7 +74,7 @@ export function Selection() {
       fetch('http://localhost:5000/lowerorder', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: { ordernum: order }
+        body: JSON.stringify({ ordernum: order })
       }).then((res) => {
         if (res.status >= 400) {
           throw res.status

@@ -121,9 +121,10 @@ APP.post('/song', async (req, res) => {
 APP.delete('/song', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
+  console.log(req.body)
   const SONGID = req.body.songid
   try {
-    await DATABASE.query(`DELETE FROM songs WHERE songid = ${SONGID}`)
+    await DATABASE.query(`DELETE FROM songs WHERE songid = $1`, [SONGID])
     console.log(`Deleted song from the database where song id = ${SONGID}.`)
     res.send(200)
   } catch (error) {
