@@ -1,0 +1,4 @@
+USER="username"
+HOST="host"
+DATABASE="database"
+PASSWORD="password"

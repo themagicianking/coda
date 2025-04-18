@@ -4,11 +4,35 @@ import Result from './Result.jsx'
 export default function Search({ handleSelect }) {
   const [results, setResults] = useState([])
   const sampleItems = [
-    { spotifyID: 0, artist: 'Indigo Girls', title: 'Closer to Fine' },
-    { spotifyID: 1, artist: 'CHVRCHES', title: 'Empty Threat' },
-    { spotifyID: 2, artist: 'Twenty One Pilots', title: 'Stressed Out' },
-    { spotifyID: 3, artist: 'AJR', title: 'Bang' },
-    { spotifyID: 4, artist: 'cavetown', title: 'This is Home' }
+    {
+      spotifyID: 0,
+      artist: 'Indigo Girls',
+      title: 'Closer to Fine',
+      lyrics: '',
+      note: ''
+    },
+    {
+      spotifyID: 1,
+      artist: 'CHVRCHES',
+      title: 'Empty Threat',
+      lyrics: '',
+      note: ''
+    },
+    {
+      spotifyID: 2,
+      artist: 'Twenty One Pilots',
+      title: 'Stressed Out',
+      lyrics: '',
+      note: ''
+    },
+    { spotifyID: 3, artist: 'AJR', title: 'Bang', lyrics: '', note: '' },
+    {
+      spotifyID: 4,
+      artist: 'cavetown',
+      title: 'This is Home',
+      lyrics: '',
+      note: ''
+    }
   ]
 
   // async function getResults(input) {
