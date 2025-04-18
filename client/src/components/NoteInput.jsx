@@ -1,5 +1,5 @@
 export function NoteInput({ song, updateNote }) {
-  const getNoteValue = (event) => {
+  const getUserText = (event) => {
     updateNote(event.target.value)
   }
 
@@ -8,7 +8,7 @@ export function NoteInput({ song, updateNote }) {
       type="text"
       name="note"
       value={song.note}
-      onChange={getNoteValue}
+      onChange={getUserText}
     />
   )
 }
