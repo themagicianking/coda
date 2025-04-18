@@ -77,55 +77,25 @@ APP.put('/note', async (req, res) => {
   }
 })
 
-APP.put('/lowerorder', async (req, res) => {
+APP.post('/addsongs', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
-  const ORDER = req.body.ordernum
+  const SONGS = req.body
   try {
-    await DATABASE.query(
-      `UPDATE songs SET songorder = songorder - 1 WHERE songorder > ${ORDER};`
-    )
-    console.log(`Lowered order for all songs higher than ${ORDER}`)
-    res.send(201)
-  } catch (error) {
-    res.status(500).send(error)
-  }
-})
-
-APP.post('/song', async (req, res) => {
-  const DATABASE = await pool.connect()
-  DATABASE.release()
-  const SONG = req.body
-  try {
-    await DATABASE.query(
-      `INSERT INTO songs (songid, spotifyid, songorder, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6,$7)`,
-      [
-        SONG.songid,
-        SONG.spotifyid,
-        SONG.songorder,
-        SONG.artist,
-        SONG.title,
-        SONG.lyrics,
-        SONG.note
-      ]
-    )
-    console.log(
-      `Posted the following song to the database: ${JSON.stringify(SONG)}`
-    )
-    res.send(200)
-  } catch (error) {
-    res.status(500).send(error)
-  }
-})
-
-APP.delete('/song', async (req, res) => {
-  const DATABASE = await pool.connect()
-  DATABASE.release()
-  console.log(req.body)
-  const SONGID = req.body.songid
-  try {
-    await DATABASE.query(`DELETE FROM songs WHERE songid = $1`, [SONGID])
-    console.log(`Deleted song from the database where song id = ${SONGID}.`)
+    await SONGS.forEach((song) => {
+      DATABASE.query(
+        `INSERT INTO songs (songid, spotifyid, songorder, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6,$7)`,
+        [
+          song.songID,
+          song.spotifyID,
+          song.songorder,
+          song.artist,
+          song.title,
+          song.lyrics,
+          song.note
+        ]
+      )
+    })
     res.send(200)
   } catch (error) {
     res.status(500).send(error)

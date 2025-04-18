@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { NoteInput } from './NoteInput'
 import { SongInfo } from './SongInfo'
@@ -7,7 +6,6 @@ export function Annotations() {
   const [song, setSong] = useState()
   const [hasPrevSong, setHasPrevSong] = useState(false)
   const [hasNextSong, setHasNextSong] = useState(false)
-  const navigate = useNavigate()
 
   const goToPrevSong = () => {
     const prevOrderNum = orderNum - 1
@@ -106,15 +104,10 @@ export function Annotations() {
     updateNext()
   }, [orderNum])
 
-  const handlePrevPage = () => {
-    putNote()
-    navigate('/selection')
-  }
-
   return (
     <>
       {/* this should link to selection page when routes are set up */}
-      <a role="button" onClick={handlePrevPage}>
+      <a role="button" onClick={putNote}>
         Previous
       </a>
       {song ? (
