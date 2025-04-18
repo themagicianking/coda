@@ -7,7 +7,7 @@ export default function SongList({ list, handleRemove }) {
       {list ? (
         <ol>
           {list.map((song) => (
-            <Song key={song.songID} song={song} handleRemove={handleRemove} />
+            <Song key={song.songid} song={song} handleRemove={handleRemove} />
           ))}
         </ol>
       ) : (
