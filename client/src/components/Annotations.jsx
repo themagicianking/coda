@@ -21,6 +21,29 @@ export function Annotations() {
     setSong({ ...song, note: newNote })
   }
 
+  async function getSong() {
+    try {
+      await fetch(`http://localhost:5000/song?songorder=${orderNum}`)
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          return res.json()
+        })
+        .then((json) => {
+          setSong(json)
+          if (json.songorder > 0) {
+            setHasPrevSong(true)
+          }
+        })
+    } catch (error) {
+      setSong(false)
+      throw new Error(
+        `Could not fetch song data from server. The following error occurred: ${error}`
+      )
+    }
+  }
+
   async function putNote() {
     try {
       await fetch('http://localhost:5000/note', {
@@ -42,66 +65,46 @@ export function Annotations() {
     }
   }
 
+  const updatePrev = () => {
+    if (orderNum <= 0) {
+      setHasPrevSong(false)
+    } else {
+      setHasPrevSong(true)
+    }
+  }
+
+
+  async function updateNext() {
+    try {
+      await fetch(
+        `http://localhost:5000/songexists?songorder=${orderNum + 1}`
+      )
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          return res.json()
+        })
+        .then((json) => {
+          if (json.exists) {
+            setHasNextSong(true)
+          } else {
+            setHasNextSong(false)
+          }
+        })
+    } catch (error) {
+      throw new Error(
+        `Could not check if next song exists. The following error occurred: ${error}`
+      )
+    }
+  }
+
   useEffect(() => {
-    async function getSong() {
-      try {
-        await fetch(`http://localhost:5000/song?songorder=${orderNum}`)
-          .then((res) => {
-            if (res.status >= 400) {
-              throw res.status
-            }
-            return res.json()
-          })
-          .then((json) => {
-            setSong(json)
-            if (json.songorder > 0) {
-              setHasPrevSong(true)
-            }
-          })
-      } catch (error) {
-        setSong(false)
-        throw new Error(
-          `Could not fetch song data from server. The following error occurred: ${error}`
-        )
-      }
-    }
-
-    const updatePrev = () => {
-      if (orderNum <= 0) {
-        setHasPrevSong(false)
-      } else {
-        setHasPrevSong(true)
-      }
-    }
-
-    async function updateNext() {
-      try {
-        await fetch(
-          `http://localhost:5000/songexists?songorder=${orderNum + 1}`
-        )
-          .then((res) => {
-            if (res.status >= 400) {
-              throw res.status
-            }
-            return res.json()
-          })
-          .then((json) => {
-            if (json.exists) {
-              setHasNextSong(true)
-            } else {
-              setHasNextSong(false)
-            }
-          })
-      } catch (error) {
-        throw new Error(
-          `Could not check if next song exists. The following error occurred: ${error}`
-        )
-      }
-    }
 
     getSong()
     updatePrev()
     updateNext()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderNum])
 
   return (
