@@ -5,29 +5,29 @@ export default function Search({ handleSelect }) {
   const [results, setResults] = useState([])
   const sampleItems = [
     {
-      spotifyid: 0,
+      spotifyID: 0,
       artist: 'Indigo Girls',
       title: 'Closer to Fine',
       lyrics: '',
       note: ''
     },
     {
-      spotifyid: 1,
+      spotifyID: 1,
       artist: 'CHVRCHES',
       title: 'Empty Threat',
       lyrics: '',
       note: ''
     },
     {
-      spotifyid: 2,
+      spotifyID: 2,
       artist: 'Twenty One Pilots',
       title: 'Stressed Out',
       lyrics: '',
       note: ''
     },
-    { spotifyid: 3, artist: 'AJR', title: 'Bang', lyrics: '', note: '' },
+    { spotifyID: 3, artist: 'AJR', title: 'Bang', lyrics: '', note: '' },
     {
-      spotifyid: 4,
+      spotifyID: 4,
       artist: 'cavetown',
       title: 'This is Home',
       lyrics: '',
@@ -73,7 +73,7 @@ export default function Search({ handleSelect }) {
         <ol>
           {results.map((song) => (
             <Result
-              key={song.spotifyid}
+              key={song.spotifyID}
               song={song}
               handleSelect={handleSelect}
             />
