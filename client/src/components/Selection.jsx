@@ -37,7 +37,7 @@ export function Selection() {
     })
   }
   const removeSong = (songorder) => {
-    deleteSong(songid)
+    deleteSong(songorder)
     getAllSongs()
     updateOrder(songorder)
   }
