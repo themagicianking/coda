@@ -5,6 +5,26 @@ import SongList from './SongList.jsx'
 export function Selection() {
   const [selected, setSelected] = useState([])
   const navigate = useNavigate()
+
+  async function getAllSongs() {
+    try {
+      fetch('http://localserver:5000/allsongs')
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          return res.json
+        })
+        .then((json) => {
+          setSelected(json)
+        })
+    } catch (error) {
+      throw new Error(
+        `Could not get songs from server. The following error occurred: ${error}`
+      )
+    }
+  }
+
   const addSong = (song) => {
     // crypto.randomUUID generates a unique index to use as a key.
     // this is necessary if the same song is selected multiple times:
@@ -20,6 +40,7 @@ export function Selection() {
       songorder: selected.length
     })
   }
+
   const removeSong = (songID, songorder) => {
     let newList = selected.filter((song) => songID != song['songID'])
     setSelected(newList)
