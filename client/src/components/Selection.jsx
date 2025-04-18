@@ -19,9 +19,11 @@ export function Selection() {
       songorder: selected.length
     })
   }
-  const removeSong = (songID) => {
+  const removeSong = (songID, songorder) => {
     let newList = selected.filter((song) => songID != song['songID'])
     setSelected(newList)
+    deleteSong(songID)
+    updateOrder(songorder)
   }
 
   async function postSong(song) {
@@ -45,12 +47,12 @@ export function Selection() {
     }
   }
 
-  async function deleteSong(song) {
+  async function deleteSong(songID) {
     try {
       fetch('http://localhost:5000/song', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: { songid: song.songID }
+        body: { songid: songID }
       }).then((res) => {
         if (res.status >= 400) {
           throw res.status
