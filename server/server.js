@@ -118,7 +118,18 @@ APP.post('/song', async (req, res) => {
   }
 })
 
-// APP.delete('/song')
+APP.delete('/song', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  const SONGID = req.body.songid
+  try {
+    await DATABASE.query(`DELETE FROM songs WHERE songid = ${SONGID}`)
+    console.log(`Deleted song from the database where song id = ${SONGID}.`)
+    res.send(200)
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
 
 APP.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)
