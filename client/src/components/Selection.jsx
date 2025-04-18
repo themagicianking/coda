@@ -31,18 +31,30 @@ export function Selection() {
 
   const addSong = (song) => {
     setSelected([...selected, { ...song, songorder: selected.length }])
+    postSong({
+      ...song,
+      songorder: selected.length
+    })
   }
   const removeSong = (songorder) => {
-    let newList = selected.filter((song) => songorder != song.songorder)
-    setSelected(newList)
+    deleteSong(songid)
+    getAllSongs()
+    updateOrder(songorder)
   }
 
-  async function postSongs() {
+  async function postSong(song) {
     try {
-      fetch('http://localhost:5000/addsongs', {
+      fetch('http://localhost:5000/song', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(selected)
+        body: JSON.stringify(song)
+      }).then((res) => {
+        if (res.status >= 400) {
+          throw res.status
+        }
+        console.log(
+          `Song posted successfully, server sent response ${res.status}`
+        )
       })
     } catch (error) {
       throw new Error(
@@ -51,14 +63,57 @@ export function Selection() {
     }
   }
 
+  async function deleteSong(songorder) {
+    try {
+      fetch('http://localhost:5000/song', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ songorder: songorder })
+      }).then((res) => {
+        if (res.status >= 400) {
+          throw res.status
+        }
+        console.log(
+          `Song deleted successfully, server sent response ${res.status}`
+        )
+      })
+    } catch (error) {
+      throw new Error(
+        `Could not delete song from database. The following error occurred: ${error}`
+      )
+    }
+  }
+
+  async function updateOrder(order) {
+    try {
+      fetch('http://localhost:5000/lowerorder', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ordernum: order })
+      }).then((res) => {
+        if (res.status >= 400) {
+          throw res.status
+        }
+        console.log(
+          `Song order updated successfully, server sent response ${res.status}`
+        )
+      })
+    } catch (error) {
+      throw new Error(
+        `Could not update song order. The following error occured: ${error}`
+      )
+    }
+  }
+
+  const handleNextPage = () => {
+    navigate('/annotations')
+  }
+
   return (
     <>
       <Search handleSelect={addSong} />
       <SongList list={selected} handleRemove={removeSong} />
-      {/* this should link to annotations page when routes are set up */}
-      <a role="button" onClick={postSongs}>
-        Next
-      </a>
+      <button onClick={handleNextPage}>Next</button>
     </>
   )
 }
