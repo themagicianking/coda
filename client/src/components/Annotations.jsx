@@ -4,7 +4,6 @@ import { SongInfo } from './SongInfo'
 export function Annotations() {
   const [orderNum, setOrderNum] = useState(0)
   const [song, setSong] = useState()
-  const [hasPrevSong, setHasPrevSong] = useState(false)
   const [hasNextSong, setHasNextSong] = useState(false)
 
   const goToPrevSong = () => {
@@ -32,9 +31,6 @@ export function Annotations() {
         })
         .then((json) => {
           setSong(json)
-          if (json.songorder > 0) {
-            setHasPrevSong(true)
-          }
         })
     } catch (error) {
       setSong(false)
@@ -64,15 +60,6 @@ export function Annotations() {
       )
     }
   }
-
-  const updatePrev = () => {
-    if (orderNum <= 0) {
-      setHasPrevSong(false)
-    } else {
-      setHasPrevSong(true)
-    }
-  }
-
 
   async function updateNext() {
     try {
@@ -121,7 +108,7 @@ export function Annotations() {
       ) : (
         <></>
       )}
-      {hasPrevSong ? (
+      {orderNum > 0 ? (
         <a role="button" onClick={goToPrevSong}>
           Previous Song
         </a>
