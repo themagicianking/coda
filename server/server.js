@@ -100,8 +100,8 @@ APP.post('/song', async (req, res) => {
     await DATABASE.query(
       `INSERT INTO songs (songid, spotifyid, songorder, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6,$7)`,
       [
-        SONG.songID,
-        SONG.spotifyID,
+        SONG.songid,
+        SONG.spotifyid,
         SONG.songorder,
         SONG.artist,
         SONG.title,

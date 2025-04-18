@@ -1,6 +1,6 @@
 export default function Song({ song, handleRemove }) {
   const updateSelections = () => {
-    handleRemove(song.songID, song.songorder)
+    handleRemove(song.songid, song.songorder)
   }
   return (
     <div>

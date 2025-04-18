@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Search from './Search.jsx'
 import SongList from './SongList.jsx'
 export function Selection() {
@@ -8,15 +8,16 @@ export function Selection() {
 
   async function getAllSongs() {
     try {
-      fetch('http://localserver:5000/allsongs')
+      await fetch('http://localhost:5000/allsongs')
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
           }
-          return res.json
+          return res.json()
         })
         .then((json) => {
           setSelected(json)
+          console.log(json)
         })
     } catch (error) {
       throw new Error(
@@ -25,6 +26,10 @@ export function Selection() {
     }
   }
 
+  useEffect(() => {
+    getAllSongs()
+  }, [])
+
   const addSong = (song) => {
     // crypto.randomUUID generates a unique index to use as a key.
     // this is necessary if the same song is selected multiple times:
@@ -32,19 +37,18 @@ export function Selection() {
     const ID = crypto.randomUUID()
     setSelected([
       ...selected,
-      { ...song, songID: ID, songorder: selected.length }
+      { ...song, songid: ID, songorder: selected.length }
     ])
     postSong({
       ...song,
-      songID: ID,
+      songid: ID,
       songorder: selected.length
     })
   }
 
-  const removeSong = (songID, songorder) => {
-    let newList = selected.filter((song) => songID != song['songID'])
-    setSelected(newList)
-    deleteSong(songID)
+  const removeSong = (songid, songorder) => {
+    deleteSong(songid)
+    getAllSongs()
     updateOrder(songorder)
   }
 
@@ -69,12 +73,12 @@ export function Selection() {
     }
   }
 
-  async function deleteSong(songID) {
+  async function deleteSong(songid) {
     try {
       fetch('http://localhost:5000/song', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ songid: songID })
+        body: JSON.stringify({ songid: songid })
       }).then((res) => {
         if (res.status >= 400) {
           throw res.status
