@@ -77,6 +77,19 @@ APP.put('/note', async (req, res) => {
   }
 })
 
+APP.put('/lowerorder', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  const ORDER = req.body.ordernum
+  try {
+    await DATABASE.query(
+      `UPDATE songs SET songorder = songorder - 1 WHERE songorder > ${ORDER};`
+    )
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
+
 APP.post('/song', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
