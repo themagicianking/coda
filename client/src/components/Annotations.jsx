@@ -5,6 +5,7 @@ import { SongInfo } from './SongInfo'
 export function Annotations() {
   const [orderNum, setOrderNum] = useState(0)
   const [song, setSong] = useState()
+  const [hasPrevSong, setHasPrevSong] = useState(false)
   const [hasNextSong, setHasNextSong] = useState(false)
   const navigate = useNavigate()
 
@@ -34,12 +35,12 @@ export function Annotations() {
         .then((json) => {
           setSong(json)
           setOrderNum(json.songorder)
-          return json.songorder + 1
+          return json.songorder
         })
-        .then((nextOrderNum) => {
-          console.log(
-            `updating next, next order number should be ${nextOrderNum}`
-          )
+        .then((currentOrderNum) => {
+          let nextOrderNum = currentOrderNum + 1
+          let prevOrderNum = currentOrderNum - 1
+          updatePrev(prevOrderNum)
           updateNext(nextOrderNum)
         })
     } catch (error) {
@@ -63,6 +64,13 @@ export function Annotations() {
           setSong(json)
           setOrderNum(json.songorder)
           setHasNextSong(true)
+          return json.songorder
+        })
+        .then((currentOrderNum) => {
+          let nextOrderNum = currentOrderNum + 1
+          let prevOrderNum = currentOrderNum - 1
+          updatePrev(prevOrderNum)
+          updateNext(nextOrderNum)
         })
     } catch (error) {
       setSong(false)
@@ -119,6 +127,32 @@ export function Annotations() {
     }
   }
 
+  async function updatePrev(prevOrderNum) {
+    try {
+      await fetch(
+        `http://localhost:5000/prevsongexists?songorder=${prevOrderNum}`
+      )
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          return res.json()
+        })
+        .then((json) => {
+          console.log(json.exists)
+          if (json.exists) {
+            setHasPrevSong(true)
+          } else {
+            setHasPrevSong(false)
+          }
+        })
+    } catch (error) {
+      throw new Error(
+        `Could not check if prev song exists. The following error occurred: ${error}`
+      )
+    }
+  }
+
   useEffect(() => {
     getNextSong()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -144,7 +178,7 @@ export function Annotations() {
       ) : (
         <></>
       )}
-      {orderNum > 0 ? (
+      {hasPrevSong ? (
         <a role="button" onClick={goToPrevSong}>
           Previous Song
         </a>
