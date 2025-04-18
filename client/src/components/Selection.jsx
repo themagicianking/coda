@@ -42,6 +42,24 @@ export function Selection() {
     }
   }
 
+  async function deleteSong(song) {
+    try {
+      fetch('http://localhost:5000/song', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: { songid: song.songID }
+      }).then((res) => {
+        console.log(
+          `Song deleted successfully, server sent response ${res.status}`
+        )
+      })
+    } catch (error) {
+      throw new Error(
+        `Could not delete song from database. The following error occurred: ${error}`
+      )
+    }
+  }
+
   const handleNextPage = () => {
     navigate('/annotations')
   }
