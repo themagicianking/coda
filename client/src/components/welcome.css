@@ -85,7 +85,7 @@
 
 #cassetteLabel {
   margin: 5em 0 0 15em;
-  padding: .5em;
+  padding: 0.5em;
 }
 
 .credits {
@@ -94,5 +94,6 @@
   justify-self: flex-end;
   max-width: 25em;
   max-height: 20em;
-  background-color: #21d460;
+  background-color: #1f1f27;
+  color:#94E561
 }
