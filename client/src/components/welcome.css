@@ -16,15 +16,23 @@
   flex-grow: 1;
   width: 25em;
   height: 20em;
-  background-color: #94E561;
+  background-color: #94e561;
 }
 
 .cassette {
   flex-grow: 2;
   align-self: center;
+  margin: 0;
   width: 40em;
-  height: 25em;
-  background-color: #F8F23A;
+  height: 30em;
+}
+
+.cassetteImage {
+  height: 100%;
+  background-image: url('../assets/cassette.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
 }
 
 .credits {
@@ -33,5 +41,5 @@
   justify-self: flex-end;
   max-width: 25em;
   max-height: 20em;
-  background-color: #21D460;
+  background-color: #21d460;
 }
