@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { SongCard } from './SongCard'
 
 const PERSONALIZATION = {
@@ -47,6 +48,8 @@ export function Playlist() {
           <SongCard key={song.songorder} song={song} />
         ))}
       </ol>
+      {/* This will link to the homepage component when it's created */}
+      <Link role="button">Home</Link>
     </div>
   )
 }
