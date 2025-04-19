@@ -20,43 +20,84 @@ APP.get('/allsongs', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   try {
-    const SONGS = await DATABASE.query('SELECT * FROM songs;')
-    console.log('Sending all songs to the client.')
-    res.send(SONGS.rows)
+    await DATABASE.query('SELECT * FROM songs;').then((songs) => {
+      console.log('Sending all songs to the client.')
+      res.send(songs.rows)
+    })
   } catch (error) {
-    res.status(404).send(error)
+    res.status(500).send(error)
   }
 })
 
-APP.get('/song', async (req, res) => {
+APP.get('/prevsong', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   const SONGORDER = req.query.songorder
   try {
-    const SONG = await DATABASE.query(
-      `SELECT * FROM songs WHERE songorder = ${SONGORDER}`
-    )
-    console.log(`Sending song with order of ${SONGORDER} to the client`)
-    res.json(SONG.rows[0])
+    await DATABASE.query(
+      `SELECT * FROM songs WHERE songorder < ${SONGORDER} ORDER BY songorder DESC LIMIT 1`
+    ).then((song) => {
+      console.log(
+        `Sending song previous in the order from ${SONGORDER} to the client`
+      )
+      res.json(song.rows[0])
+    })
   } catch (error) {
-    res.status(404).json(error)
+    res.status(500).json(error)
   }
 })
 
-APP.get('/songexists', async (req, res) => {
+APP.get('/prevsongexists', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   const SONGORDER = req.query.songorder
   try {
-    const SONGS = await DATABASE.query(
-      `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder = ${SONGORDER}) AS "exists"`
-    )
-    console.log(
-      `Sending existence status of song with songorder of ${SONGORDER} to client.`
-    )
-    res.send(SONGS.rows[0])
+    await DATABASE.query(
+      `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder <= ${SONGORDER}) AS "exists"`
+    ).then((songs) => {
+      console.log(
+        `Sending existence status of song with songorder less than or equal to ${SONGORDER} to client.`
+      )
+      res.send(songs.rows[0])
+    })
   } catch (error) {
-    res.status(404).send(error)
+    res.status(500).send(error)
+  }
+})
+
+APP.get('/nextsong', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  const SONGORDER = req.query.songorder
+  try {
+    await DATABASE.query(
+      `SELECT * FROM songs WHERE songorder > ${SONGORDER} ORDER BY songorder LIMIT 1`
+    ).then((song) => {
+      console.log(
+        `Sending song next in the order from ${SONGORDER} to the client`
+      )
+      res.json(song.rows[0])
+    })
+  } catch (error) {
+    res.status(500).json(error)
+  }
+})
+
+APP.get('/nextsongexists', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  const SONGORDER = req.query.songorder
+  try {
+    await DATABASE.query(
+      `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder >= ${SONGORDER}) AS "exists"`
+    ).then((songs) => {
+      console.log(
+        `Sending existence status of song with songorder more than or equal to ${SONGORDER} to client.`
+      )
+      res.send(songs.rows[0])
+    })
+  } catch (error) {
+    res.status(500).send(error)
   }
 })
 
@@ -69,35 +110,49 @@ APP.put('/note', async (req, res) => {
     await DATABASE.query(`UPDATE songs SET note=$1 WHERE songorder=$2;`, [
       NOTE,
       SONGORDER
-    ])
-    console.log(`Updated annotation for song with order of ${SONGORDER}`)
-    res.send(201)
+    ]).then(() => {
+      console.log(`Updated annotation for song with order of ${SONGORDER}`)
+      res.send(201)
+    })
   } catch (error) {
-    res.status(500).send(error)
+    res.status(501).send(error)
   }
 })
 
-APP.post('/addsongs', async (req, res) => {
+APP.post('/song', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
-  const SONGS = req.body
+  const SONG = req.body
   try {
-    await SONGS.forEach((song) => {
-      DATABASE.query(
-        `INSERT INTO songs (spotifyid, songorder, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6,$7)`,
-        [
-          song.spotifyid,
-          song.songorder,
-          song.artist,
-          song.title,
-          song.lyrics,
-          song.note
-        ]
+    await DATABASE.query(
+      `INSERT INTO songs (spotifyid, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5)`,
+      [SONG.spotifyid, SONG.artist, SONG.title, SONG.lyrics, SONG.note]
+    ).then(() => {
+      console.log(
+        `Posted the following song to the database: ${JSON.stringify(SONG)}`
       )
+      res.send(200)
     })
-    res.send(200)
   } catch (error) {
-    res.status(500).send(error)
+    res.status(501).send(error)
+  }
+})
+
+APP.delete('/song', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  const SONGORDER = req.body.songorder
+  try {
+    await DATABASE.query(`DELETE FROM songs WHERE songorder = $1`, [
+      SONGORDER
+    ]).then(() => {
+      console.log(
+        `Deleted song from the database where song order = ${SONGORDER}.`
+      )
+      res.send(200)
+    })
+  } catch (error) {
+    res.status(501).send(error)
   }
 })
 
