@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import Search from './Search.jsx'
 import SongList from './SongList.jsx'
+import './selection.css'
+
 export function Selection() {
   const [selected, setSelected] = useState([])
   const navigate = useNavigate()
@@ -105,6 +107,7 @@ export function Selection() {
       <Search handleSelect={addSong} />
       <SongList list={selected} handleRemove={removeSong} />
       <button onClick={handleNextPage}>Next</button>
+      {/* Photo by <a href="https://unsplash.com/@enginakyurt?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">engin akyurt</a> on <a href="https://unsplash.com/photos/a-black-crumpled-paper-background-with-a-black-background-Ya-IIca3PjM?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a> */}
     </>
   )
 }
