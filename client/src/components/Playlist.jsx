@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { SongCard } from './SongCard'
 
 export function Playlist() {
   const [songs, setSongs] = useState([])
@@ -34,7 +35,7 @@ export function Playlist() {
       <p>General description of playlist</p>
       <ol>
         {songs.map((song) => (
-          <li>{JSON.stringify(song)}</li>
+          <SongCard key={song.songorder} song={song} />
         ))}
       </ol>
     </div>
