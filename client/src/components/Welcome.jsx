@@ -5,10 +5,10 @@ import './welcome.css'
 
 export function Welcome() {
   return (
-    <>
+    <div className='welcome'>
       <AboutApp />
       <Cassette />
       <Credits />
-    </>
+    </div>
   )
 }

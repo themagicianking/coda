@@ -1,6 +1,6 @@
 export function AboutApp() {
   return (
-    <article id="about" className="lime rounded padding">
+    <article className="about">
       <h3>About</h3>
       <p>
         Coda is an app I created for my final project with Techtonica. I grew up

@@ -1,6 +1,6 @@
 export function Credits() {
   return (
-    <article id="credits" className="hella green rounded padding">
+    <article className="credits">
       <h4>Credits</h4>
       <p>
         This project was coded and designed by Thane Wilson (@themagicianking on

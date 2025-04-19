@@ -1,15 +1,36 @@
-#about {
-  width: 30em;
-  margin: 1em;
+.welcome {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100vw;
+  height: 100vh;
 }
 
-#cassette {
+.welcome > * {
+  margin: 1em;
+  border-radius: 1em;
+  padding: 1em;
+}
+
+.about {
+  flex-grow: 1;
+  width: 25em;
+  height: 20em;
+  background-color: #94E561;
+}
+
+.cassette {
+  flex-grow: 2;
+  align-self: center;
   width: 40em;
   height: 25em;
-  margin: 1em;
+  background-color: #F8F23A;
 }
 
-#credits {
-  width: 20em;
-  margin: 1em;
+.credits {
+  flex-grow: 1;
+  align-self: flex-end;
+  justify-self: flex-end;
+  width: 25em;
+  /* height: 20em; */
+  background-color: #21D460;
 }
