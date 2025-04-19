@@ -20,19 +20,22 @@
 }
 
 .cassette {
+  display: flex;
   flex-grow: 2;
   align-self: center;
   margin: 0;
+  margin-bottom: 5em;
   width: 40em;
   height: 30em;
 }
 
 .cassetteImage {
-  height: 100%;
+  height: 150%;
+  width: 150%;
   background-image: url('../assets/cassette.jpg');
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 100%;
+  background-size: 120%;
 }
 
 .credits {
