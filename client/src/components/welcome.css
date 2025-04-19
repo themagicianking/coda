@@ -9,13 +9,13 @@
 .welcome > * {
   margin: 1em;
   border-radius: 1em;
-  padding: 1em;
+  padding: 1.5em;
 }
 
 .about {
   flex-grow: 1;
   width: 25em;
-  height: 20em;
+  height: fit-content;
   background-color: #94e561;
 }
 
@@ -91,9 +91,10 @@
 .credits {
   flex-grow: 1;
   align-self: flex-end;
-  justify-self: flex-end;
+  margin-top: 3em;
   max-width: 25em;
   max-height: 20em;
   background-color: #1f1f27;
-  color:#94E561
+  color:#94E561;
+  text-align: right;
 }
