@@ -1,6 +1,7 @@
 .welcome {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   width: 100vw;
   height: 100vh;
 }
@@ -30,7 +31,7 @@
   flex-grow: 1;
   align-self: flex-end;
   justify-self: flex-end;
-  width: 25em;
-  /* height: 20em; */
+  max-width: 25em;
+  max-height: 20em;
   background-color: #21D460;
 }
