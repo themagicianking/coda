@@ -91,12 +91,17 @@ export function Selection() {
     }
   }
 
+  const goToPrev = () => {
+    navigate('/welcome')
+  }
+
   const handleNextPage = () => {
     navigate('/annotations')
   }
 
   return (
     <>
+      <button onClick={goToPrev}>Previous</button>
       <Search handleSelect={addSong} />
       <SongList list={selected} handleRemove={removeSong} />
       <button onClick={handleNextPage}>Next</button>
