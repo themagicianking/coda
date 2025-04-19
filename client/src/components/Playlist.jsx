@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react'
 import { SongCard } from './SongCard'
 
+const PERSONALIZATION = {
+  title: 'A Playlist',
+  sender: 'Me',
+  recipient: 'You',
+  description: 'This is the personalized description of the whole playlist.'
+}
+
 export function Playlist() {
   const [songs, setSongs] = useState([])
 
@@ -30,9 +37,11 @@ export function Playlist() {
 
   return (
     <div>
-      <h1>Playlist Name</h1>
-      <h2>From Name to Name</h2>
-      <p>General description of playlist</p>
+      <h1>{PERSONALIZATION.title}</h1>
+      <h2>
+        From {PERSONALIZATION.sender} to {PERSONALIZATION.recipient}
+      </h2>
+      <p>{PERSONALIZATION.description}</p>
       <ol>
         {songs.map((song) => (
           <SongCard key={song.songorder} song={song} />
