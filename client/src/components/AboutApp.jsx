@@ -1,7 +1,7 @@
 export function AboutApp() {
   return (
     <article>
-      <h1>About</h1>
+      <h2>About</h2>
       <p>
         Coda is an app I created for my final project with Techtonica. I grew up
         with vinyl, CDs, and cassettes as my primary music sources, and I wanted
