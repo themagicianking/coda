@@ -1,3 +1,9 @@
+import { AboutApp } from './AboutApp'
+
 export function Welcome() {
-  return (<div>Hello World</div>)
+  return (
+    <>
+      <AboutApp />
+    </>
+  )
 }
