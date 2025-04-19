@@ -88,6 +88,10 @@
   padding: 0.5em;
 }
 
+#cassetteLabel:hover {
+  box-shadow: 0px 0px 3px 10px #94e561;
+}
+
 .credits {
   flex-grow: 1;
   align-self: flex-end;
