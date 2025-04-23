@@ -27,6 +27,6 @@ VALUES
 
 CREATE TABLE credentials (
   id SERIAL PRIMARY KEY,
-  accesstoken VARCHAR(5000) NOT NULL,
-  refreshtoken VARCHAR(5000) NOT NULL
+  accesstoken VARCHAR(50000) NOT NULL,
+  refreshtoken VARCHAR(50000) NOT NULL
 );

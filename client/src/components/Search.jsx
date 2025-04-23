@@ -3,7 +3,7 @@ import Result from './Result.jsx'
 
 export default function Search({ handleSelect }) {
   const [results, setResults] = useState([])
-  const [accessToken, setAccessToken] = useState()
+  // const [accessToken, setAccessToken] = useState()
   // const sampleItems = [
   //   {
   //     spotifyid: 0,
@@ -36,28 +36,9 @@ export default function Search({ handleSelect }) {
   //   }
   // ]
 
-  async function getCredentials() {
-    try {
-      await fetch('http://localhost:5000/credentials')
-        .then((res) => {
-          if (res.status >= 400) {
-            throw res.status
-          }
-          return res.json()
-        })
-        .then((json) => {
-          setAccessToken(json.accesstoken)
-        })
-    } catch (error) {
-      throw new Error(
-        `Could not get credentials from server. The following error occurred: ${error}`
-      )
-    }
-  }
-
-  // async function getResults(input) {
+  // async function getCredentials() {
   //   try {
-  //     await fetch(`https://api.spotify.com/v1/search${input}`)
+  //     await fetch('http://localhost:5000/credentials')
   //       .then((res) => {
   //         if (res.status >= 400) {
   //           throw res.status
@@ -65,23 +46,43 @@ export default function Search({ handleSelect }) {
   //         return res.json()
   //       })
   //       .then((json) => {
-  //         setResults(json)
+  //         setAccessToken(json.accesstoken)
   //       })
   //   } catch (error) {
   //     throw new Error(
-  //       `Could not connect to API. The following error occurred: ${error}`
+  //       `Could not get credentials from server. The following error occurred: ${error}`
   //     )
   //   }
   // }
 
-  useEffect(() => {
-    getCredentials()
-  }, [])
+  async function getResults(input) {
+    console.log(input)
+    try {
+      await fetch(`http://localhost:5000/search?input=${input}`)
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          return res.json()
+        })
+        .then((json) => {
+          setResults(json)
+        })
+    } catch (error) {
+      throw new Error(
+        `Could not connect to API. The following error occurred: ${error}`
+      )
+    }
+  }
 
-  const handleSearch = () => {
-    // let input = event.target.value
-    // getResults(input)
-    setResults(sampleItems)
+  // useEffect(() => {
+  //   getCredentials()
+  // }, [])
+
+  const handleSearch = (event) => {
+    let input = event.target.value
+    getResults(input)
+    // setResults(sampleItems)
   }
 
   return (

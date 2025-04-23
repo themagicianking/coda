@@ -16,6 +16,7 @@ const pool = new Pool({
   database: process.env.DATABASE,
   password: process.env.PASSWORD
 })
+let access_token = ""
 
 APP.use(cors())
 APP.use(express.json())
@@ -85,10 +86,11 @@ APP.get('/callback', function (req, res) {
 
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
-        const access_token = body.access_token,
-          refresh_token = body.refresh_token
+         access_token = body.access_token
+          // refresh_token = body.refresh_token
 
-        postCredentials(access_token, refresh_token)
+        // console.log(access_token)
+        // postCredentials(access_token, refresh_token)
 
         const options = {
           url: 'https://api.spotify.com/v1/me',
@@ -139,19 +141,35 @@ async function postCredentials(accesstoken, refreshtoken) {
   }
 }
 
-APP.get('/credentials', async (req, res) => {
+async function getCredentials() {
   const DATABASE = await pool.connect()
   DATABASE.release()
   try {
-    await DATABASE.query('SELECT * FROM credentials LIMIT 1;').then(
-      (credentials) => {
-        console.log('Sending credentials to the client.')
-        res.send(credentials.rows)
-      }
-    )
+    await DATABASE.query(
+      'SELECT * FROM credentials ORDER BY id DESC LIMIT 1;'
+    ).then((credentials) => {
+      console.log(credentials.rows[0].accesstoken)
+      return credentials.rows[0].accesstoken
+    })
   } catch (error) {
-    res.status(500).send(error)
+    console.log('Could not get credentials.')
   }
+}
+
+APP.get('/search', async (req, res) => {
+  const INPUT = req.query.input
+  // const ACCESS_TOKEN = getCredentials()
+  const options = {
+    url: `https://api.spotify.com/v1/search?q=track%3A${INPUT}&type=track&include_external=audio`,
+    headers: {
+      Authorization: 'Bearer ' + access_token
+    },
+    json: true
+  }
+
+  request.get(options, function (error, response, body) {
+    console.log(body)
+  })
 })
 
 APP.get('/allsongs', async (req, res) => {
