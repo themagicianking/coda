@@ -66,7 +66,8 @@ export default function Search({ handleSelect }) {
           return res.json()
         })
         .then((json) => {
-          setResults(json)
+          console.log(json)
+          setResults(json.tracks.items)
         })
     } catch (error) {
       throw new Error(

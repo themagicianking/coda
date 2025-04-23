@@ -5,7 +5,7 @@ export default function Result({ song, handleSelect }) {
   return (
     <div>
       <li>
-        {song.title} by {song.artist}
+        {song.name} by {song.artists[0].name}
         <button style={{ marginLeft: '10px' }} onClick={updateSelections}>
           Add
         </button>

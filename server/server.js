@@ -16,7 +16,7 @@ const pool = new Pool({
   database: process.env.DATABASE,
   password: process.env.PASSWORD
 })
-let access_token = ""
+let access_token = ''
 
 APP.use(cors())
 APP.use(express.json())
@@ -86,8 +86,8 @@ APP.get('/callback', function (req, res) {
 
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
-         access_token = body.access_token
-          // refresh_token = body.refresh_token
+        access_token = body.access_token
+        // refresh_token = body.refresh_token
 
         // console.log(access_token)
         // postCredentials(access_token, refresh_token)
@@ -166,10 +166,13 @@ APP.get('/search', async (req, res) => {
     },
     json: true
   }
-
-  request.get(options, function (error, response, body) {
-    console.log(body)
-  })
+  try {
+    request.get(options, function (error, response, body) {
+      res.send(body)
+    })
+  } catch (error) {
+    res.status(500).send(error)
+  }
 })
 
 APP.get('/allsongs', async (req, res) => {
