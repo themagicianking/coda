@@ -139,6 +139,21 @@ async function postCredentials(accesstoken, refreshtoken) {
   }
 }
 
+APP.get('/credentials', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  try {
+    await DATABASE.query('SELECT * FROM credentials LIMIT 1;').then(
+      (credentials) => {
+        console.log('Sending credentials to the client.')
+        res.send(credentials.rows)
+      }
+    )
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
+
 APP.get('/allsongs', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
