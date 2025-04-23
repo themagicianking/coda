@@ -85,10 +85,7 @@ APP.get('/callback', function (req, res) {
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
         accessToken = body.access_token
-        // refresh_token = body.refresh_token
-
-        // console.log(access_token)
-        // postCredentials(access_token, refresh_token)
+        // refreshToken = body.refresh_token
 
         const options = {
           url: 'https://api.spotify.com/v1/me',
@@ -101,14 +98,9 @@ APP.get('/callback', function (req, res) {
           console.log(body)
         })
 
-        // we can also pass the token to the browser to make requests from there
+        // redirects the user to song selection page
         res.redirect(
           'http://localhost:5173/selection'
-          // '/#' +
-          //   querystring.stringify({
-          //     access_token: access_token,
-          //     refresh_token: refresh_token
-          //   })
         )
       } else {
         res.redirect(
@@ -122,41 +114,8 @@ APP.get('/callback', function (req, res) {
   }
 })
 
-async function postCredentials(accesstoken, refreshtoken) {
-  const DATABASE = await pool.connect()
-  DATABASE.release()
-
-  try {
-    await DATABASE.query(
-      `INSERT INTO credentials (accesstoken, refreshtoken) VALUES ($1, $2) `,
-      [accesstoken, refreshtoken]
-    )
-    console.log('Successfully posted credentials to the database.')
-  } catch (error) {
-    console.log(
-      `Was not able to post credentials. The following error occurred: ${error}`
-    )
-  }
-}
-
-async function getCredentials() {
-  const DATABASE = await pool.connect()
-  DATABASE.release()
-  try {
-    await DATABASE.query(
-      'SELECT * FROM credentials ORDER BY id DESC LIMIT 1;'
-    ).then((credentials) => {
-      console.log(credentials.rows[0].accesstoken)
-      return credentials.rows[0].accesstoken
-    })
-  } catch (error) {
-    console.log('Could not get credentials.')
-  }
-}
-
 APP.get('/search', async (req, res) => {
   const INPUT = req.query.input
-  // const ACCESS_TOKEN = getCredentials()
   const options = {
     url: `https://api.spotify.com/v1/search?q=track%3A${INPUT}&type=track&include_external=audio`,
     headers: {
