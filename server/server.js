@@ -16,15 +16,15 @@ const pool = new Pool({
   database: process.env.DATABASE,
   password: process.env.PASSWORD
 })
-let access_token = ''
+let accessToken = ''
 
 APP.use(cors())
 APP.use(express.json())
 APP.use(cookieParser())
 
-const client_id = process.env.CLIENT_ID // your clientId
-const client_secret = process.env.CLIENT_SECRET // Your secret
-const redirect_uri = 'http://localhost:5000/callback' // Your redirect uri
+const CLIENT_ID = process.env.CLIENT_ID
+const CLIENT_SECRET = process.env.CLIENT_SECRET
+const REDIRECT_URI = 'http://localhost:5000/callback'
 
 const generateRandomString = (length) => {
   return crypto.randomBytes(60).toString('hex').slice(0, length)
@@ -33,33 +33,31 @@ const generateRandomString = (length) => {
 const STATEKEY = 'spotify_auth_state'
 
 APP.get('/login', function (req, res) {
-  const state = generateRandomString(16)
-  res.cookie(STATEKEY, state)
-
-  // your application requests authorization
-  const scope = 'user-read-private user-read-email'
+  const STATE = generateRandomString(16)
+  res.cookie(STATEKEY, STATE)
+  // request authorization from spotify api
+  const SCOPE = 'user-read-private user-read-email'
   res.redirect(
     'https://accounts.spotify.com/authorize?' +
       querystring.stringify({
         response_type: 'code',
-        client_id: client_id,
-        scope: scope,
-        redirect_uri: redirect_uri,
-        state: state
+        client_id: CLIENT_ID,
+        scope: SCOPE,
+        redirect_uri: REDIRECT_URI,
+        state: STATE
       })
   )
 })
 
 APP.get('/callback', function (req, res) {
-  // your application requests refresh and access tokens
-  // after checking the state parameter
+  // request refresh and access tokens after checking the state parameter
 
-  const code = req.query.code || null
-  const state = req.query.state || null
-  const storedState = req.cookies ? req.cookies[STATEKEY] : null
+  const CODE = req.query.code || null
+  const STATE = req.query.state || null
+  const STORED_STATE = req.cookies ? req.cookies[STATEKEY] : null
 
-  if (state === null || state !== storedState) {
-    console.log(state, storedState)
+  if (STATE === null || STATE !== STORED_STATE) {
+    console.log(STATE, STORED_STATE)
     res.redirect(
       '/#' +
         querystring.stringify({
@@ -71,22 +69,22 @@ APP.get('/callback', function (req, res) {
     const authOptions = {
       url: 'https://accounts.spotify.com/api/token',
       form: {
-        code: code,
-        redirect_uri: redirect_uri,
+        code: CODE,
+        redirect_uri: REDIRECT_URI,
         grant_type: 'authorization_code'
       },
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
         Authorization:
           'Basic ' +
-          new Buffer.from(client_id + ':' + client_secret).toString('base64')
+          new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64')
       },
       json: true
     }
 
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
-        access_token = body.access_token
+        accessToken = body.access_token
         // refresh_token = body.refresh_token
 
         // console.log(access_token)
@@ -94,7 +92,7 @@ APP.get('/callback', function (req, res) {
 
         const options = {
           url: 'https://api.spotify.com/v1/me',
-          headers: { Authorization: 'Bearer ' + access_token },
+          headers: { Authorization: 'Bearer ' + accessToken },
           json: true
         }
 
@@ -162,7 +160,7 @@ APP.get('/search', async (req, res) => {
   const options = {
     url: `https://api.spotify.com/v1/search?q=track%3A${INPUT}&type=track&include_external=audio`,
     headers: {
-      Authorization: 'Bearer ' + access_token
+      Authorization: 'Bearer ' + accessToken
     },
     json: true
   }
