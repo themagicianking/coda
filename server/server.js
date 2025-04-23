@@ -103,11 +103,12 @@ APP.get('/callback', function (req, res) {
 
         // we can also pass the token to the browser to make requests from there
         res.redirect(
-          '/#' +
-            querystring.stringify({
-              access_token: access_token,
-              refresh_token: refresh_token
-            })
+          'http://localhost:5173/selection'
+          // '/#' +
+          //   querystring.stringify({
+          //     access_token: access_token,
+          //     refresh_token: refresh_token
+          //   })
         )
       } else {
         res.redirect(
