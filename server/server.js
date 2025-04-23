@@ -88,6 +88,8 @@ APP.get('/callback', function (req, res) {
         const access_token = body.access_token,
           refresh_token = body.refresh_token
 
+        postCredentials(access_token, refresh_token)
+
         const options = {
           url: 'https://api.spotify.com/v1/me',
           headers: { Authorization: 'Bearer ' + access_token },
@@ -118,6 +120,23 @@ APP.get('/callback', function (req, res) {
     })
   }
 })
+
+async function postCredentials(accesstoken, refreshtoken) {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+
+  try {
+    await DATABASE.query(
+      `INSERT INTO credentials (accesstoken, refreshtoken) VALUES ($1, $2) `,
+      [accesstoken, refreshtoken]
+    )
+    console.log('Successfully posted credentials to the database.')
+  } catch (error) {
+    console.log(
+      `Was not able to post credentials. The following error occurred: ${error}`
+    )
+  }
+}
 
 APP.get('/allsongs', async (req, res) => {
   const DATABASE = await pool.connect()
