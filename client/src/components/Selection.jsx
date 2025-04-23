@@ -30,9 +30,7 @@ export function Selection() {
     getAllSongs()
   }, [])
 
-  useEffect(() => {
-    console.log('THE SELECTED SONGS CHANGED')
-  }, [selected])
+  useEffect(() => {}, [selected])
 
   const addSong = (song) => {
     postSong(song)

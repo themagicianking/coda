@@ -25,6 +25,17 @@ export default function Search({ handleSelect }) {
     }
   }
 
+  function formatSong(song) {
+    // todo: incorporate songs with multiple artists
+    // todo: figure out if it's possible to get lyrics
+    return {
+      spotifyid: song.id,
+      title: song.name,
+      artist: song.artists[0].name,
+      note: ''
+    }
+  }
+
   const handleSearch = (event) => {
     let input = event.target.value
     getResults(input)
@@ -44,7 +55,7 @@ export default function Search({ handleSelect }) {
           {results.map((song) => (
             <Result
               key={song.id}
-              song={song}
+              song={formatSong(song)}
               handleSelect={handleSelect}
             />
           ))}
