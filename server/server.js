@@ -87,17 +87,6 @@ APP.get('/callback', function (req, res) {
         accessToken = body.access_token
         // refreshToken = body.refresh_token
 
-        const options = {
-          url: 'https://api.spotify.com/v1/me',
-          headers: { Authorization: 'Bearer ' + accessToken },
-          json: true
-        }
-
-        // use the access token to access the Spotify Web API
-        request.get(options, function (error, response, body) {
-          console.log(body)
-        })
-
         // redirects the user to song selection page
         res.redirect(
           'http://localhost:5173/selection'
