@@ -1,7 +1,5 @@
 DROP TABLE IF EXISTS songs;
 
-DROP TABLE IF EXISTS credentials;
-
 CREATE TABLE songs (
   songorder SERIAL PRIMARY KEY,
   spotifyid VARCHAR(255) NOT NULL,
@@ -24,9 +22,3 @@ VALUES
   (2, 'Twenty One Pilots', 'Stressed Out', ''),
   (16, 'AJR', 'Bang', ''),
   (16, 'cavetown', 'This is Home', '');
-
-CREATE TABLE credentials (
-  id SERIAL PRIMARY KEY,
-  accesstoken VARCHAR(50000) NOT NULL,
-  refreshtoken VARCHAR(50000) NOT NULL
-);
