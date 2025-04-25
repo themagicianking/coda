@@ -30,9 +30,7 @@ export function Selection() {
     getAllSongs()
   }, [])
 
-  useEffect(() => {
-    console.log('THE SELECTED SONGS CHANGED')
-  }, [selected])
+  useEffect(() => {}, [selected])
 
   const addSong = (song) => {
     postSong(song)
@@ -91,12 +89,17 @@ export function Selection() {
     }
   }
 
+  const goToPrev = () => {
+    navigate('/welcome')
+  }
+
   const handleNextPage = () => {
     navigate('/annotations')
   }
 
   return (
     <>
+      <button onClick={goToPrev}>Previous</button>
       <Search handleSelect={addSong} />
       <SongList list={selected} handleRemove={removeSong} />
       <button onClick={handleNextPage}>Next</button>
