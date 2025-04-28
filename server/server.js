@@ -12,9 +12,6 @@ const PORT = 5000
 const ENVIRONMENT = process.env.RAILWAY_ENVIRONMENT_NAME
 const { Pool } = pkg
 
-if (ENVIRONMENT == "development") {
-  
-}
 const pool = new Pool({
   user: process.env.PGUSER,
   host: process.env.PGHOST,
