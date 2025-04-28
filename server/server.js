@@ -9,13 +9,25 @@ import request from 'request'
 
 const APP = express()
 const PORT = 5000
+const ENVIRONMENT = process.env.RAILWAY_ENVIRONMENT_NAME
 const { Pool } = pkg
-const pool = new Pool({
-  user: process.env.USER,
-  host: process.env.HOST,
-  database: process.env.DATABASE,
-  password: process.env.PASSWORD
-})
+
+let databaseCredentials = {}
+
+if (ENVIRONMENT == 'development') {
+  databaseCredentials = {
+    user: process.env.USER,
+    host: process.env.HOST,
+    database: process.env.DATABASE,
+    password: process.env.PASSWORD
+  }
+} else {
+  const DB_URL = process.env.DATABASE_URL
+  databaseCredentials = { DB_URL }
+}
+
+const pool = new Pool(databaseCredentials)
+
 let accessToken = ''
 
 APP.use(cors())
@@ -88,9 +100,7 @@ APP.get('/callback', function (req, res) {
         // refreshToken = body.refresh_token
 
         // redirects the user to song selection page
-        res.redirect(
-          'http://localhost:5173/selection'
-        )
+        res.redirect('http://localhost:5173/selection')
       } else {
         res.redirect(
           '/#' +
