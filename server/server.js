@@ -26,7 +26,7 @@ APP.use(cookieParser())
 
 const CLIENT_ID = process.env.CLIENT_ID
 const CLIENT_SECRET = process.env.CLIENT_SECRET
-const REDIRECT_URI = 'http://localhost:5000/callback'
+const REDIRECT_URI = process.env.REDIRECT_URI
 
 const generateRandomString = (length) => {
   return crypto.randomBytes(60).toString('hex').slice(0, length)
