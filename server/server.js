@@ -27,6 +27,7 @@ APP.use(cookieParser())
 const CLIENT_ID = process.env.CLIENT_ID
 const CLIENT_SECRET = process.env.CLIENT_SECRET
 const REDIRECT_URI = process.env.REDIRECT_URI
+const SELECTION_URI = process.env.SELECTION_URI
 
 const generateRandomString = (length) => {
   return crypto.randomBytes(60).toString('hex').slice(0, length)
@@ -90,9 +91,7 @@ APP.get('/callback', function (req, res) {
         // refreshToken = body.refresh_token
 
         // redirects the user to song selection page
-        res.redirect(
-          'http://localhost:5173/selection'
-        )
+        res.redirect(SELECTION_URI)
       } else {
         res.redirect(
           '/#' +
