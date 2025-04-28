@@ -12,22 +12,15 @@ const PORT = 5000
 const ENVIRONMENT = process.env.RAILWAY_ENVIRONMENT_NAME
 const { Pool } = pkg
 
-let databaseCredentials = {}
-
-if (ENVIRONMENT == 'development') {
-  databaseCredentials = {
-    user: process.env.USER,
-    host: process.env.HOST,
-    database: process.env.DATABASE,
-    password: process.env.PASSWORD
-  }
-} else {
-  const DB_URL = process.env.DATABASE_URL
-  databaseCredentials = { DB_URL }
+if (ENVIRONMENT == "development") {
+  
 }
-
-const pool = new Pool(databaseCredentials)
-
+const pool = new Pool({
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  password: process.env.PGPASSWORD
+})
 let accessToken = ''
 
 APP.use(cors())
@@ -100,7 +93,9 @@ APP.get('/callback', function (req, res) {
         // refreshToken = body.refresh_token
 
         // redirects the user to song selection page
-        res.redirect('http://localhost:5173/selection')
+        res.redirect(
+          'http://localhost:5173/selection'
+        )
       } else {
         res.redirect(
           '/#' +
