@@ -1,11 +1,4 @@
-import { useNavigate } from 'react-router-dom'
-
 export function Cassette() {
-  const navigate = useNavigate()
-
-  // const goToNext = () => {
-  //   navigate('http://localhost:5000/login')
-  // }
 
   return (
     <article className="cassette">
