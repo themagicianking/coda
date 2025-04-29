@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it } from 'vitest'
-import { App } from '/src/App'
+import { AboutApp } from '/src/components/AboutApp'
 
-describe('App', () => {
+describe('AboutApp', () => {
   it('renders the App component', () => {
-    render(<App />)
+    render(<AboutApp />)
 
     screen.debug()
   })
