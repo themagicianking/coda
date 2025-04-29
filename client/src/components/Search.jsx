@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Result from './Result.jsx'
+import { Result } from './Result.jsx'
 
 export default function Search({ handleSelect }) {
   const [results, setResults] = useState([])
