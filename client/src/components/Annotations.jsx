@@ -116,7 +116,6 @@ export function Annotations() {
           return res.json()
         })
         .then((json) => {
-          console.log(json.exists)
           if (json.exists) {
             setHasNextSong(true)
           } else {
@@ -142,7 +141,6 @@ export function Annotations() {
           return res.json()
         })
         .then((json) => {
-          console.log(json.exists)
           if (json.exists) {
             setHasPrevSong(true)
           } else {

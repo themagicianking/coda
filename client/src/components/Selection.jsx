@@ -15,7 +15,6 @@ export function Selection() {
           if (res.status >= 400) {
             throw res.status
           }
-          console.log('Got all songs from the server.')
           return res.json()
         })
         .then((json) => {

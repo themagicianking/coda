@@ -60,7 +60,6 @@ APP.get('/callback', function (req, res) {
   const STORED_STATE = req.cookies ? req.cookies[STATEKEY] : null
 
   if (STATE === null || STATE !== STORED_STATE) {
-    console.log(STATE, STORED_STATE)
     res.redirect(
       '/#' +
         querystring.stringify({
@@ -88,7 +87,8 @@ APP.get('/callback', function (req, res) {
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
         accessToken = body.access_token
-        console.log(`The current selection uri: ${SELECTION_URI}`)
+        // todo: write function that uses refresh token to get new auth code
+        // when old auth code has expired
         // refreshToken = body.refresh_token
 
         // redirects the user to song selection page

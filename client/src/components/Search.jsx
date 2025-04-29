@@ -7,7 +7,6 @@ export default function Search({ handleSelect }) {
   const [results, setResults] = useState([])
 
   async function getResults(input) {
-    console.log(input)
     try {
       await fetch(`${SERVER_URL}/search?input=${input}`)
         .then((res) => {
@@ -17,7 +16,6 @@ export default function Search({ handleSelect }) {
           return res.json()
         })
         .then((json) => {
-          console.log(json)
           setResults(json.tracks.items)
         })
     } catch (error) {

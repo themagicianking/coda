@@ -6,8 +6,6 @@ import { ServerContext } from './components/ServerContext'
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL
 
-console.log(SERVER_URL)
-
 function App() {
   return (
     <ServerContext.Provider value={SERVER_URL}>
