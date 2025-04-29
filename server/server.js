@@ -88,6 +88,7 @@ APP.get('/callback', function (req, res) {
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
         accessToken = body.access_token
+        console.log(`The current selection uri: ${SELECTION_URI}`)
         // refreshToken = body.refresh_token
 
         // redirects the user to song selection page
