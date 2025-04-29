@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import Search from './Search.jsx'
+import { Search } from './Search.jsx'
 import SongList from './SongList.jsx'
 export function Selection() {
   const [selected, setSelected] = useState([])
