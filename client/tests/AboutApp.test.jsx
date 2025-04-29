@@ -3,7 +3,7 @@ import { describe, it } from 'vitest'
 import { AboutApp } from '/src/components/AboutApp'
 
 describe('AboutApp', () => {
-  it('renders the App component', () => {
+  it('renders the AboutApp component', () => {
     render(<AboutApp />)
 
     screen.debug()
