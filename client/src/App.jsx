@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Annotations } from './components/Annotations'
 import { Selection } from './components/Selection'
 import { Welcome } from './components/Welcome'
-function App() {
+export function App() {
   return (
     <Router>
       <Routes>
@@ -13,5 +13,3 @@ function App() {
     </Router>
   )
 }
-
-export default App
