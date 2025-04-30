@@ -19,6 +19,11 @@ export function Annotations() {
     getNextSong()
   }
 
+  const goToNextPage = () => {
+    putNote()
+    navigate('/playlist')
+  }
+
   const updateNote = (newNote) => {
     setSong({ ...song, note: newNote })
   }
@@ -193,7 +198,8 @@ export function Annotations() {
         <></>
       )}
       {/* this should link to personalization page when routes are set up */}
-      <a role="button" onClick={putNote}>
+      {/* currently links to playlist view since personalization does not yet exist */}
+      <a role="button" onClick={goToNextPage}>
         Next
       </a>
     </>
