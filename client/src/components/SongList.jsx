@@ -1,6 +1,6 @@
 import { Song } from './Song.jsx'
 
-export default function SongList({ list, handleRemove }) {
+export function SongList({ list, handleRemove }) {
   return (
     <article>
       {list ? (
