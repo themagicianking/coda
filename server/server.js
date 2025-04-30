@@ -2,6 +2,10 @@ import express from 'express'
 import cors from 'cors'
 import pkg from 'pg'
 import 'dotenv/config'
+import crypto from 'crypto'
+import querystring from 'querystring'
+import cookieParser from 'cookie-parser'
+import request from 'request'
 
 const APP = express()
 const PORT = 5000
@@ -12,9 +16,110 @@ const pool = new Pool({
   database: process.env.DATABASE,
   password: process.env.PASSWORD
 })
+let accessToken = ''
 
 APP.use(cors())
 APP.use(express.json())
+APP.use(cookieParser())
+
+const CLIENT_ID = process.env.CLIENT_ID
+const CLIENT_SECRET = process.env.CLIENT_SECRET
+const REDIRECT_URI = 'http://localhost:5000/callback'
+
+const generateRandomString = (length) => {
+  return crypto.randomBytes(60).toString('hex').slice(0, length)
+}
+
+const STATEKEY = 'spotify_auth_state'
+
+APP.get('/login', function (req, res) {
+  const STATE = generateRandomString(16)
+  res.cookie(STATEKEY, STATE)
+  // request authorization from spotify api
+  const SCOPE = 'user-read-private user-read-email'
+  res.redirect(
+    'https://accounts.spotify.com/authorize?' +
+      querystring.stringify({
+        response_type: 'code',
+        client_id: CLIENT_ID,
+        scope: SCOPE,
+        redirect_uri: REDIRECT_URI,
+        state: STATE
+      })
+  )
+})
+
+APP.get('/callback', function (req, res) {
+  // request refresh and access tokens after checking the state parameter
+
+  const CODE = req.query.code || null
+  const STATE = req.query.state || null
+  const STORED_STATE = req.cookies ? req.cookies[STATEKEY] : null
+
+  if (STATE === null || STATE !== STORED_STATE) {
+    console.log(STATE, STORED_STATE)
+    res.redirect(
+      '/#' +
+        querystring.stringify({
+          error: 'state_mismatch'
+        })
+    )
+  } else {
+    res.clearCookie(STATEKEY)
+    const authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      form: {
+        code: CODE,
+        redirect_uri: REDIRECT_URI,
+        grant_type: 'authorization_code'
+      },
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+        Authorization:
+          'Basic ' +
+          new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64')
+      },
+      json: true
+    }
+
+    request.post(authOptions, function (error, response, body) {
+      if (!error && response.statusCode === 200) {
+        accessToken = body.access_token
+        // refreshToken = body.refresh_token
+
+        // redirects the user to song selection page
+        res.redirect(
+          'http://localhost:5173/selection'
+        )
+      } else {
+        res.redirect(
+          '/#' +
+            querystring.stringify({
+              error: 'invalid_token'
+            })
+        )
+      }
+    })
+  }
+})
+
+APP.get('/search', async (req, res) => {
+  const INPUT = req.query.input
+  const options = {
+    url: `https://api.spotify.com/v1/search?q=track%3A${INPUT}&type=track&include_external=audio`,
+    headers: {
+      Authorization: 'Bearer ' + accessToken
+    },
+    json: true
+  }
+  try {
+    request.get(options, function (error, response, body) {
+      res.send(body)
+    })
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
 
 APP.get('/allsongs', async (req, res) => {
   const DATABASE = await pool.connect()

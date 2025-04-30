@@ -1,0 +1,110 @@
+.welcome {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  width: 100vw;
+  height: 100vh;
+}
+
+.welcome > * {
+  margin: 1em;
+  border-radius: 1em;
+  padding: 1.5em;
+}
+
+.about {
+  flex-grow: 1;
+  box-shadow: 0.5em 0.5em 0.5em 0 #9c9c9c;
+  width: 25em;
+  height: fit-content;
+  background-color: #94e561;
+}
+
+.cassette {
+  display: flex;
+  flex-grow: 2;
+  align-self: center;
+  margin: 0;
+  margin-bottom: 5em;
+  width: 40em;
+  height: 30em;
+  text-align: center;
+}
+
+.cassetteImage {
+  display: flex;
+  justify-content: center;
+  height: 150%;
+  width: 150%;
+  background-image: url('../assets/cassette.jpg');
+  background-repeat: no-repeat;
+  background-position: 40% 50%;
+  background-size: 120%;
+}
+
+.cassetteImage > h1 {
+  margin-top: 1em;
+  height: 3em;
+}
+
+.tape {
+  background-color: hsla(0, 0%, 100%, 0.778);
+  box-shadow: inset 0 0 1em 0.5em hsla(0, 0%, 100%, 0.1);
+  height: 3em;
+  position: absolute;
+  transform: rotate(-15deg);
+  width: 10em;
+  -webkit-filter: drop-shadow(0 1px 1px hsla(0, 0%, 0%, 0.3));
+}
+.tape:after,
+.tape:before {
+  background-size: 0.4em 0.4em;
+  bottom: 0;
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 0.2em;
+}
+.tape:after {
+  background-image: linear-gradient(
+      45deg,
+      transparent 50%,
+      hsla(0, 0%, 100%, 0.3) 50%
+    ),
+    linear-gradient(-45deg, transparent 50%, hsla(0, 0%, 100%, 0.3) 50%);
+  background-position: 0 100%;
+  left: -0.2em;
+}
+.tape:before {
+  background-image: linear-gradient(
+      135deg,
+      transparent 50%,
+      hsla(0, 0%, 100%, 0.3) 50%
+    ),
+    linear-gradient(-135deg, transparent 50%, hsla(0, 0%, 100%, 0.3) 50%);
+  background-position: 100% 100%;
+  right: -0.2em;
+}
+
+#cassetteLabel {
+  text-decoration: none;
+  color: black;
+  margin-top: 20em;
+  padding: 0.5em;
+}
+
+#cassetteLabel:hover {
+  box-shadow: 0px 0px 3px 10px #94e561;
+}
+
+.credits {
+  flex-grow: 1;
+  align-self: flex-end;
+  margin-top: 3em;
+  box-shadow: 0.5em 0.5em 0.5em 0 #4b4b4b;
+  max-width: 25em;
+  max-height: 20em;
+  background-color: #1f1f27;
+  color: #94e561;
+  text-align: right;
+}
