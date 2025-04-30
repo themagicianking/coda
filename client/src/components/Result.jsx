@@ -1,4 +1,4 @@
-export default function Result({ song, handleSelect }) {
+export function Result({ song, handleSelect }) {
   const updateSelections = () => {
     handleSelect(song)
   }

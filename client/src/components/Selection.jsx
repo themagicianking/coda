@@ -1,10 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import Search from './Search.jsx'
-import SongList from './SongList.jsx'
+import { Search } from './Search.jsx'
+import { SongList } from './SongList.jsx'
 export function Selection() {
   const [selected, setSelected] = useState([])
+  const [error, setError] = useState()
   const navigate = useNavigate()
+
+  // todo: set user visible error messages for posting and deleting songs
 
   async function getAllSongs() {
     try {
@@ -20,9 +23,7 @@ export function Selection() {
           setSelected(json)
         })
     } catch (error) {
-      throw new Error(
-        `Could not get songs from server. The following error occurred: ${error}`
-      )
+      setError(error)
     }
   }
 
@@ -101,7 +102,13 @@ export function Selection() {
     <>
       <button onClick={goToPrev}>Previous</button>
       <Search handleSelect={addSong} />
-      <SongList list={selected} handleRemove={removeSong} />
+      {selected ? (
+        <SongList list={selected} handleRemove={removeSong} />
+      ) : (
+        <p>
+          Could not get songs from server. The following error occurred: {error}
+        </p>
+      )}
       <button onClick={handleNextPage}>Next</button>
     </>
   )
