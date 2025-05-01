@@ -1,17 +1,19 @@
-import { useNavigate } from 'react-router-dom'
+import { useContext } from 'react'
+import { ServerContext } from './ServerContext'
 
 export function Cassette() {
-  const navigate = useNavigate()
-
-  // const goToNext = () => {
-  //   navigate('http://localhost:5000/login')
-  // }
+  const SERVER_URL = useContext(ServerContext)
 
   return (
     <article className="cassette">
       <div className="cassetteImage">
         <h1>Coda: personalized playlists for the digital age</h1>
-        <a href="http://localhost:5000/login" id="cassetteLabel" className="tape" role="link">
+        <a
+          href={`${SERVER_URL}/login`}
+          id="cassetteLabel"
+          className="tape"
+          role="link"
+        >
           click here to get started
         </a>
       </div>

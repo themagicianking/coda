@@ -9,12 +9,14 @@ import request from 'request'
 
 const APP = express()
 const PORT = 5000
+const ENVIRONMENT = process.env.RAILWAY_ENVIRONMENT_NAME
 const { Pool } = pkg
+
 const pool = new Pool({
-  user: process.env.USER,
-  host: process.env.HOST,
-  database: process.env.DATABASE,
-  password: process.env.PASSWORD
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  password: process.env.PGPASSWORD
 })
 let accessToken = ''
 
@@ -24,7 +26,8 @@ APP.use(cookieParser())
 
 const CLIENT_ID = process.env.CLIENT_ID
 const CLIENT_SECRET = process.env.CLIENT_SECRET
-const REDIRECT_URI = 'http://localhost:5000/callback'
+const REDIRECT_URI = process.env.REDIRECT_URI
+const SELECTION_URI = process.env.SELECTION_URI
 
 const generateRandomString = (length) => {
   return crypto.randomBytes(60).toString('hex').slice(0, length)
@@ -57,7 +60,6 @@ APP.get('/callback', function (req, res) {
   const STORED_STATE = req.cookies ? req.cookies[STATEKEY] : null
 
   if (STATE === null || STATE !== STORED_STATE) {
-    console.log(STATE, STORED_STATE)
     res.redirect(
       '/#' +
         querystring.stringify({
@@ -85,12 +87,12 @@ APP.get('/callback', function (req, res) {
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
         accessToken = body.access_token
+        // todo: write function that uses refresh token to get new auth code
+        // when old auth code has expired
         // refreshToken = body.refresh_token
 
         // redirects the user to song selection page
-        res.redirect(
-          'http://localhost:5173/selection'
-        )
+        res.redirect(SELECTION_URI)
       } else {
         res.redirect(
           '/#' +

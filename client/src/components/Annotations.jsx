@@ -2,9 +2,13 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { NoteInput } from './NoteInput'
 import { SongInfo } from './SongInfo'
+import { useContext } from 'react'
+import { ServerContext } from './ServerContext'
 export function Annotations() {
+  const SERVER_URL = useContext(ServerContext)
   const [orderNum, setOrderNum] = useState(0)
   const [song, setSong] = useState()
+  const [error, setError] = useState()
   const [hasPrevSong, setHasPrevSong] = useState(false)
   const [hasNextSong, setHasNextSong] = useState(false)
   const navigate = useNavigate()
@@ -30,7 +34,7 @@ export function Annotations() {
 
   async function getNextSong() {
     try {
-      await fetch(`http://localhost:5000/nextsong?songorder=${orderNum}`)
+      await fetch(`${SERVER_URL}/nextsong?songorder=${orderNum}`)
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
@@ -50,15 +54,13 @@ export function Annotations() {
         })
     } catch (error) {
       setSong(false)
-      throw new Error(
-        `Could not fetch next song data from server. The following error occurred: ${error}`
-      )
+      setError(error)
     }
   }
 
   async function getPrevSong() {
     try {
-      await fetch(`http://localhost:5000/prevsong?songorder=${orderNum}`)
+      await fetch(`${SERVER_URL}/prevsong?songorder=${orderNum}`)
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
@@ -87,7 +89,7 @@ export function Annotations() {
 
   async function putNote() {
     try {
-      await fetch('http://localhost:5000/note', {
+      await fetch(`${SERVER_URL}/note`, {
         method: 'PUT',
         body: JSON.stringify({ note: song.note, songorder: song.songorder }),
         headers: { 'Content-Type': 'application/json' }
@@ -109,7 +111,7 @@ export function Annotations() {
   async function updateNext(nextOrderNum) {
     try {
       await fetch(
-        `http://localhost:5000/nextsongexists?songorder=${nextOrderNum}`
+        `${SERVER_URL}/nextsongexists?songorder=${nextOrderNum}`
       )
         .then((res) => {
           if (res.status >= 400) {
@@ -118,7 +120,6 @@ export function Annotations() {
           return res.json()
         })
         .then((json) => {
-          console.log(json.exists)
           if (json.exists) {
             setHasNextSong(true)
           } else {
@@ -135,7 +136,7 @@ export function Annotations() {
   async function updatePrev(prevOrderNum) {
     try {
       await fetch(
-        `http://localhost:5000/prevsongexists?songorder=${prevOrderNum}`
+        `${SERVER_URL}/prevsongexists?songorder=${prevOrderNum}`
       )
         .then((res) => {
           if (res.status >= 400) {
@@ -144,7 +145,6 @@ export function Annotations() {
           return res.json()
         })
         .then((json) => {
-          console.log(json.exists)
           if (json.exists) {
             setHasPrevSong(true)
           } else {
@@ -181,7 +181,7 @@ export function Annotations() {
           <NoteInput song={song} updateNote={updateNote} />
         </>
       ) : (
-        <></>
+        <p>Could not fetch song data. The following error occurred: {error}</p>
       )}
       {hasPrevSong ? (
         <a role="button" onClick={goToPrevSong}>

@@ -1,13 +1,13 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
+import { ServerContext } from './ServerContext.jsx'
 import Result from './Result.jsx'
 
-export default function Search({ handleSelect }) {
+export function Search({ handleSelect }) {
   const [results, setResults] = useState([])
 
   async function getResults(input) {
-    console.log(input)
     try {
-      await fetch(`http://localhost:5000/search?input=${input}`)
+      await fetch(`${SERVER_URL}/search?input=${input}`)
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
@@ -15,7 +15,6 @@ export default function Search({ handleSelect }) {
           return res.json()
         })
         .then((json) => {
-          console.log(json)
           setResults(json.tracks.items)
         })
     } catch (error) {
