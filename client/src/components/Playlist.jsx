@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SongCard } from './SongCard'
+import './playlist.css'
 
 const PERSONALIZATION = {
   title: 'A Playlist',
@@ -37,17 +38,21 @@ export function Playlist() {
   }, [])
 
   return (
-    <div>
-      <h1>{PERSONALIZATION.title}</h1>
-      <h2>
-        From {PERSONALIZATION.sender} to {PERSONALIZATION.recipient}
-      </h2>
-      <p>{PERSONALIZATION.description}</p>
-      <ol>
-        {songs.map((song) => (
-          <SongCard key={song.songorder} song={song} />
-        ))}
-      </ol>
+    <div className="playlist">
+      <div className="card">
+        <div className="title">
+          <h1>{PERSONALIZATION.title}</h1>
+          <h2>
+            From {PERSONALIZATION.sender} to {PERSONALIZATION.recipient}
+          </h2>
+        </div>
+        <p className='description'>{PERSONALIZATION.description}</p>
+        <ol className='songs'>
+          {songs.map((song) => (
+            <SongCard key={song.songorder} song={song} />
+          ))}
+        </ol>
+      </div>
       {/* This will link to the homepage component when it's created */}
       <Link to={{ pathname: '/welcome' }} role="link">
         Home

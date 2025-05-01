@@ -1,0 +1,44 @@
+.playlist {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin: 1em;
+  border-radius: 1em;
+  box-shadow: 0.5em 0.5em 0.5em 0 #9c9c9c;
+  width: 80%;
+  padding: 1.5em;
+  background-color: #1f1f27;
+}
+
+.title {
+  border-radius: 1em;
+  padding: 0.5em;
+  color: #94e561;
+  background-color: #1f1f27;
+  text-align: center;
+}
+
+.description {
+  border-radius: 1em;
+  padding: 0.5em;
+  color: #1f1f27;
+  background-color: #f8f23a;
+  text-align: center;
+}
+
+.songs {
+  flex-grow: 1;
+  border-radius: 1em;
+  padding: 0.5em;
+  background-color: #94e561;
+}
+
+
