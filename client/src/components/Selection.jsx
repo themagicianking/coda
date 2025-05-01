@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { useContext, useEffect, useState } from 'react'
 import { ServerContext } from './ServerContext.jsx'
-import Search from './Search.jsx'
-import SongList from './SongList.jsx'
+import { Search } from './Search.jsx'
+import { SongList } from './SongList.jsx'
 export function Selection() {
   const SERVER_URL = useContext(ServerContext)
   const [selected, setSelected] = useState([])

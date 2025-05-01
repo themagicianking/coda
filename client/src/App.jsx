@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Annotations } from './components/Annotations'
+import { Playlist } from './components/Playlist'
 import { Selection } from './components/Selection'
 import { Welcome } from './components/Welcome'
 import { ServerContext } from './components/ServerContext'
@@ -14,7 +15,8 @@ export function App() {
           <Route path="/welcome" element={<Welcome />} />
           <Route path="/selection" element={<Selection />} />
           <Route path="/annotations" element={<Annotations />} />
-        </Routes>
+          <Route path="/playlist" element={<Playlist />} />
+      </Routes>
       </Router>
     </ServerContext.Provider>
   )

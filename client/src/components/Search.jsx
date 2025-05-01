@@ -1,9 +1,10 @@
 import { useContext, useState } from 'react'
 import { ServerContext } from './ServerContext.jsx'
-import Result from './Result.jsx'
+import { Result } from './Result.jsx'
 
 export function Search({ handleSelect }) {
   const [results, setResults] = useState([])
+  const SERVER_URL = useContext(ServerContext)
 
   async function getResults(input) {
     try {
