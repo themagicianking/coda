@@ -8,6 +8,7 @@ export function Annotations() {
   const SERVER_URL = useContext(ServerContext)
   const [orderNum, setOrderNum] = useState(0)
   const [song, setSong] = useState()
+  const [error, setError] = useState()
   const [hasPrevSong, setHasPrevSong] = useState(false)
   const [hasNextSong, setHasNextSong] = useState(false)
   const navigate = useNavigate()
@@ -48,9 +49,7 @@ export function Annotations() {
         })
     } catch (error) {
       setSong(false)
-      throw new Error(
-        `Could not fetch next song data from server. The following error occurred: ${error}`
-      )
+      setError(error)
     }
   }
 
@@ -177,7 +176,7 @@ export function Annotations() {
           <NoteInput song={song} updateNote={updateNote} />
         </>
       ) : (
-        <></>
+        <p>Could not fetch song data. The following error occurred: {error}</p>
       )}
       {hasPrevSong ? (
         <a role="button" onClick={goToPrevSong}>

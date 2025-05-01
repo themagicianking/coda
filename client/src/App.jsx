@@ -6,7 +6,7 @@ import { ServerContext } from './components/ServerContext'
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL
 
-function App() {
+export function App() {
   return (
     <ServerContext.Provider value={SERVER_URL}>
       <Router>
@@ -19,5 +19,3 @@ function App() {
     </ServerContext.Provider>
   )
 }
-
-export default App

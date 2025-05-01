@@ -1,4 +1,4 @@
-export default function Song({ song, handleRemove }) {
+export function Song({ song, handleRemove }) {
   const updateSelections = () => {
     handleRemove(song.songorder)
   }
