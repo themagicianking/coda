@@ -49,7 +49,9 @@ export function Playlist() {
         ))}
       </ol>
       {/* This will link to the homepage component when it's created */}
-      <Link role="button">Home</Link>
+      <Link to={{ pathname: '/welcome' }} role="link">
+        Home
+      </Link>
     </div>
   )
 }
