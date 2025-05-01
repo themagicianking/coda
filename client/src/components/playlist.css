@@ -9,7 +9,7 @@
 .card {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  height: 85%;
   margin: 1em;
   border-radius: 1em;
   box-shadow: 0.5em 0.5em 0.5em 0 #9c9c9c;
@@ -30,15 +30,31 @@
   border-radius: 1em;
   padding: 0.5em;
   color: #1f1f27;
-  background-color: #f8f23a;
+  background-color: #94e561;
   text-align: center;
 }
 
 .songs {
+  display: flex;
+  flex-wrap: wrap;
   flex-grow: 1;
+  align-content: flex-start;
+  justify-content: center;
+  overflow: scroll;
+  scrollbar-color: #94e561 #1f1f27;
   border-radius: 1em;
-  padding: 0.5em;
-  background-color: #94e561;
 }
 
+.song {
+  display: flex;
+  flex-direction: column;
+  margin: 0.5em;
+  width: 44%;
+  border-radius: 1em;
+  background-color: #94e561;
+  padding: 1em;
+}
 
+.song > * {
+  text-align: center;
+}

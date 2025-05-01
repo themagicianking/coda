@@ -46,8 +46,8 @@ export function Playlist() {
             From {PERSONALIZATION.sender} to {PERSONALIZATION.recipient}
           </h2>
         </div>
-        <p className='description'>{PERSONALIZATION.description}</p>
-        <ol className='songs'>
+        <p className="description">{PERSONALIZATION.description}</p>
+        <ol className="songs">
           {songs.map((song) => (
             <SongCard key={song.songorder} song={song} />
           ))}
