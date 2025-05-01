@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { Search } from './Search.jsx'
-import { SongList } from './SongList.jsx'
+import { useContext, useEffect, useState } from 'react'
+import { ServerContext } from './ServerContext.jsx'
+import Search from './Search.jsx'
+import SongList from './SongList.jsx'
 export function Selection() {
+  const SERVER_URL = useContext(ServerContext)
   const [selected, setSelected] = useState([])
   const [error, setError] = useState()
   const navigate = useNavigate()
@@ -11,12 +13,11 @@ export function Selection() {
 
   async function getAllSongs() {
     try {
-      await fetch('http://localhost:5000/allsongs')
+      await fetch(`${SERVER_URL}/allsongs`)
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
           }
-          console.log('Got all songs from the server.')
           return res.json()
         })
         .then((json) => {
@@ -42,7 +43,7 @@ export function Selection() {
 
   async function postSong(song) {
     try {
-      fetch('http://localhost:5000/song', {
+      fetch(`${SERVER_URL}/song`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(song)
@@ -67,7 +68,7 @@ export function Selection() {
 
   async function deleteSong(songorder) {
     try {
-      fetch('http://localhost:5000/song', {
+      fetch(`${SERVER_URL}/song`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ songorder: songorder })
