@@ -1,63 +1,44 @@
-import { useState } from 'react'
-import Result from './Result.jsx'
+import { useContext, useState } from 'react'
+import { ServerContext } from './ServerContext.jsx'
+import { Result } from './Result.jsx'
 
-export default function Search({ handleSelect }) {
+export function Search({ handleSelect }) {
   const [results, setResults] = useState([])
-  const sampleItems = [
-    {
-      spotifyid: 0,
-      artist: 'Indigo Girls',
-      title: 'Closer to Fine',
-      lyrics: '',
-      note: ''
-    },
-    {
-      spotifyid: 1,
-      artist: 'CHVRCHES',
-      title: 'Empty Threat',
-      lyrics: '',
-      note: ''
-    },
-    {
-      spotifyid: 2,
-      artist: 'Twenty One Pilots',
-      title: 'Stressed Out',
-      lyrics: '',
-      note: ''
-    },
-    { spotifyid: 3, artist: 'AJR', title: 'Bang', lyrics: '', note: '' },
-    {
-      spotifyid: 4,
-      artist: 'cavetown',
-      title: 'This is Home',
-      lyrics: '',
+  const SERVER_URL = useContext(ServerContext)
+
+  async function getResults(input) {
+    try {
+      await fetch(`${SERVER_URL}/search?input=${input}`)
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          return res.json()
+        })
+        .then((json) => {
+          setResults(json.tracks.items)
+        })
+    } catch (error) {
+      throw new Error(
+        `Could not connect to API. The following error occurred: ${error}`
+      )
+    }
+  }
+
+  function formatSong(song) {
+    // todo: incorporate songs with multiple artists
+    // todo: figure out if it's possible to get lyrics
+    return {
+      spotifyid: song.id,
+      title: song.name,
+      artist: song.artists[0].name,
       note: ''
     }
-  ]
+  }
 
-  // async function getResults(input) {
-  //   try {
-  //     await fetch(`https://api.spotify.com/v1/search${input}`)
-  //       .then((res) => {
-  //         if (res.status >= 400) {
-  //           throw res.status
-  //         }
-  //         return res.json()
-  //       })
-  //       .then((json) => {
-  //         setResults(json)
-  //       })
-  //   } catch (error) {
-  //     throw new Error(
-  //       `Could not connect to API. The following error occurred: ${error}`
-  //     )
-  //   }
-  // }
-
-  const handleSearch = () => {
-    // let input = event.target.value
-    // getResults(input)
-    setResults(sampleItems)
+  const handleSearch = (event) => {
+    let input = event.target.value
+    getResults(input)
   }
 
   return (
@@ -73,8 +54,8 @@ export default function Search({ handleSelect }) {
         <ol>
           {results.map((song) => (
             <Result
-              key={song.spotifyid}
-              song={song}
+              key={song.id}
+              song={formatSong(song)}
               handleSelect={handleSelect}
             />
           ))}

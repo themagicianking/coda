@@ -14,7 +14,7 @@
 
 .about {
   flex-grow: 1;
-  box-shadow: .5em .5em .5em 0 #9c9c9c;
+  box-shadow: 0.5em 0.5em 0.5em 0 #9c9c9c;
   width: 25em;
   height: fit-content;
   background-color: #94e561;
@@ -32,6 +32,8 @@
 }
 
 .cassetteImage {
+  display: flex;
+  justify-content: center;
   height: 150%;
   width: 150%;
   background-image: url('../assets/cassette.jpg');
@@ -85,7 +87,9 @@
 }
 
 #cassetteLabel {
-  margin: 5em 0 0 15em;
+  text-decoration: none;
+  color: black;
+  margin-top: 20em;
   padding: 0.5em;
 }
 
@@ -97,10 +101,10 @@
   flex-grow: 1;
   align-self: flex-end;
   margin-top: 3em;
-  box-shadow: .5em .5em .5em 0 #4b4b4b;
+  box-shadow: 0.5em 0.5em 0.5em 0 #4b4b4b;
   max-width: 25em;
   max-height: 20em;
   background-color: #1f1f27;
-  color:#94E561;
+  color: #94e561;
   text-align: right;
 }
