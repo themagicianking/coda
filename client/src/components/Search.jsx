@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react'
 import { ServerContext } from './ServerContext.jsx'
 import { Result } from './Result.jsx'
+import './selection.css'
 
 export function Search({ handleSelect }) {
   const [results, setResults] = useState([])
@@ -51,7 +52,7 @@ export function Search({ handleSelect }) {
         onChange={handleSearch}
       />
       {results.length > 0 ? (
-        <ol>
+        <ol className="results">
           {results.map((song) => (
             <Result
               key={song.id}

@@ -9,11 +9,18 @@
 
 .lists {
   display: flex;
+  max-height: 80%;
 }
 
 .lists > * {
+  display: flex;
+  flex-direction: column;
   margin: 1em;
-  
+}
+
+.results {
+  overflow: scroll;
+  scrollbar-color: #94e561 #1f1f27;
 }
 
 .nav {
