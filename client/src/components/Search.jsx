@@ -4,7 +4,8 @@ import { Result } from './Result.jsx'
 import './selection.css'
 
 export function Search({ handleSelect }) {
-  const [results, setResults] = useState([])
+  const [results, setResults] = useState()
+  const [error, setError] = useState()
   const SERVER_URL = useContext(ServerContext)
 
   async function getResults(input) {
@@ -17,12 +18,14 @@ export function Search({ handleSelect }) {
           return res.json()
         })
         .then((json) => {
-          setResults(json.tracks.items)
+          if (json.tracks.items) {
+            setResults(json.tracks.items)
+          } else {
+            setError('Could not retrieve Spotify search results.')
+          }
         })
-    } catch (error) {
-      throw new Error(
-        `Could not connect to API. The following error occurred: ${error}`
-      )
+    } catch (e) {
+      setError(`Could not connect to API. The following error occurred: ${e}`)
     }
   }
 
@@ -51,7 +54,7 @@ export function Search({ handleSelect }) {
         aria-label="Search"
         onChange={handleSearch}
       />
-      {results.length > 0 ? (
+      {results ? (
         <ol className="results">
           {results.map((song) => (
             <Result
@@ -62,7 +65,7 @@ export function Search({ handleSelect }) {
           ))}
         </ol>
       ) : (
-        <></>
+        <p>{error}</p>
       )}
     </article>
   )
