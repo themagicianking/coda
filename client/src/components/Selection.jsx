@@ -104,7 +104,7 @@ export function Selection() {
 
   return (
     <div className="selection">
-      <h1>Choose Your Songs</h1>
+      <h1 className='title'>Choose Your Songs</h1>
       <div className="lists">
         <Search handleSelect={addSong} />
         {selected ? (

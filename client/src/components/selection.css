@@ -1,3 +1,5 @@
+/* todo: remove highlight on unfocus on buttons */
+
 .selection {
   display: flex;
   flex-direction: column;
@@ -6,12 +8,21 @@
   height: 100vh;
 }
 
+.selection .title {
+  padding: 0.5em 0 0 0;
+  text-align: center;
+}
+
 .lists {
   display: flex;
   flex-grow: 1;
   max-height: 80%;
   width: 80%;
   justify-content: center;
+}
+
+.lists h2 {
+  text-align: center;
 }
 
 .lists > * {
