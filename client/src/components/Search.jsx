@@ -51,6 +51,7 @@ export function Search({ handleSelect }) {
       <input
         type="search"
         name="search"
+        autoComplete='off'
         placeholder="Search"
         aria-label="Search"
         onChange={handleSearch}
