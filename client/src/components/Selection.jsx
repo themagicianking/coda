@@ -3,9 +3,11 @@ import { useContext, useEffect, useState } from 'react'
 import { ServerContext } from './ServerContext.jsx'
 import { Search } from './Search.jsx'
 import { SongList } from './SongList.jsx'
+import './selection.css'
+
 export function Selection() {
   const SERVER_URL = useContext(ServerContext)
-  const [selected, setSelected] = useState([])
+  const [selected, setSelected] = useState()
   const [error, setError] = useState()
   const navigate = useNavigate()
 
@@ -21,10 +23,11 @@ export function Selection() {
           return res.json()
         })
         .then((json) => {
+          console.log(json)
           setSelected(json)
         })
-    } catch (error) {
-      setError(error)
+    } catch (e) {
+      setError(e.message)
     }
   }
 
@@ -100,17 +103,23 @@ export function Selection() {
   }
 
   return (
-    <>
-      <button onClick={goToPrev}>Previous</button>
-      <Search handleSelect={addSong} />
-      {selected ? (
-        <SongList list={selected} handleRemove={removeSong} />
-      ) : (
-        <p>
-          Could not get songs from server. The following error occurred: {error}
-        </p>
-      )}
-      <button onClick={handleNextPage}>Next</button>
-    </>
+    <div className="selection">
+      <h1 className='title'>Choose Your Songs</h1>
+      <div className="lists">
+        <Search handleSelect={addSong} />
+        {selected ? (
+          <SongList list={selected} handleRemove={removeSong} />
+        ) : (
+          <p>
+            Could not get songs from server. The following error occurred:{' '}
+            {error}
+          </p>
+        )}
+      </div>
+      <div className="nav">
+        <button onClick={goToPrev}>Previous</button>
+        <button onClick={handleNextPage}>Next</button>
+      </div>
+    </div>
   )
 }
