@@ -7,7 +7,7 @@ import './selection.css'
 
 export function Selection() {
   const SERVER_URL = useContext(ServerContext)
-  const [selected, setSelected] = useState([])
+  const [selected, setSelected] = useState()
   const [error, setError] = useState()
   const navigate = useNavigate()
 
@@ -23,10 +23,11 @@ export function Selection() {
           return res.json()
         })
         .then((json) => {
+          console.log(json)
           setSelected(json)
         })
-    } catch (error) {
-      setError(error)
+    } catch (e) {
+      setError(e.message)
     }
   }
 

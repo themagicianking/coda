@@ -18,9 +18,9 @@ export function Search({ handleSelect }) {
           return res.json()
         })
         .then((json) => {
-          if (json.tracks.items) {
+          try {
             setResults(json.tracks.items)
-          } else {
+          } catch {
             setError('Could not retrieve Spotify search results.')
           }
         })
