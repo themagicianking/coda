@@ -47,6 +47,7 @@ export function Search({ handleSelect }) {
 
   return (
     <article>
+      <h2>Search Spotify</h2>
       <input
         type="search"
         name="search"

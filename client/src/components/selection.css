@@ -1,7 +1,6 @@
 .selection {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
   width: 100vw;
   height: 100vh;
@@ -9,18 +8,26 @@
 
 .lists {
   display: flex;
+  flex-grow: 1;
   max-height: 80%;
+  width: 80%;
+  justify-content: center;
 }
 
 .lists > * {
   display: flex;
   flex-direction: column;
+  border-radius: 1em;
+  box-shadow: 0.5em 0.5em 0.5em 0 #9c9c9c;
   margin: 1em;
+  width: 50%;
+  background-color: #94e561;
+  padding: 1em;
 }
 
 .results {
   overflow: scroll;
-  scrollbar-color: #94e561 #1f1f27;
+  scrollbar-color: #94e561 #ffffff;
 }
 
 .nav {
