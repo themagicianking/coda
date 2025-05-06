@@ -1,0 +1,28 @@
+.selection {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.lists {
+  display: flex;
+}
+
+.lists > * {
+  margin: 1em;
+  
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  margin: 1em;
+  width: 100%;
+}
+
+.nav > * {
+  margin: 0 5em;
+}

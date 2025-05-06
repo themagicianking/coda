@@ -102,18 +102,22 @@ export function Selection() {
   }
 
   return (
-    <>
-      <button onClick={goToPrev}>Previous</button>
-      <Search handleSelect={addSong} />
-      {selected ? (
-        <SongList list={selected} handleRemove={removeSong} />
-      ) : (
-        <p>
-          Could not get songs from server. The following error occurred: {error}
-        </p>
-      )}
-      <button onClick={handleNextPage}>Next</button>
-      {/* Photo by <a href="https://unsplash.com/@enginakyurt?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">engin akyurt</a> on <a href="https://unsplash.com/photos/a-black-crumpled-paper-background-with-a-black-background-Ya-IIca3PjM?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a> */}
-    </>
+    <div className="selection">
+      <div className="lists">
+        <Search handleSelect={addSong} />
+        {selected ? (
+          <SongList list={selected} handleRemove={removeSong} />
+        ) : (
+          <p>
+            Could not get songs from server. The following error occurred:{' '}
+            {error}
+          </p>
+        )}
+      </div>
+      <div className="nav">
+        <button onClick={goToPrev}>Previous</button>
+        <button onClick={handleNextPage}>Next</button>
+      </div>
+    </div>
   )
 }
