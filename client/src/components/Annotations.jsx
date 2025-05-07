@@ -23,7 +23,6 @@ function getCookie(cname) {
 
 export function Annotations() {
   const SERVER_URL = useContext(ServerContext)
-  const [userid, setUserid] = useState('sample')
   const [orderNum, setOrderNum] = useState(0)
   const [song, setSong] = useState()
   const [error, setError] = useState()
@@ -44,11 +43,7 @@ export function Annotations() {
 
   const goToNextPage = () => {
     putNote()
-    // get user id
     getUserId()
-    // create spotify playlist
-    createPlaylist()
-    // post all songs to spotify playlist
     navigate('/playlist')
   }
 
@@ -66,7 +61,7 @@ export function Annotations() {
           return res.json()
         })
         .then((json) => {
-          setUserid(json.id)
+          createPlaylist(json.id)
         })
     } catch (error) {
       console.log(
@@ -75,7 +70,7 @@ export function Annotations() {
     }
   }
 
-  async function createPlaylist() {
+  async function createPlaylist(userid) {
     try {
       await fetch(`${SERVER_URL}/spotifyplaylist`, {
         method: 'POST',

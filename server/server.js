@@ -275,31 +275,44 @@ APP.post('/song', async (req, res) => {
   }
 })
 
+APP.post()
+
 APP.post('/spotifyplaylist', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+
   const USERID = req.body.userid
   const ACCESS_TOKEN = req.body.ACCESS_TOKEN
 
+  // todo: add in actual personalization for name and description
+
+  const options = {
+    url: `https://api.spotify.com/v1/users/${USERID}/playlists`,
+    headers: {
+      Authorization: 'Bearer ' + ACCESS_TOKEN
+    },
+    body: {
+      name: 'Playlist Test Name',
+      public: true,
+      collaborative: false,
+      description: 'Playlist test description'
+    },
+    json: true
+  }
+
   try {
-    await fetch(`https://api.spotify.com/v1/users/${USERID}/playlists`, {
-      method: 'POST',
-      headers: {
-        Authorization: 'Bearer ' + ACCESS_TOKEN,
-        'Content-Type': 'application/json'
-      },
-      body: {
-        name: 'Playlist Test Name',
-        public: true,
-        collaborative: false,
-        description: 'Playlist test description'
-      }
-    }).then((res) => {
-      console.log(res)
-      if (res.status >= 400) {
-        throw res.statusText
-      }
-      console.log('Successfully created new playlist.')
-      res.send(200)
-    })
+    request
+      .post(options, function (error, response, body) {
+        console.log(body)
+      })
+      .then((res) => {
+        console.log(res)
+        if (res.status >= 400) {
+          throw res.statusText
+        }
+        console.log('Successfully created new playlist.')
+        res.send(200)
+      })
   } catch (error) {
     res.status(500).send(error)
   }
