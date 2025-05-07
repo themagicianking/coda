@@ -4,11 +4,15 @@ export function NoteInput({ song, updateNote }) {
   }
 
   return (
-    <input
-      type="text"
-      name="note"
-      value={song.note}
-      onChange={getUserText}
-    />
+    <div>
+      <textarea
+        type="text"
+        name="note"
+        placeholder="Add your note here..."
+        value={song.note}
+        style={{ maxWidth: '100%', height: '50%' }}
+        onChange={getUserText}
+      />
+    </div>
   )
 }
