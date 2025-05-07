@@ -275,12 +275,31 @@ APP.post('/song', async (req, res) => {
   }
 })
 
-APP.post()
-
-APP.post('/spotifyplaylist', async (req, res) => {
+APP.post('/playlist', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
+  const PLAYLIST = req.body
 
+  try {
+    await DATABASE.query(
+      `INSERT INTO playlists (playlistname, playlistdesc, sender, recipient) VALUES($1,$2,$3,$4)`,
+      [
+        PLAYLIST.playlistname,
+        PLAYLIST.playlistdec,
+        PLAYLIST.sender,
+        PLAYLIST.recipient
+      ]
+    ).then(() => {
+      console.log(
+        `Posted the following playlist to the database: ${JSON.stringify(PLAYLIST)}`
+      )
+    })
+  } catch (error) {
+    res.status(501).send(error)
+  }
+})
+
+APP.post('/spotifyplaylist', async (req, res) => {
   const USERID = req.body.userid
   const ACCESS_TOKEN = req.body.ACCESS_TOKEN
 
