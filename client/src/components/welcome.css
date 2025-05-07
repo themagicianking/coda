@@ -16,7 +16,7 @@
 
 .about {
   flex-grow: 1;
-  box-shadow: 0.5em 0.5em 0.5em 0 #9c9c9c;
+  box-shadow: 0.25em 0.25em 0.5em 0em #9c9c9c;
   width: 25em;
   height: fit-content;
   background-color: #94e561;
@@ -110,7 +110,7 @@
   flex-grow: 1;
   align-self: flex-end;
   margin-top: 3em;
-  box-shadow: 0.5em 0.5em 0.5em 0 #4b4b4b;
+  box-shadow: 0.25em 0.25em 0.5em 0em #9c9c9c;
   max-width: 25em;
   max-height: 20em;
   background-color: #1f1f27;
