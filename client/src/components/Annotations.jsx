@@ -172,27 +172,32 @@ export function Annotations() {
     <div className="annotations">
       <h1 className="title">Add Your Notes</h1>
       {song ? (
-        <div className="main">
-          <SongInfo song={song} />
-          <NoteInput song={song} updateNote={updateNote} />
-        </div>
+        <>
+          <div className="main">
+            <SongInfo song={song} />
+            <NoteInput song={song} updateNote={updateNote} />
+          </div>
+          <div className="annotationNav">
+            {hasPrevSong ? (
+              <a role="button" onClick={goToPrevSong}>
+                <button>Previous Song</button>
+              </a>
+            ) : (
+              <></>
+            )}
+            {hasNextSong ? (
+              <a role="button" onClick={goToNextSong}>
+                <button>Next Song</button>
+              </a>
+            ) : (
+              <></>
+            )}
+          </div>
+        </>
       ) : (
         <p>Could not fetch song data. The following error occurred: {error}</p>
       )}
-      {hasPrevSong ? (
-        <a role="button" onClick={goToPrevSong}>
-          Previous Song
-        </a>
-      ) : (
-        <></>
-      )}
-      {hasNextSong ? (
-        <a role="button" onClick={goToNextSong}>
-          Next Song
-        </a>
-      ) : (
-        <></>
-      )}
+
       <div className="nav">
         <button>
           <a role="button" onClick={handlePrevPage}>
