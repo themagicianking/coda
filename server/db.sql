@@ -1,10 +1,21 @@
 DROP TABLE IF EXISTS songs;
+DROP TABLE IF EXISTS playlist;
 
 CREATE TABLE songs (
   songorder SERIAL PRIMARY KEY,
-  spotifyid VARCHAR(255) NOT NULL,
+  spotifyid VARCHAR(5000) NOT NULL,
+  playlistid VARCHAR(5000) NOT NULL,
   artist VARCHAR(255) NOT NULL,
   title VARCHAR(255) NOT NULL,
   lyrics VARCHAR(5000),
   note VARCHAR(5000) NOT NULL
 );
+
+CREATE TABLE playlist (
+  id SERIAL PRIMARY KEY,
+  spotifyid VARCHAR(5000) NOT NULL,
+  playlistname VARCHAR(255) NOT NULL,
+  playlistdesc VARCHAR(5000) NOT NULL,
+  sender VARCHAR(255) NOT NULL,
+  recipient VARCHAR(255) NOT NULL,
+)
