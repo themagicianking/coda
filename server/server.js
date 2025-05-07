@@ -19,6 +19,7 @@ const pool = new Pool({
   password: process.env.PGPASSWORD
 })
 let accessToken = ''
+let userid = ''
 
 APP.use(cors())
 APP.use(express.json())
@@ -87,6 +88,17 @@ APP.get('/callback', function (req, res) {
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
         accessToken = body.access_token
+
+        let options = {
+          url: 'https://api.spotify.com/v1/me',
+          headers: { Authorization: 'Bearer ' + accessToken },
+          json: true
+        }
+
+        request.get(options, function (error, response, body) {
+          userid = body.id
+        })
+
         // todo: write function that uses refresh token to get new auth code
         // when old auth code has expired
         // refreshToken = body.refresh_token
@@ -127,10 +139,12 @@ APP.get('/allsongs', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   try {
-    await DATABASE.query('SELECT * FROM songs ORDER BY songorder;').then((songs) => {
-      console.log('Sending all songs to the client.')
-      res.send(songs.rows)
-    })
+    await DATABASE.query('SELECT * FROM songs ORDER BY songorder;').then(
+      (songs) => {
+        console.log('Sending all songs to the client.')
+        res.send(songs.rows)
+      }
+    )
   } catch (error) {
     res.status(500).send(error)
   }
@@ -242,6 +256,27 @@ APP.post('/song', async (req, res) => {
     })
   } catch (error) {
     res.status(501).send(error)
+  }
+})
+
+APP.post('/playlist', async (req, res) => {
+  try {
+    await fetch(`https://api.spotify.com/v1/users/${userid}/playlists`, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+        'Content-Type': 'application/json'
+      },
+      body: {
+        name: 'Playlist Test Name',
+        description: 'Playlist test description'
+      }
+    }).then((res) => {
+      console.log('Successfully created new playlist.')
+      res.send(200)
+    })
+  } catch (error) {
+    res.status(500).send(error)
   }
 })
 
