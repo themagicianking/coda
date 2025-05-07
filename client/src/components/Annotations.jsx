@@ -44,7 +44,7 @@ export function Annotations() {
   const goToNextPage = () => {
     putNote()
     getUserId()
-    navigate('/playlist')
+    navigate('/personalization')
   }
 
   const updateNote = (newNote) => {
@@ -268,7 +268,7 @@ export function Annotations() {
         {/* currently links to playlist view since personalization does not yet exist */}
 
         <a role="button" onClick={goToNextPage}>
-          <button>Submit</button>
+          <button>Next</button>
         </a>
       </div>
     </div>
