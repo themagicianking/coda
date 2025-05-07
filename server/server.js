@@ -18,7 +18,7 @@ const pool = new Pool({
   database: process.env.PGDATABASE,
   password: process.env.PGPASSWORD
 })
-let accessToken = ''
+// let accessToken = ''
 let userid = ''
 
 APP.use(cors())
@@ -59,6 +59,7 @@ APP.get('/callback', function (req, res) {
   const CODE = req.query.code || null
   const STATE = req.query.state || null
   const STORED_STATE = req.cookies ? req.cookies[STATEKEY] : null
+  const ACCESS_TOKEN = req.cookies ? req.cookies.ACCESS_TOKEN : null
 
   if (STATE === null || STATE !== STORED_STATE) {
     res.redirect(
@@ -87,11 +88,13 @@ APP.get('/callback', function (req, res) {
 
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
-        accessToken = body.access_token
+        let access_token = body.access_token
+        res.clearCookie('ACCESS_TOKEN')
+        res.cookie('ACCESS_TOKEN', access_token)
 
         let options = {
           url: 'https://api.spotify.com/v1/me',
-          headers: { Authorization: 'Bearer ' + accessToken },
+          headers: { Authorization: 'Bearer ' + ACCESS_TOKEN },
           json: true
         }
 
@@ -122,7 +125,7 @@ APP.get('/search', async (req, res) => {
   const options = {
     url: `https://api.spotify.com/v1/search?q=track%3A${INPUT}&type=track&include_external=audio`,
     headers: {
-      Authorization: 'Bearer ' + accessToken
+      Authorization: 'Bearer ' + ACCESS_TOKEN
     },
     json: true
   }
@@ -265,7 +268,7 @@ APP.post('/spotifyplaylist', async (req, res) => {
     await fetch(`https://api.spotify.com/v1/users/${USERID}/playlists`, {
       method: 'PUT',
       headers: {
-        Authorization: 'Bearer ' + accessToken,
+        Authorization: 'Bearer ' + ACCESS_TOKEN,
         'Content-Type': 'application/json'
       },
       body: {
@@ -288,7 +291,7 @@ APP.post('/spotifysongs', async (req, res) => {
     await fetch(`https://api.spotify.com/v1/playlists/${PLAYLISTID}/tracks`, {
       method: 'PUT',
       headers: {
-        Authorization: 'Bearer ' + accessToken,
+        Authorization: 'Bearer ' + ACCESS_TOKEN,
         'Content-Type': 'application/json'
       },
       body: {

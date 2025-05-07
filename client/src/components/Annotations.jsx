@@ -27,6 +27,8 @@ export function Annotations() {
 
   const goToNextPage = () => {
     putNote()
+    // create spotify playlist
+    // post all songs to spotify playlist
     navigate('/playlist')
   }
 
@@ -207,7 +209,7 @@ export function Annotations() {
         {/* currently links to playlist view since personalization does not yet exist */}
 
         <a role="button" onClick={goToNextPage}>
-          <button>Next</button>
+          <button>Submit</button>
         </a>
       </div>
     </div>
