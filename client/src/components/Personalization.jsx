@@ -2,29 +2,49 @@ import { useContext } from 'react'
 import { ServerContext } from './ServerContext.jsx'
 import { useNavigate } from 'react-router-dom'
 
+function getCookie(cname) {
+  let name = cname + '='
+  let ca = document.cookie.split(';')
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i]
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1)
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length)
+    }
+  }
+  return ''
+}
+
 export function Personalization() {
   const SERVER_URL = useContext(ServerContext)
+  const ACCESS_TOKEN = getCookie('ACCESS_TOKEN')
+  const PLAYLISTID = getCookie('playlistid')
   const navigate = useNavigate()
 
   const handlePrevPage = () => {
     navigate('/annotations')
   }
+
   const handleSubmit = (event) => {
     event.preventDefault()
 
     const FORM_DATA = {
+      id: PLAYLISTID,
       name: event.target.name.value,
       sender: event.target.sender.value,
       recipient: event.target.recipient.value,
-      decription: event.target.description.value
+      description: event.target.description.value
     }
 
-    createPlaylist(FORM_DATA)
+    createPlaylistPersonalization(FORM_DATA)
+    getUserId(FORM_DATA)
 
     // navigate('/playlist')
   }
 
-  async function createPlaylist(personalization) {
+  async function createPlaylistPersonalization(personalization) {
     try {
       await fetch(`${SERVER_URL}/playlist`, {
         method: 'POST',
@@ -41,6 +61,54 @@ export function Personalization() {
     } catch (error) {
       console.log(
         `Could not post playlist. The following error occurred: ${error}`
+      )
+    }
+  }
+
+  async function getUserId(personalization) {
+    try {
+      await fetch(`${SERVER_URL}/userid?ACCESS_TOKEN=${ACCESS_TOKEN}`)
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          return res.json()
+        })
+        .then((json) => {
+          createPlaylist(json.id, personalization)
+        })
+    } catch (error) {
+      console.log(
+        `Could not get userid. The following error occurred: ${error}`
+      )
+    }
+  }
+
+  async function createPlaylist(userid, personalization) {
+    try {
+      await fetch(`${SERVER_URL}/spotifyplaylist`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userid: userid,
+          personalization: personalization,
+          ACCESS_TOKEN: ACCESS_TOKEN
+        })
+      })
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          return res.json()
+        })
+        .then((json) => {
+          console.log(
+            `Successfully created playlist, server returned response ${json}`
+          )
+        })
+    } catch (error) {
+      console.log(
+        `Could not create playlist. The following error occurred: ${error}`
       )
     }
   }

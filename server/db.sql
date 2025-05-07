@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS songs;
+
 DROP TABLE IF EXISTS playlist;
 
 CREATE TABLE songs (
@@ -12,10 +13,10 @@ CREATE TABLE songs (
 );
 
 CREATE TABLE playlists (
-  id SERIAL PRIMARY KEY,
-  spotifyid VARCHAR(5000) NOT NULL,
+  id VARCHAR PRIMARY KEY,
+  spotifyid VARCHAR(5000),
   playlistname VARCHAR(255) NOT NULL,
   playlistdesc VARCHAR(5000) NOT NULL,
   sender VARCHAR(255) NOT NULL,
-  recipient VARCHAR(255) NOT NULL,
+  recipient VARCHAR(255) NOT NULL
 )

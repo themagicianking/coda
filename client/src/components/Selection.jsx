@@ -5,10 +5,26 @@ import { Search } from './Search.jsx'
 import { SongList } from './SongList.jsx'
 import './selection.css'
 
+function getCookie(cname) {
+  let name = cname + '='
+  let ca = document.cookie.split(';')
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i]
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1)
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length)
+    }
+  }
+  return ''
+}
+
 export function Selection() {
   const SERVER_URL = useContext(ServerContext)
   const [selected, setSelected] = useState()
   const [error, setError] = useState()
+  const PLAYLISTID = getCookie('playlistid')
   const navigate = useNavigate()
 
   // todo: set user visible error messages for posting and deleting songs
@@ -33,6 +49,10 @@ export function Selection() {
 
   useEffect(() => {
     getAllSongs()
+    if (PLAYLISTID === null) {
+      const ID = crypto.randomUUID()
+      document.cookie = `playlistid=${ID}`
+    }
   }, [])
 
   useEffect(() => {}, [selected])
@@ -49,7 +69,7 @@ export function Selection() {
       fetch(`${SERVER_URL}/song`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(song)
+        body: JSON.stringify({ playlistid: getCookie('playlistid'), ...song })
       })
         .then((res) => {
           if (res.status >= 400) {

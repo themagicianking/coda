@@ -262,8 +262,15 @@ APP.post('/song', async (req, res) => {
   const SONG = req.body
   try {
     await DATABASE.query(
-      `INSERT INTO songs (spotifyid, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5)`,
-      [SONG.spotifyid, SONG.artist, SONG.title, SONG.lyrics, SONG.note]
+      `INSERT INTO songs (playlistid, spotifyid, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6)`,
+      [
+        SONG.playlistid,
+        SONG.spotifyid,
+        SONG.artist,
+        SONG.title,
+        SONG.lyrics,
+        SONG.note
+      ]
     ).then(() => {
       console.log(
         `Posted the following song to the database: ${JSON.stringify(SONG)}`
@@ -281,18 +288,16 @@ APP.post('/playlist', async (req, res) => {
   const PERSONALIZATION = req.body
 
   try {
-    const PLAYLIST = await DATABASE.query(
-      `INSERT INTO playlists (playlistname, playlistdesc, sender, recipient) VALUES($1,$2,$3,$4)`,
+    await DATABASE.query(
+      `INSERT INTO playlists (id, playlistname, playlistdesc, sender, recipient) VALUES($1,$2,$3,$4,$5)`,
       [
-        PERSONALIZATION.playlistname,
-        PERSONALIZATION.playlistdec,
+        PERSONALIZATION.id,
+        PERSONALIZATION.name,
+        PERSONALIZATION.description,
         PERSONALIZATION.sender,
         PERSONALIZATION.recipient
       ]
-    )
-
-    return PLAYLIST.then((playlist) => {
-      console.log(playlist)
+    ).then(() => {
       console.log(
         `Posted the following playlist to the database: ${JSON.stringify(PERSONALIZATION)}`
       )
@@ -304,9 +309,8 @@ APP.post('/playlist', async (req, res) => {
 
 APP.post('/spotifyplaylist', async (req, res) => {
   const USERID = req.body.userid
+  const PERSONALIZATION = req.body.personalization
   const ACCESS_TOKEN = req.body.ACCESS_TOKEN
-
-  // todo: add in actual personalization for name and description
 
   const options = {
     url: `https://api.spotify.com/v1/users/${USERID}/playlists`,
@@ -314,27 +318,22 @@ APP.post('/spotifyplaylist', async (req, res) => {
       Authorization: 'Bearer ' + ACCESS_TOKEN
     },
     body: {
-      name: 'Playlist Test Name',
+      name: PERSONALIZATION.name,
       public: true,
       collaborative: false,
-      description: 'Playlist test description'
+      description: PERSONALIZATION.description
     },
     json: true
   }
 
   try {
-    request
-      .post(options, function (error, response, body) {
-        console.log(body)
-      })
-      .then((res) => {
-        console.log(res)
-        if (res.status >= 400) {
-          throw res.statusText
-        }
-        console.log('Successfully created new playlist.')
-        res.send(200)
-      })
+    request.post(options, function (error, response, body) {
+      if (res.status >= 400) {
+        throw res.statusText
+      }
+      console.log('Successfully created new playlist.')
+      res.status(200)
+    })
   } catch (error) {
     res.status(500).send(error)
   }
