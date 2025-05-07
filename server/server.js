@@ -262,6 +262,7 @@ APP.post('/song', async (req, res) => {
 
 APP.post('/spotifyplaylist', async (req, res) => {
   const USERID = req.body.userid
+
   try {
     await fetch(`https://api.spotify.com/v1/users/${USERID}/playlists`, {
       method: 'PUT',
@@ -278,6 +279,7 @@ APP.post('/spotifyplaylist', async (req, res) => {
       res.send(200)
     })
   } catch (error) {
+    console.log(`here is the body, ${req.body}`)
     res.status(500).send(error)
   }
 })

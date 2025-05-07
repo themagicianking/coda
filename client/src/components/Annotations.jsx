@@ -8,7 +8,7 @@ import './annotations.css'
 
 export function Annotations() {
   const SERVER_URL = useContext(ServerContext)
-  const [userid, setUserid] = useState()
+  const [userid, setUserid] = useState('sample')
   const [orderNum, setOrderNum] = useState(0)
   const [song, setSong] = useState()
   const [error, setError] = useState()
@@ -29,7 +29,7 @@ export function Annotations() {
   const goToNextPage = () => {
     putNote()
     // get user id
-    getUserId()
+    // getUserId()
     // create spotify playlist
     createPlaylist()
     // post all songs to spotify playlist
@@ -40,15 +40,16 @@ export function Annotations() {
     setSong({ ...song, note: newNote })
   }
 
-  async function getUserId() {
-    setUserid('sampleid')
-  }
+  // async function getUserId() {
+  //   setUserid('sampleid')
+  // }
 
   async function createPlaylist() {
     try {
       await fetch(`${SERVER_URL}/spotifyplaylist`, {
         method: 'POST',
-        body: { userid: userid }
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userid: userid })
       })
         .then((res) => {
           if (res.status >= 400) {
