@@ -15,6 +15,7 @@ export function Playlist() {
   const navigate = useNavigate()
 
   const goHome = () => {
+    clearCookie()
     navigate('/welcome')
   }
 

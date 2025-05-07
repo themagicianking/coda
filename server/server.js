@@ -238,6 +238,16 @@ APP.get('/nextsongexists', async (req, res) => {
   }
 })
 
+APP.get('/clearcookies', async (req, res) => {
+  try {
+    res.clearCookie('ACCESS_TOKEN')
+    res.clearCookie('playlistid')
+    res.send('Successfully cleared cookies.')
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
+
 APP.put('/note', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()

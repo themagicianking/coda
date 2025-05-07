@@ -41,7 +41,7 @@ export function Personalization() {
     createPlaylistPersonalization(FORM_DATA)
     getUserId(FORM_DATA)
 
-    // navigate('/playlist')
+    navigate('/playlist')
   }
 
   async function createPlaylistPersonalization(personalization) {
