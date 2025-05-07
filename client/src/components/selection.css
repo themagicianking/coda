@@ -41,6 +41,22 @@
   scrollbar-color: #94e561 #ffffff;
 }
 
+.results li > button,
+.selected li > button {
+  margin-left: 10px;
+  box-shadow: none;
+  border-color: #ffffff;
+  background-color: #ffffff;
+  color: #1f1f27;
+}
+
+.results li > button:hover,
+.selected li > button:hover {
+  border-color: #1f1f27;
+  background-color: #1f1f27;
+  color: #21d460;
+}
+
 .selected {
   overflow: scroll;
   scrollbar-color: #94e561 #ffffff;

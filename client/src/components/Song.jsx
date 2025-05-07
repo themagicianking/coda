@@ -3,13 +3,9 @@ export function Song({ song, handleRemove }) {
     handleRemove(song.songorder)
   }
   return (
-    <div>
-      <li>
-        {song.title} by {song.artist}
-        <button style={{ marginLeft: '10px' }} onClick={updateSelections}>
-          Remove
-        </button>
-      </li>
-    </div>
+    <li>
+      {song.title} by {song.artist}
+      <button onClick={updateSelections}>Remove</button>
+    </li>
   )
 }
