@@ -38,7 +38,7 @@ APP.get('/login', function (req, res) {
   const STATE = generateRandomString(16)
   res.cookie(STATEKEY, STATE)
   // request authorization from spotify api
-  const SCOPE = 'user-read-private user-read-email'
+  const SCOPE = 'user-read-private playlist-modify-public'
   res.redirect(
     'https://accounts.spotify.com/authorize?' +
       querystring.stringify({
@@ -96,10 +96,6 @@ APP.get('/callback', function (req, res) {
           json: true
         }
 
-        request.get(options, function (error, response, body) {
-          userid = body.id
-        })
-
         // todo: write function that uses refresh token to get new auth code
         // when old auth code has expired
         // refreshToken = body.refresh_token
@@ -138,6 +134,7 @@ APP.get('/userid', async (req, res) => {
 
 APP.get('/search', async (req, res) => {
   const INPUT = req.query.input
+  const ACCESS_TOKEN = req.query.ACCESS_TOKEN
   const options = {
     url: `https://api.spotify.com/v1/search?q=track%3A${INPUT}&type=track&include_external=audio`,
     headers: {
@@ -280,19 +277,26 @@ APP.post('/song', async (req, res) => {
 
 APP.post('/spotifyplaylist', async (req, res) => {
   const USERID = req.body.userid
+  const ACCESS_TOKEN = req.body.ACCESS_TOKEN
 
   try {
     await fetch(`https://api.spotify.com/v1/users/${USERID}/playlists`, {
-      method: 'PUT',
+      method: 'POST',
       headers: {
         Authorization: 'Bearer ' + ACCESS_TOKEN,
         'Content-Type': 'application/json'
       },
       body: {
         name: 'Playlist Test Name',
+        public: true,
+        collaborative: false,
         description: 'Playlist test description'
       }
     }).then((res) => {
+      console.log(res)
+      if (res.status >= 400) {
+        throw res.statusText
+      }
       console.log('Successfully created new playlist.')
       res.send(200)
     })

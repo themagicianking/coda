@@ -3,14 +3,32 @@ import { ServerContext } from './ServerContext.jsx'
 import { Result } from './Result.jsx'
 import './selection.css'
 
+function getCookie(cname) {
+  let name = cname + '='
+  let ca = document.cookie.split(';')
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i]
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1)
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length)
+    }
+  }
+  return ''
+}
+
 export function Search({ handleSelect }) {
   const [results, setResults] = useState()
   const [error, setError] = useState()
+  const ACCESS_TOKEN = getCookie('ACCESS_TOKEN')
   const SERVER_URL = useContext(ServerContext)
 
   async function getResults(input) {
     try {
-      await fetch(`${SERVER_URL}/search?input=${input}`)
+      await fetch(
+        `${SERVER_URL}/search?input=${input}&ACCESS_TOKEN= ${ACCESS_TOKEN}`
+      )
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
@@ -51,7 +69,7 @@ export function Search({ handleSelect }) {
       <input
         type="search"
         name="search"
-        autoComplete='off'
+        autoComplete="off"
         placeholder="Search"
         aria-label="Search"
         onChange={handleSearch}

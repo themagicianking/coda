@@ -80,7 +80,7 @@ export function Annotations() {
       await fetch(`${SERVER_URL}/spotifyplaylist`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userid: userid })
+        body: JSON.stringify({ userid: userid, ACCESS_TOKEN: ACCESS_TOKEN })
       })
         .then((res) => {
           if (res.status >= 400) {
