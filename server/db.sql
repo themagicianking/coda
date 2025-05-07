@@ -11,7 +11,7 @@ CREATE TABLE songs (
   note VARCHAR(5000) NOT NULL
 );
 
-CREATE TABLE playlist (
+CREATE TABLE playlists (
   id SERIAL PRIMARY KEY,
   spotifyid VARCHAR(5000) NOT NULL,
   playlistname VARCHAR(255) NOT NULL,

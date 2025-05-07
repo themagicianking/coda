@@ -259,9 +259,10 @@ APP.post('/song', async (req, res) => {
   }
 })
 
-APP.post('/playlist', async (req, res) => {
+APP.post('/spotifyplaylist', async (req, res) => {
+  const USERID = req.userid
   try {
-    await fetch(`https://api.spotify.com/v1/users/${userid}/playlists`, {
+    await fetch(`https://api.spotify.com/v1/users/${USERID}/playlists`, {
       method: 'PUT',
       headers: {
         Authorization: 'Bearer ' + accessToken,
@@ -273,6 +274,29 @@ APP.post('/playlist', async (req, res) => {
       }
     }).then((res) => {
       console.log('Successfully created new playlist.')
+      res.send(200)
+    })
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
+
+APP.post('/spotifysongs', async (req, res) => {
+  const PLAYLISTID = req.playlistid
+  const URIS = req.uris
+  try {
+    await fetch(`https://api.spotify.com/v1/playlists/${PLAYLISTID}/tracks`, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+        'Content-Type': 'application/json'
+      },
+      body: {
+        uris: JSON.stringify(URIS),
+        position: 0
+      }
+    }).then((res) => {
+      console.log('Successfully added all songs to new playlist.')
       res.send(200)
     })
   } catch (error) {
