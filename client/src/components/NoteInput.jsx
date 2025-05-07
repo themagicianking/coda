@@ -1,3 +1,5 @@
+import './annotations.css'
+
 export function NoteInput({ song, updateNote }) {
   const getUserText = (event) => {
     updateNote(event.target.value)

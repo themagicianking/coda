@@ -208,6 +208,7 @@ h1 {
   font-size: 4rem;
   line-height: 1.2;
   letter-spacing: -0.1rem;
+  text-shadow: 5px 5px #94e561;
 }
 h2 {
   font-size: 3.6rem;

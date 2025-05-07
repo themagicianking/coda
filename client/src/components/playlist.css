@@ -26,6 +26,10 @@
   text-align: center;
 }
 
+.playlist .title h1 {
+  text-shadow: none;
+}
+
 .description {
   border-radius: 1em;
   padding: 0.5em;
