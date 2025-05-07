@@ -278,20 +278,23 @@ APP.post('/song', async (req, res) => {
 APP.post('/playlist', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
-  const PLAYLIST = req.body
+  const PERSONALIZATION = req.body
 
   try {
-    await DATABASE.query(
+    const PLAYLIST = await DATABASE.query(
       `INSERT INTO playlists (playlistname, playlistdesc, sender, recipient) VALUES($1,$2,$3,$4)`,
       [
-        PLAYLIST.playlistname,
-        PLAYLIST.playlistdec,
-        PLAYLIST.sender,
-        PLAYLIST.recipient
+        PERSONALIZATION.playlistname,
+        PERSONALIZATION.playlistdec,
+        PERSONALIZATION.sender,
+        PERSONALIZATION.recipient
       ]
-    ).then(() => {
+    )
+
+    return PLAYLIST.then((playlist) => {
+      console.log(playlist)
       console.log(
-        `Posted the following playlist to the database: ${JSON.stringify(PLAYLIST)}`
+        `Posted the following playlist to the database: ${JSON.stringify(PERSONALIZATION)}`
       )
     })
   } catch (error) {
