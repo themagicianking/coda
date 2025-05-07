@@ -7,7 +7,10 @@ export function Cassette() {
   return (
     <article className="cassette">
       <div className="cassetteImage">
-        <h1>Coda: personalized playlists for the digital age</h1>
+        <div className="title">
+          <h1>CODA</h1>
+          <p>personalized playlists for the digital age</p>
+        </div>
         <a
           href={`${SERVER_URL}/login`}
           id="cassetteLabel"
