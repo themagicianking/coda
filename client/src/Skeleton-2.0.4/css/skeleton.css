@@ -265,11 +265,11 @@ p {
 /* Links
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 a {
-  color: #f9a22f;
+  color: #ffffff;
   text-decoration: none;
 }
 a:hover {
-  color: #f8f23a;
+  color: #21D460;
 }
 
 /* Buttons
@@ -283,7 +283,7 @@ input[type='button'] {
   display: inline-block;
   height: 38px;
   padding: 0 30px;
-  color: #f9a22f;
+  color: #94e561;
   text-align: center;
   font-size: 11px;
   font-weight: 600;
@@ -308,7 +308,7 @@ button:focus,
 input[type='submit']:focus,
 input[type='reset']:focus,
 input[type='button']:focus {
-  color: #f8f23a;
+  color: #ffffff;
   outline: 0;
 }
 .button.button-primary,

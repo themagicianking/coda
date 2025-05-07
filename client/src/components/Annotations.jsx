@@ -199,18 +199,16 @@ export function Annotations() {
       )}
 
       <div className="nav">
-        <button>
-          <a role="button" onClick={handlePrevPage}>
-            Previous
-          </a>
-        </button>
+        <a role="button" onClick={handlePrevPage}>
+          <button>Previous</button>
+        </a>
+
         {/* this should link to personalization page when routes are set up */}
         {/* currently links to playlist view since personalization does not yet exist */}
-        <button>
-          <a role="button" onClick={goToNextPage}>
-            Next
-          </a>
-        </button>
+
+        <a role="button" onClick={goToNextPage}>
+          <button>Next</button>
+        </a>
       </div>
     </div>
   )

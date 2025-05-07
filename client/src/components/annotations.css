@@ -63,3 +63,14 @@
   background-color: #1f1f27;
   color: #21D460;
 }
+
+.annotations .nav {
+  display: flex;
+  justify-content: space-between;
+  margin: 1em;
+  width: 100%;
+}
+
+/* .annotations .nav > * {
+  margin: 0 5em;
+} */

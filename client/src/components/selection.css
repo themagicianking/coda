@@ -41,7 +41,12 @@
   scrollbar-color: #94e561 #ffffff;
 }
 
-.nav {
+.selected {
+  overflow: scroll;
+  scrollbar-color: #94e561 #ffffff;
+}
+
+.selection .nav {
   display: flex;
   justify-content: space-between;
   margin: 1em;
