@@ -6,6 +6,21 @@ import { useContext } from 'react'
 import { ServerContext } from './ServerContext'
 import './annotations.css'
 
+function getCookie(cname) {
+  let name = cname + '='
+  let ca = document.cookie.split(';')
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i]
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1)
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length)
+    }
+  }
+  return ''
+}
+
 export function Annotations() {
   const SERVER_URL = useContext(ServerContext)
   const [userid, setUserid] = useState('sample')
@@ -14,6 +29,7 @@ export function Annotations() {
   const [error, setError] = useState()
   const [hasPrevSong, setHasPrevSong] = useState(false)
   const [hasNextSong, setHasNextSong] = useState(false)
+  const ACCESS_TOKEN = getCookie('ACCESS_TOKEN')
   const navigate = useNavigate()
 
   const goToPrevSong = () => {
@@ -29,7 +45,7 @@ export function Annotations() {
   const goToNextPage = () => {
     putNote()
     // get user id
-    // getUserId()
+    getUserId()
     // create spotify playlist
     createPlaylist()
     // post all songs to spotify playlist
@@ -40,9 +56,24 @@ export function Annotations() {
     setSong({ ...song, note: newNote })
   }
 
-  // async function getUserId() {
-  //   setUserid('sampleid')
-  // }
+  async function getUserId() {
+    try {
+      await fetch(`${SERVER_URL}/userid?ACCESS_TOKEN=${ACCESS_TOKEN}`)
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          return res.json()
+        })
+        .then((json) => {
+          setUserid(json.id)
+        })
+    } catch (error) {
+      console.log(
+        `Could not get userid. The following error occurred: ${error}`
+      )
+    }
+  }
 
   async function createPlaylist() {
     try {

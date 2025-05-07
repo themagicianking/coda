@@ -118,6 +118,24 @@ APP.get('/callback', function (req, res) {
   }
 })
 
+APP.get('/userid', async (req, res) => {
+  const ACCESS_TOKEN = req.query.ACCESS_TOKEN
+  const options = {
+    url: 'https://api.spotify.com/v1/me',
+    headers: {
+      Authorization: 'Bearer ' + ACCESS_TOKEN
+    },
+    json: true
+  }
+  try {
+    request.get(options, function (error, response, body) {
+      res.send(body)
+    })
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
+
 APP.get('/search', async (req, res) => {
   const INPUT = req.query.input
   const options = {
@@ -279,7 +297,6 @@ APP.post('/spotifyplaylist', async (req, res) => {
       res.send(200)
     })
   } catch (error) {
-    console.log(`here is the body, ${req.body}`)
     res.status(500).send(error)
   }
 })
