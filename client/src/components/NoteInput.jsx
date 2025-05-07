@@ -8,6 +8,7 @@ export function NoteInput({ song, updateNote }) {
   return (
     <div>
       <textarea
+        className="textarea"
         type="text"
         name="note"
         placeholder="Add your note here..."

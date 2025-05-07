@@ -31,10 +31,24 @@
   padding: 1em;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+.header h2 {
+  margin: 0 0 0 0.25em;
+}
+
 .lyrics {
   border-radius: 1em;
   background-color: #ffffff;
   padding: 1em;
+}
+
+.textarea {
+  border-radius: 1em;
 }
 
 .annotationNav {
@@ -47,7 +61,7 @@
 }
 
 .annotationNav button {
-  margin: .5em;
+  margin: 0.5em;
   width: 20em;
   border-color: #ffffff;
   background-color: #ffffff;
@@ -61,7 +75,7 @@
 .annotationNav a:hover * {
   border-color: #1f1f27;
   background-color: #1f1f27;
-  color: #21D460;
+  color: #21d460;
 }
 
 .annotations .nav {
