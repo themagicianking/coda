@@ -8,6 +8,7 @@ import './annotations.css'
 
 export function Annotations() {
   const SERVER_URL = useContext(ServerContext)
+  const [userid, setUserid] = useState()
   const [orderNum, setOrderNum] = useState(0)
   const [song, setSong] = useState()
   const [error, setError] = useState()
@@ -27,13 +28,44 @@ export function Annotations() {
 
   const goToNextPage = () => {
     putNote()
+    // get user id
+    getUserId()
     // create spotify playlist
+    createPlaylist()
     // post all songs to spotify playlist
     navigate('/playlist')
   }
 
   const updateNote = (newNote) => {
     setSong({ ...song, note: newNote })
+  }
+
+  async function getUserId() {
+    setUserid('sampleid')
+  }
+
+  async function createPlaylist() {
+    try {
+      await fetch(`${SERVER_URL}/spotifyplaylist`, {
+        method: 'POST',
+        body: { userid: userid }
+      })
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          return res.json()
+        })
+        .then((json) => {
+          console.log(
+            `Successfully created playlist, server returned response ${json}`
+          )
+        })
+    } catch (error) {
+      console.log(
+        `Could not create playlist. The following error occurred: ${error}`
+      )
+    }
   }
 
   async function getNextSong() {

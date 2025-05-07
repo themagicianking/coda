@@ -18,8 +18,6 @@ const pool = new Pool({
   database: process.env.PGDATABASE,
   password: process.env.PGPASSWORD
 })
-// let accessToken = ''
-let userid = ''
 
 APP.use(cors())
 APP.use(express.json())
@@ -263,7 +261,7 @@ APP.post('/song', async (req, res) => {
 })
 
 APP.post('/spotifyplaylist', async (req, res) => {
-  const USERID = req.userid
+  const USERID = req.body.userid
   try {
     await fetch(`https://api.spotify.com/v1/users/${USERID}/playlists`, {
       method: 'PUT',
