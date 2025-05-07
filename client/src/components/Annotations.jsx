@@ -4,6 +4,8 @@ import { NoteInput } from './NoteInput'
 import { SongInfo } from './SongInfo'
 import { useContext } from 'react'
 import { ServerContext } from './ServerContext'
+import './annotations.css'
+
 export function Annotations() {
   const SERVER_URL = useContext(ServerContext)
   const [orderNum, setOrderNum] = useState(0)
@@ -110,9 +112,7 @@ export function Annotations() {
 
   async function updateNext(nextOrderNum) {
     try {
-      await fetch(
-        `${SERVER_URL}/nextsongexists?songorder=${nextOrderNum}`
-      )
+      await fetch(`${SERVER_URL}/nextsongexists?songorder=${nextOrderNum}`)
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
@@ -135,9 +135,7 @@ export function Annotations() {
 
   async function updatePrev(prevOrderNum) {
     try {
-      await fetch(
-        `${SERVER_URL}/prevsongexists?songorder=${prevOrderNum}`
-      )
+      await fetch(`${SERVER_URL}/prevsongexists?songorder=${prevOrderNum}`)
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
@@ -171,37 +169,47 @@ export function Annotations() {
   }
 
   return (
-    <>
-      <a role="button" onClick={handlePrevPage}>
-        Previous
-      </a>
+    <div className="annotations">
+      <h1 className="title">Add Your Notes</h1>
       {song ? (
         <>
-          <SongInfo song={song} />
-          <NoteInput song={song} updateNote={updateNote} />
+          <div className="main">
+            <SongInfo song={song} />
+            <NoteInput song={song} updateNote={updateNote} />
+          </div>
+          <div className="annotationNav">
+            {hasPrevSong ? (
+              <a role="button" onClick={goToPrevSong}>
+                <button>Previous Song</button>
+              </a>
+            ) : (
+              <></>
+            )}
+            {hasNextSong ? (
+              <a role="button" onClick={goToNextSong}>
+                <button>Next Song</button>
+              </a>
+            ) : (
+              <></>
+            )}
+          </div>
         </>
       ) : (
         <p>Could not fetch song data. The following error occurred: {error}</p>
       )}
-      {hasPrevSong ? (
-        <a role="button" onClick={goToPrevSong}>
-          Previous Song
+
+      <div className="nav">
+        <a role="button" onClick={handlePrevPage}>
+          <button>Previous</button>
         </a>
-      ) : (
-        <></>
-      )}
-      {hasNextSong ? (
-        <a role="button" onClick={goToNextSong}>
-          Next Song
+
+        {/* this should link to personalization page when routes are set up */}
+        {/* currently links to playlist view since personalization does not yet exist */}
+
+        <a role="button" onClick={goToNextPage}>
+          <button>Next</button>
         </a>
-      ) : (
-        <></>
-      )}
-      {/* this should link to personalization page when routes are set up */}
-      {/* currently links to playlist view since personalization does not yet exist */}
-      <a role="button" onClick={goToNextPage}>
-        Next
-      </a>
-    </>
+      </div>
+    </div>
   )
 }

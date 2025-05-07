@@ -201,13 +201,14 @@ h5,
 h6 {
   margin-top: 0;
   margin-bottom: 2rem;
-  font-family: 'Mali';
+  font-family: 'Rubik Glitch', system-ui;
   font-weight: 300;
 }
 h1 {
   font-size: 4rem;
   line-height: 1.2;
   letter-spacing: -0.1rem;
+  text-shadow: 5px 5px #94e561;
 }
 h2 {
   font-size: 3.6rem;
@@ -264,11 +265,11 @@ p {
 /* Links
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 a {
-  color: #f9a22f;
+  color: #ffffff;
   text-decoration: none;
 }
 a:hover {
-  color: #f8f23a;
+  color: #21D460;
 }
 
 /* Buttons
@@ -282,7 +283,7 @@ input[type='button'] {
   display: inline-block;
   height: 38px;
   padding: 0 30px;
-  color: #f9a22f;
+  color: #94e561;
   text-align: center;
   font-size: 11px;
   font-weight: 600;
@@ -291,7 +292,6 @@ input[type='button'] {
   text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
-  background-color: transparent;
   border-radius: 4px;
   box-shadow: 0.5em 0.5em 0.5em 0 #9c9c9c;
   background-color: #1f1f27;
@@ -308,7 +308,7 @@ button:focus,
 input[type='submit']:focus,
 input[type='reset']:focus,
 input[type='button']:focus {
-  color: #f8f23a;
+  color: #ffffff;
   outline: 0;
 }
 .button.button-primary,

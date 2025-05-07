@@ -117,8 +117,8 @@ export function Selection() {
         )}
       </div>
       <div className="nav">
-        <button onClick={goToPrev}>Previous</button>
-        <button onClick={handleNextPage}>Next</button>
+        <a><button onClick={goToPrev}>Previous</button></a>
+        <a><button onClick={handleNextPage}>Next</button></a>
       </div>
     </div>
   )

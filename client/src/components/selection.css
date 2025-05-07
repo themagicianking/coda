@@ -29,7 +29,7 @@
   display: flex;
   flex-direction: column;
   border-radius: 1em;
-  box-shadow: 0.5em 0.5em 0.5em 0 #9c9c9c;
+  box-shadow: 0.25em 0.25em 0.5em 0em #9c9c9c;
   margin: 1em;
   width: 50%;
   background-color: #94e561;
@@ -41,7 +41,29 @@
   scrollbar-color: #94e561 #ffffff;
 }
 
-.nav {
+.results li > button,
+.selected li > button {
+  margin-left: 10px;
+  box-shadow: none;
+  box-shadow: 0.25em 0.25em 0.5em 0em #6da848;
+  border: none;
+  background-color: #ffffff;
+  color: #1f1f27;
+}
+
+.results li > button:hover,
+.selected li > button:hover {
+  border-color: #1f1f27;
+  background-color: #1f1f27;
+  color: #21d460;
+}
+
+.selected {
+  overflow: scroll;
+  scrollbar-color: #94e561 #ffffff;
+}
+
+.selection .nav {
   display: flex;
   justify-content: space-between;
   margin: 1em;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { SongCard } from './SongCard'
 import './playlist.css'
 
@@ -12,6 +12,11 @@ const PERSONALIZATION = {
 
 export function Playlist() {
   const [songs, setSongs] = useState([])
+  const navigate = useNavigate()
+
+  const goHome = () => {
+    navigate('/welcome')
+  }
 
   async function getAllSongs() {
     try {
@@ -53,12 +58,9 @@ export function Playlist() {
           ))}
         </ol>
       </div>
-      {/* This will link to the homepage component when it's created */}
-      <button>
-        <Link to={{ pathname: '/welcome' }} role="link">
-          Home
-        </Link>
-      </button>
+      <a>
+        <button onClick={goHome}>Home</button>
+      </a>
     </div>
   )
 }

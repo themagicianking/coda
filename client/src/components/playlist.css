@@ -18,12 +18,16 @@
   background-color: #1f1f27;
 }
 
-.welcome .title {
+.playlist .title {
   border-radius: 1em;
   padding: 0.5em;
   color: #94e561;
   background-color: #1f1f27;
   text-align: center;
+}
+
+.playlist .title h1 {
+  text-shadow: none;
 }
 
 .description {

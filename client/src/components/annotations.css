@@ -1,0 +1,90 @@
+.annotations {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.annotations .title {
+  padding: 0.5em 0 0 0;
+  text-align: center;
+}
+
+.annotations .main {
+  display: flex;
+  flex-grow: 1;
+  max-height: 70%;
+  width: 80%;
+  justify-content: center;
+}
+
+.annotations .main > * {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1em;
+  box-shadow: 0.25em 0.25em 0.5em 0em #9c9c9c;
+  margin: 1em;
+  width: 50%;
+  background-color: #94e561;
+  padding: 1em;
+  overflow: scroll;
+  scrollbar-color: #94e561 #ffffff;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+.header h2 {
+  margin: 0 0 0 0.25em;
+}
+
+.lyrics {
+  border-radius: 1em;
+  background-color: #ffffff;
+  padding: 1em;
+  overflow: scroll;
+  scrollbar-color: #94e561 #ffffff;
+}
+
+.textarea {
+  border-radius: 1em;
+}
+
+.annotationNav {
+  display: flex;
+  justify-content: center;
+  border-radius: 1em;
+  box-shadow: 0.25em 0.25em 0.5em 0em #9c9c9c;
+  background-color: #94e561;
+  padding: 1em;
+}
+
+.annotationNav button {
+  margin: 0.5em;
+  width: 20em;
+  border: none;
+  background-color: #ffffff;
+  box-shadow: 0.25em 0.25em 0.5em 0em #6da848;
+  outline: black;
+}
+
+.annotationNav a * {
+  color: #1f1f27;
+}
+
+.annotationNav a:hover * {
+  border-color: #1f1f27;
+  background-color: #1f1f27;
+  color: #21d460;
+}
+
+.annotations .nav {
+  display: flex;
+  justify-content: space-between;
+  margin: 1em;
+  width: 100%;
+}

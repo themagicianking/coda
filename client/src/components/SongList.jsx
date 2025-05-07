@@ -1,11 +1,12 @@
 import { Song } from './Song.jsx'
+import "./selection.css"
 
 export function SongList({ list, handleRemove }) {
   return (
     <article>
       <h2>Selected Songs</h2>
       {list.length > 0 ? (
-        <ol>
+        <ol className='selected'>
           {list.map((song) => (
             <Song
               key={song.songorder}
