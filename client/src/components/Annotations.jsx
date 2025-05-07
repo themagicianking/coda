@@ -169,17 +169,13 @@ export function Annotations() {
   }
 
   return (
-    <div>
-      <button>
-        <a role="button" onClick={handlePrevPage}>
-          Previous
-        </a>
-      </button>
+    <div className="annotations">
+      <h1 className="title">Add Your Notes</h1>
       {song ? (
-        <>
+        <div className="main">
           <SongInfo song={song} />
           <NoteInput song={song} updateNote={updateNote} />
-        </>
+        </div>
       ) : (
         <p>Could not fetch song data. The following error occurred: {error}</p>
       )}
@@ -197,13 +193,20 @@ export function Annotations() {
       ) : (
         <></>
       )}
-      {/* this should link to personalization page when routes are set up */}
-      {/* currently links to playlist view since personalization does not yet exist */}
-      <button>
-        <a role="button" onClick={goToNextPage}>
-          Next
-        </a>
-      </button>
+      <div className="nav">
+        <button>
+          <a role="button" onClick={handlePrevPage}>
+            Previous
+          </a>
+        </button>
+        {/* this should link to personalization page when routes are set up */}
+        {/* currently links to playlist view since personalization does not yet exist */}
+        <button>
+          <a role="button" onClick={goToNextPage}>
+            Next
+          </a>
+        </button>
+      </div>
     </div>
   )
 }

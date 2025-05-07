@@ -1,0 +1,20 @@
+.annotations {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.annotations .title {
+  padding: 0.5em 0 0 0;
+  text-align: center;
+}
+
+.annotations .main {
+  display: flex;
+  flex-grow: 1;
+  max-height: 80%;
+  width: 80%;
+  justify-content: center;
+}
