@@ -43,7 +43,12 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 
 ## Usage
 
-This project is not currently usable.
+1. Click on the "get started" button on the welcome page. The first time you do this, Spotify will ask you to authorize the app to be able to read your account information. (These permissions will be changing slightly with new iterations of the app; eventually it will ask permission to edit and create public playlists.)
+2. On the selection page, you will be able to search for songs through Spotify and add them to your selected songs. You may add the same song twice and you may also remove songs. You must select at least one song to move forward.
+3. On the annotations page, each of the songs you selected will be displayed along with a text box. You can now add your notes to each song. Notes will automatically be saved when you click prev/next song and prev/next page.
+4. On the playlist page, you may view all of the songs you have chosen with the notes you've given them. Clicking "home" will return you to the welcome page. Currently, your playlist data will persist when navigating home.
+
+<!-- todo: add troubleshooting section -->
 
 ## Features
 

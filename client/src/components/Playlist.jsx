@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { ServerContext } from './ServerContext.jsx'
 import { useNavigate } from 'react-router-dom'
 import { SongCard } from './SongCard'
 import './playlist.css'
@@ -12,6 +13,7 @@ const PERSONALIZATION = {
 
 export function Playlist() {
   const [songs, setSongs] = useState([])
+  const SERVER_URL = useContext(ServerContext)
   const navigate = useNavigate()
 
   const goHome = () => {
@@ -20,7 +22,7 @@ export function Playlist() {
 
   async function getAllSongs() {
     try {
-      await fetch('http://localhost:5000/allsongs')
+      await fetch(`${SERVER_URL}/allsongs`)
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
