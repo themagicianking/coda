@@ -4,12 +4,12 @@ import { ServerContext } from './ServerContext'
 import { SongCard } from './SongCard'
 import './playlist.css'
 
-const PERSONALIZATION = {
-  title: 'A Playlist',
-  sender: 'Me',
-  recipient: 'You',
-  description: 'This is the personalized description of the whole playlist.'
-}
+// const PERSONALIZATION = {
+//   title: 'A Playlist',
+//   sender: 'Me',
+//   recipient: 'You',
+//   description: 'This is the personalized description of the whole playlist.'
+// }
 
 function getCookie(cname) {
   let name = cname + '='
@@ -28,6 +28,7 @@ function getCookie(cname) {
 
 export function Playlist() {
   const [songs, setSongs] = useState([])
+  const [personalization, setPersonalization] = useState({})
   const PLAYLIST_ID = getCookie('PLAYLIST_ID')
   const SERVER_URL = useContext(ServerContext)
   const navigate = useNavigate()
@@ -59,7 +60,17 @@ export function Playlist() {
 
   async function getPersonalization() {
     try {
-      await fetch(`${SERVER_URL}/`)
+      await fetch(`${SERVER_URL}/personalization?playlistid=${PLAYLIST_ID}`)
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          console.log('Got playlist personalization detials from server.')
+          return res.json()
+        })
+        .then((json) => {
+          setPersonalization(json)
+        })
     } catch (error) {
       console.log(
         `Could not get personalization details. The following error occurred: ${error}`
@@ -83,12 +94,12 @@ export function Playlist() {
     <div className="playlist">
       <div className="card">
         <div className="title">
-          <h1>{PERSONALIZATION.title}</h1>
+          <h1>{personalization.title}</h1>
           <h2>
-            From {PERSONALIZATION.sender} to {PERSONALIZATION.recipient}
+            From {personalization.sender} to {personalization.recipient}
           </h2>
         </div>
-        <p className="description">{PERSONALIZATION.description}</p>
+        <p className="description">{personalization.description}</p>
         <ol className="songs">
           {songs.map((song) => (
             <SongCard key={song.songorder} song={song} />

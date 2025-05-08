@@ -249,9 +249,9 @@ APP.get('/nextsongexists', async (req, res) => {
 APP.get('/personalization', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
-  const PLAYLIST_ID = req.query.PLAYLIST_ID
+  const PLAYLIST_ID = req.query.playlistid
   try {
-    await DATABASE.query(`SELECT * FROM playlists WHERE playlistid = $1`, [
+    await DATABASE.query(`SELECT * FROM playlists WHERE id = $1`, [
       PLAYLIST_ID
     ]).then((playlist) => {
       console.log(
