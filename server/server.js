@@ -127,7 +127,7 @@ APP.get('/allsongs', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   try {
-    await DATABASE.query('SELECT * FROM songs;').then((songs) => {
+    await DATABASE.query('SELECT * FROM songs ORDER BY songorder;').then((songs) => {
       console.log('Sending all songs to the client.')
       res.send(songs.rows)
     })

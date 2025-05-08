@@ -1,9 +1,12 @@
 import { useContext, useState } from 'react'
 import { ServerContext } from './ServerContext.jsx'
-import Result from './Result.jsx'
+import { Result } from './Result.jsx'
+import './selection.css'
 
 export function Search({ handleSelect }) {
-  const [results, setResults] = useState([])
+  const [results, setResults] = useState()
+  const [error, setError] = useState()
+  const SERVER_URL = useContext(ServerContext)
 
   async function getResults(input) {
     try {
@@ -15,12 +18,14 @@ export function Search({ handleSelect }) {
           return res.json()
         })
         .then((json) => {
-          setResults(json.tracks.items)
+          try {
+            setResults(json.tracks.items)
+          } catch {
+            setError('Could not retrieve Spotify search results.')
+          }
         })
-    } catch (error) {
-      throw new Error(
-        `Could not connect to API. The following error occurred: ${error}`
-      )
+    } catch (e) {
+      setError(`Could not connect to API. The following error occurred: ${e}`)
     }
   }
 
@@ -42,15 +47,17 @@ export function Search({ handleSelect }) {
 
   return (
     <article>
+      <h2>Search Spotify</h2>
       <input
         type="search"
         name="search"
+        autoComplete='off'
         placeholder="Search"
         aria-label="Search"
         onChange={handleSearch}
       />
-      {results.length > 0 ? (
-        <ol>
+      {results ? (
+        <ol className="results">
           {results.map((song) => (
             <Result
               key={song.id}
@@ -60,7 +67,7 @@ export function Search({ handleSelect }) {
           ))}
         </ol>
       ) : (
-        <></>
+        <p>{error}</p>
       )}
     </article>
   )
