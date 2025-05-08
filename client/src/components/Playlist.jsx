@@ -4,13 +4,6 @@ import { ServerContext } from './ServerContext'
 import { SongCard } from './SongCard'
 import './playlist.css'
 
-// const PERSONALIZATION = {
-//   title: 'A Playlist',
-//   sender: 'Me',
-//   recipient: 'You',
-//   description: 'This is the personalized description of the whole playlist.'
-// }
-
 function getCookie(cname) {
   let name = cname + '='
   let ca = document.cookie.split(';')
