@@ -10,18 +10,34 @@ const PERSONALIZATION = {
   description: 'This is the personalized description of the whole playlist.'
 }
 
+function getCookie(cname) {
+  let name = cname + '='
+  let ca = document.cookie.split(';')
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i]
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1)
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length)
+    }
+  }
+  return ''
+}
+
 export function Playlist() {
   const [songs, setSongs] = useState([])
+  const PLAYLIST_ID = getCookie('PLAYLIST_ID')
   const navigate = useNavigate()
 
   const goHome = () => {
-    clearCookie()
+    clearCookies()
     navigate('/welcome')
   }
 
   async function getAllSongs() {
     try {
-      await fetch('http://localhost:5000/allsongs')
+      await fetch(`http://localhost:5000/allsongs?PLAYLIST_ID=${PLAYLIST_ID}`)
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
@@ -37,6 +53,13 @@ export function Playlist() {
         `Could not get songs from server. The following error occurred: ${error}`
       )
     }
+  }
+
+  function clearCookies() {
+    let date = new Date()
+    date.setTime(date.getTime() - 1)
+    document.cookie = 'PLAYLIST_ID=; expires=' + date.toGMTString()
+    document.cookie = 'ACCESS_TOKEN=; expires=' + date.toGMTString()
   }
 
   useEffect(() => {

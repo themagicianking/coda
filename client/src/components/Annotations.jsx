@@ -6,6 +6,21 @@ import { useContext } from 'react'
 import { ServerContext } from './ServerContext'
 import './annotations.css'
 
+function getCookie(cname) {
+  let name = cname + '='
+  let ca = document.cookie.split(';')
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i]
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1)
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length)
+    }
+  }
+  return ''
+}
+
 export function Annotations() {
   const SERVER_URL = useContext(ServerContext)
   const [orderNum, setOrderNum] = useState(0)
@@ -13,6 +28,7 @@ export function Annotations() {
   const [error, setError] = useState()
   const [hasPrevSong, setHasPrevSong] = useState(false)
   const [hasNextSong, setHasNextSong] = useState(false)
+  const PLAYLIST_ID = getCookie('PLAYLIST_ID')
   const navigate = useNavigate()
 
   const goToPrevSong = () => {
@@ -36,7 +52,9 @@ export function Annotations() {
 
   async function getNextSong() {
     try {
-      await fetch(`${SERVER_URL}/nextsong?songorder=${orderNum}`)
+      await fetch(
+        `${SERVER_URL}/nextsong?songorder=${orderNum}&PLAYLIST_ID=${PLAYLIST_ID}`
+      )
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
@@ -62,7 +80,9 @@ export function Annotations() {
 
   async function getPrevSong() {
     try {
-      await fetch(`${SERVER_URL}/prevsong?songorder=${orderNum}`)
+      await fetch(
+        `${SERVER_URL}/prevsong?songorder=${orderNum}&PLAYLIST_IDd=${PLAYLIST_ID}`
+      )
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
@@ -112,7 +132,9 @@ export function Annotations() {
 
   async function updateNext(nextOrderNum) {
     try {
-      await fetch(`${SERVER_URL}/nextsongexists?songorder=${nextOrderNum}`)
+      await fetch(
+        `${SERVER_URL}/nextsongexists?songorder=${nextOrderNum}&PLAYLIST_ID=${PLAYLIST_ID}`
+      )
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
@@ -135,7 +157,7 @@ export function Annotations() {
 
   async function updatePrev(prevOrderNum) {
     try {
-      await fetch(`${SERVER_URL}/prevsongexists?songorder=${prevOrderNum}`)
+      await fetch(`${SERVER_URL}/prevsongexists?songorder=${prevOrderNum}&PLAYLIST_ID=${PLAYLIST_ID}`)
         .then((res) => {
           if (res.status >= 400) {
             throw res.status

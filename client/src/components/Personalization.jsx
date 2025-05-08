@@ -20,7 +20,7 @@ function getCookie(cname) {
 export function Personalization() {
   const SERVER_URL = useContext(ServerContext)
   const ACCESS_TOKEN = getCookie('ACCESS_TOKEN')
-  const PLAYLISTID = getCookie('playlistid')
+  const PLAYLIST_ID = getCookie('PLAYLIST_ID')
   const navigate = useNavigate()
 
   const handlePrevPage = () => {
@@ -31,7 +31,7 @@ export function Personalization() {
     event.preventDefault()
 
     const FORM_DATA = {
-      id: PLAYLISTID,
+      id: PLAYLIST_ID,
       name: event.target.name.value,
       sender: event.target.sender.value,
       recipient: event.target.recipient.value,

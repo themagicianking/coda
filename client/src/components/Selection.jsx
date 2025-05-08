@@ -24,14 +24,19 @@ export function Selection() {
   const SERVER_URL = useContext(ServerContext)
   const [selected, setSelected] = useState()
   const [error, setError] = useState()
-  const PLAYLISTID = getCookie('playlistid')
+  const PLAYLIST_ID = getCookie('PLAYLIST_ID')
   const navigate = useNavigate()
 
   // todo: set user visible error messages for posting and deleting songs
 
+  function createPLAYLIST_ID() {
+    document.cookie = `PLAYLIST_ID=${crypto.randomUUID()}`
+    return getCookie('PLAYLIST_ID')
+  }
+
   async function getAllSongs() {
     try {
-      await fetch(`${SERVER_URL}/allsongs`)
+      await fetch(`${SERVER_URL}/allsongs?PLAYLIST_ID=${PLAYLIST_ID}`)
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
@@ -39,7 +44,6 @@ export function Selection() {
           return res.json()
         })
         .then((json) => {
-          console.log(json)
           setSelected(json)
         })
     } catch (e) {
@@ -48,11 +52,10 @@ export function Selection() {
   }
 
   useEffect(() => {
-    getAllSongs()
-    if (PLAYLISTID === null) {
-      const ID = crypto.randomUUID()
-      document.cookie = `playlistid=${ID}`
+    if (PLAYLIST_ID == '') {
+      createPLAYLIST_ID()
     }
+    getAllSongs()
   }, [])
 
   useEffect(() => {}, [selected])
@@ -64,12 +67,19 @@ export function Selection() {
     deleteSong(songorder)
   }
 
+  function clearCookies() {
+    let date = new Date()
+    date.setTime(date.getTime() - 1)
+    document.cookie = 'PLAYLIST_ID=; expires=' + date.toGMTString()
+    document.cookie = 'ACCESS_TOKEN=; expires=' + date.toGMTString()
+  }
+
   async function postSong(song) {
     try {
       fetch(`${SERVER_URL}/song`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playlistid: getCookie('playlistid'), ...song })
+        body: JSON.stringify({ PLAYLIST_ID: getCookie('PLAYLIST_ID'), ...song })
       })
         .then((res) => {
           if (res.status >= 400) {
@@ -115,6 +125,7 @@ export function Selection() {
   }
 
   const goToPrev = () => {
+    clearCookies()
     navigate('/welcome')
   }
 

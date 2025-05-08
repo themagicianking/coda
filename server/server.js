@@ -152,15 +152,17 @@ APP.get('/search', async (req, res) => {
 })
 
 APP.get('/allsongs', async (req, res) => {
+  const PLAYLIST_ID = req.query.PLAYLIST_ID
   const DATABASE = await pool.connect()
   DATABASE.release()
   try {
-    await DATABASE.query('SELECT * FROM songs ORDER BY songorder;').then(
-      (songs) => {
-        console.log('Sending all songs to the client.')
-        res.send(songs.rows)
-      }
-    )
+    await DATABASE.query(
+      `SELECT * FROM songs WHERE playlistid = $1 ORDER BY songorder;`,
+      [PLAYLIST_ID]
+    ).then((songs) => {
+      console.log('Sending all songs to the client.')
+      res.send(songs.rows)
+    })
   } catch (error) {
     res.status(500).send(error)
   }
@@ -170,9 +172,11 @@ APP.get('/prevsong', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   const SONGORDER = req.query.songorder
+  const PLAYLIST_ID = req.query.PLAYLIST_ID
   try {
     await DATABASE.query(
-      `SELECT * FROM songs WHERE songorder < ${SONGORDER} ORDER BY songorder DESC LIMIT 1`
+      `SELECT * FROM songs WHERE songorder < $1 AND playlistid = $2 ORDER BY songorder DESC LIMIT 1`,
+      [SONGORDER, PLAYLIST_ID]
     ).then((song) => {
       console.log(
         `Sending song previous in the order from ${SONGORDER} to the client`
@@ -188,9 +192,11 @@ APP.get('/prevsongexists', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   const SONGORDER = req.query.songorder
+  const PLAYLIST_ID = req.query.PLAYLIST_ID
   try {
     await DATABASE.query(
-      `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder <= ${SONGORDER}) AS "exists"`
+      `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder <= $1 AND playlistid = $2) AS "exists"`,
+      [SONGORDER, PLAYLIST_ID]
     ).then((songs) => {
       console.log(
         `Sending existence status of song with songorder less than or equal to ${SONGORDER} to client.`
@@ -206,9 +212,11 @@ APP.get('/nextsong', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   const SONGORDER = req.query.songorder
+  const PLAYLIST_ID = req.query.PLAYLIST_ID
   try {
     await DATABASE.query(
-      `SELECT * FROM songs WHERE songorder > ${SONGORDER} ORDER BY songorder LIMIT 1`
+      `SELECT * FROM songs WHERE songorder > $1 AND playlistid = $2 ORDER BY songorder LIMIT 1`,
+      [SONGORDER, PLAYLIST_ID]
     ).then((song) => {
       console.log(
         `Sending song next in the order from ${SONGORDER} to the client`
@@ -224,25 +232,17 @@ APP.get('/nextsongexists', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   const SONGORDER = req.query.songorder
+  const PLAYLIST_ID = req.query.PLAYLIST_ID
   try {
     await DATABASE.query(
-      `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder >= ${SONGORDER}) AS "exists"`
+      `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder >= $1 AND playlistid = $2) AS "exists"`,
+      [SONGORDER, PLAYLIST_ID]
     ).then((songs) => {
       console.log(
         `Sending existence status of song with songorder more than or equal to ${SONGORDER} to client.`
       )
       res.send(songs.rows[0])
     })
-  } catch (error) {
-    res.status(500).send(error)
-  }
-})
-
-APP.get('/clearcookies', async (req, res) => {
-  try {
-    res.clearCookie('ACCESS_TOKEN')
-    res.clearCookie('playlistid')
-    res.send('Successfully cleared cookies.')
   } catch (error) {
     res.status(500).send(error)
   }
@@ -274,7 +274,7 @@ APP.post('/song', async (req, res) => {
     await DATABASE.query(
       `INSERT INTO songs (playlistid, spotifyid, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6)`,
       [
-        SONG.playlistid,
+        SONG.PLAYLIST_ID,
         SONG.spotifyid,
         SONG.artist,
         SONG.title,
@@ -350,10 +350,10 @@ APP.post('/spotifyplaylist', async (req, res) => {
 })
 
 APP.post('/spotifysongs', async (req, res) => {
-  const PLAYLISTID = req.playlistid
+  const PLAYLIST_ID = req.PLAYLIST_ID
   const URIS = req.uris
   try {
-    await fetch(`https://api.spotify.com/v1/playlists/${PLAYLISTID}/tracks`, {
+    await fetch(`https://api.spotify.com/v1/playlists/${PLAYLIST_ID}/tracks`, {
       method: 'PUT',
       headers: {
         Authorization: 'Bearer ' + ACCESS_TOKEN,
