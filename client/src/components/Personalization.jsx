@@ -27,6 +27,14 @@ export function Personalization() {
     navigate('/annotations')
   }
 
+  const handleNextPage = () => {
+    const FORM = document.querySelector('form')
+    const formTrigger = FORM.querySelector('button.submit')
+    const submitEvent = new SubmitEvent('submit', { submitter: formTrigger })
+    submitEvent
+    navigate('/playlist')
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault()
 
@@ -40,8 +48,6 @@ export function Personalization() {
 
     createPlaylistPersonalization(FORM_DATA)
     getUserId(FORM_DATA)
-
-    navigate('/playlist')
   }
 
   async function createPlaylistPersonalization(personalization) {
@@ -130,15 +136,15 @@ export function Personalization() {
             form="personalization"
             id="description"
           ></textarea>
+          <input type="submit" style={{ display: 'none' }}></input>
         </div>
         <div className="nav">
           <a role="button" onClick={handlePrevPage}>
             <button>Previous</button>
           </a>
-          <input type="submit"></input>
-          {/* <a role="button" onClick={goToNextPage}>
+          <a role="button" onClick={handleNextPage}>
             <button>Submit</button>
-          </a> */}
+          </a>
         </div>
       </form>
     </div>

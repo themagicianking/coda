@@ -218,9 +218,7 @@ APP.get('/nextsong', async (req, res) => {
       `SELECT * FROM songs WHERE songorder > $1 AND playlistid = $2 ORDER BY songorder LIMIT 1`,
       [SONGORDER, PLAYLIST_ID]
     ).then((song) => {
-      console.log(
-        `Sending song ${JSON.stringify(song.rows[0])} to the client`
-      )
+      console.log(`Sending song ${JSON.stringify(song.rows[0])} to the client`)
       res.json(song.rows[0])
     })
   } catch (error) {
@@ -242,6 +240,24 @@ APP.get('/nextsongexists', async (req, res) => {
         `Sending existence status of song with songorder more than or equal to ${SONGORDER} to client.`
       )
       res.send(songs.rows[0])
+    })
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
+
+APP.get('/personalization', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
+  const PLAYLIST_ID = req.query.PLAYLIST_ID
+  try {
+    await DATABASE.query(`SELECT * FROM playlists WHERE playlistid = $1`, [
+      PLAYLIST_ID
+    ]).then((playlist) => {
+      console.log(
+        `Sending playlist details for playlist ${JSON.stringify(playlist.rows[0])} to client.`
+      )
+      res.send(playlist.rows[0])
     })
   } catch (error) {
     res.status(500).send(error)

@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ServerContext } from './ServerContext'
 import { SongCard } from './SongCard'
 import './playlist.css'
 
@@ -28,6 +29,7 @@ function getCookie(cname) {
 export function Playlist() {
   const [songs, setSongs] = useState([])
   const PLAYLIST_ID = getCookie('PLAYLIST_ID')
+  const SERVER_URL = useContext(ServerContext)
   const navigate = useNavigate()
 
   const goHome = () => {
@@ -37,7 +39,7 @@ export function Playlist() {
 
   async function getAllSongs() {
     try {
-      await fetch(`http://localhost:5000/allsongs?PLAYLIST_ID=${PLAYLIST_ID}`)
+      await fetch(`${SERVER_URL}/allsongs?PLAYLIST_ID=${PLAYLIST_ID}`)
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
@@ -55,6 +57,16 @@ export function Playlist() {
     }
   }
 
+  async function getPersonalization() {
+    try {
+      await fetch(`${SERVER_URL}/`)
+    } catch (error) {
+      console.log(
+        `Could not get personalization details. The following error occurred: ${error}`
+      )
+    }
+  }
+
   function clearCookies() {
     let date = new Date()
     date.setTime(date.getTime() - 1)
@@ -64,6 +76,7 @@ export function Playlist() {
 
   useEffect(() => {
     getAllSongs()
+    getPersonalization()
   }, [])
 
   return (
