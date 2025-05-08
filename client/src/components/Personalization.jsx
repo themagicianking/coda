@@ -98,6 +98,7 @@ export function Personalization() {
         body: JSON.stringify({
           userid: userid,
           personalization: personalization,
+          playlistid: PLAYLIST_ID,
           ACCESS_TOKEN: ACCESS_TOKEN
         })
       })

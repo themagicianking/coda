@@ -334,8 +334,11 @@ APP.post('/playlist', async (req, res) => {
 })
 
 APP.post('/spotifyplaylist', async (req, res) => {
+  const DATABASE = await pool.connect()
+  DATABASE.release()
   const USERID = req.body.userid
   const PERSONALIZATION = req.body.personalization
+  const PLAYLIST_ID = req.body.playlistid
   const ACCESS_TOKEN = req.body.ACCESS_TOKEN
 
   const options = {
@@ -354,10 +357,22 @@ APP.post('/spotifyplaylist', async (req, res) => {
 
   try {
     request.post(options, function (error, response, body) {
-      if (res.status >= 400) {
-        throw res.statusText
+      if (response.status >= 400) {
+        throw response.statusText
       }
       console.log('Successfully created new playlist.')
+      const SPOTIFY_ID = response.body.id
+      try {
+        DATABASE.query(`UPDATE playlists SET spotifyid=$1 WHERE id=$2`, [
+          SPOTIFY_ID,
+          PLAYLIST_ID
+        ])
+      } catch (error) {
+        throw Error(
+          `Could not update playlist's spotify id. The following error occurred: ${error}`
+        )
+      }
+
       res.status(200)
     })
   } catch (error) {

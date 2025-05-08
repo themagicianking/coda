@@ -98,6 +98,16 @@ export function Playlist() {
             <SongCard key={song.songorder} song={song} />
           ))}
         </ol>
+        <iframe
+          style={{ borderRadius: '12px' }}
+          src="https://open.spotify.com/embed/playlist/7jM1o2G0XMPV5iLMvLS6c5?utm_source=generator&theme=0"
+          width="100%"
+          height="152"
+          frameBorder="0"
+          allowFullScreen=""
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+        ></iframe>
       </div>
       <a>
         <button onClick={goHome}>Home</button>
