@@ -29,9 +29,50 @@ export function Selection() {
 
   // todo: set user visible error messages for posting and deleting songs
 
-  function createPLAYLIST_ID() {
+  useEffect(() => {
+    if (PLAYLIST_ID == '') {
+      createPlaylistID()
+    }
+    getAllSongs()
+  }, [])
+
+  useEffect(() => {}, [selected])
+
+  const addSong = (song) => {
+    postSong(song)
+  }
+  const removeSong = (songorder) => {
+    deleteSong(songorder)
+  }
+
+  const goToPrev = () => {
+    clearCookies()
+    navigate('/welcome')
+  }
+
+  const handleNextPage = () => {
+    selected.length > 0 ? navigate('/annotations') : showSnackbar()
+  }
+
+  function clearCookies() {
+    let date = new Date()
+    date.setTime(date.getTime() - 1)
+    document.cookie = 'PLAYLIST_ID=; expires=' + date.toGMTString()
+    document.cookie = 'ACCESS_TOKEN=; expires=' + date.toGMTString()
+  }
+
+  function createPlaylistID() {
     document.cookie = `PLAYLIST_ID=${crypto.randomUUID()}`
     return getCookie('PLAYLIST_ID')
+  }
+
+  function showSnackbar() {
+    const snackbar = document.getElementById('snackbar')
+    snackbar.className = 'show'
+
+    setTimeout(function () {
+      snackbar.className = snackbar.className.replace('show', '')
+    }, 3000)
   }
 
   async function getAllSongs() {
@@ -49,29 +90,6 @@ export function Selection() {
     } catch (e) {
       setError(e.message)
     }
-  }
-
-  useEffect(() => {
-    if (PLAYLIST_ID == '') {
-      createPLAYLIST_ID()
-    }
-    getAllSongs()
-  }, [])
-
-  useEffect(() => {}, [selected])
-
-  const addSong = (song) => {
-    postSong(song)
-  }
-  const removeSong = (songorder) => {
-    deleteSong(songorder)
-  }
-
-  function clearCookies() {
-    let date = new Date()
-    date.setTime(date.getTime() - 1)
-    document.cookie = 'PLAYLIST_ID=; expires=' + date.toGMTString()
-    document.cookie = 'ACCESS_TOKEN=; expires=' + date.toGMTString()
   }
 
   async function postSong(song) {
@@ -124,15 +142,6 @@ export function Selection() {
     }
   }
 
-  const goToPrev = () => {
-    clearCookies()
-    navigate('/welcome')
-  }
-
-  const handleNextPage = () => {
-    navigate('/annotations')
-  }
-
   return (
     <div className="selection">
       <h1 className="title">Choose Your Songs</h1>
@@ -155,6 +164,7 @@ export function Selection() {
           <button onClick={handleNextPage}>Next</button>
         </a>
       </div>
+      <div id="snackbar">You must select at least one song!</div>
     </div>
   )
 }

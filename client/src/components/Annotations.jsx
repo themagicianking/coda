@@ -74,7 +74,7 @@ export function Annotations() {
         })
     } catch (error) {
       setSong(false)
-      setError(error)
+      setError(error.message)
     }
   }
 
@@ -103,7 +103,7 @@ export function Annotations() {
         })
     } catch (error) {
       setSong(false)
-      throw new Error(
+      setError(
         `Could not fetch previous song data from server. The following error occurred: ${error}`
       )
     }
@@ -157,7 +157,9 @@ export function Annotations() {
 
   async function updatePrev(prevOrderNum) {
     try {
-      await fetch(`${SERVER_URL}/prevsongexists?songorder=${prevOrderNum}&PLAYLIST_ID=${PLAYLIST_ID}`)
+      await fetch(
+        `${SERVER_URL}/prevsongexists?songorder=${prevOrderNum}&PLAYLIST_ID=${PLAYLIST_ID}`
+      )
         .then((res) => {
           if (res.status >= 400) {
             throw res.status

@@ -219,7 +219,7 @@ APP.get('/nextsong', async (req, res) => {
       [SONGORDER, PLAYLIST_ID]
     ).then((song) => {
       console.log(
-        `Sending song next in the order from ${SONGORDER} to the client`
+        `Sending song ${JSON.stringify(song.rows[0])} to the client`
       )
       res.json(song.rows[0])
     })
