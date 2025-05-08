@@ -1,5 +1,5 @@
 PGUSER="user"
-PGHOST="host"
+PGHOST="localhost"
 PGDATABASE="coda"
 PGPASSWORD="password"
 CLIENT_ID="client id"
