@@ -58,7 +58,7 @@ export function Playlist() {
           if (res.status >= 400) {
             throw res.status
           }
-          console.log('Got playlist personalization detials from server.')
+          console.log('Got playlist personalization details from server.')
           return res.json()
         })
         .then((json) => {
@@ -100,7 +100,7 @@ export function Playlist() {
         </ol>
         <iframe
           style={{ borderRadius: '12px' }}
-          src="https://open.spotify.com/embed/playlist/7jM1o2G0XMPV5iLMvLS6c5?utm_source=generator&theme=0"
+          src={`https://open.spotify.com/embed/playlist/${personalization.spotifyid}?utm_source=generator&theme=0`}
           width="100%"
           height="152"
           frameBorder="0"
