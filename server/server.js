@@ -88,9 +88,10 @@ APP.get('/callback', async (req, res) => {
           return response.json()
         })
         .then((json) => {
-          accessToken = json.access_token
           // refreshToken = json.refresh_token
-          res.redirect(`${CLIENT_URL}/selection`)
+          res.redirect(
+            `${CLIENT_URL}/selection?ACCESS_TOKEN=${json.access_token}`
+          )
         })
     } catch (error) {
       res.send(

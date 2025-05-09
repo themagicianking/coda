@@ -127,4 +127,4 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - [x] Update CSS so that button highlight disappears after click
 - [x] Refactor `formatSong()` to support multiple artists
 - [x] Refactor annotations page to render all songs at once and display one at a time
-- [ ] Refactor requests to Spotify to not use request
+- [x] Refactor requests to Spotify to not use request

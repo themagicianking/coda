@@ -10,6 +10,12 @@ export function Selection() {
   const [selected, setSelected] = useState()
   const [error, setError] = useState()
   const navigate = useNavigate()
+  const urlParams = new URLSearchParams(window.location.search)
+  const ACCESS_TOKEN = urlParams.get('ACCESS_TOKEN')
+
+  if (ACCESS_TOKEN) {
+    localStorage.setItem('ACCESS_TOKEN', ACCESS_TOKEN)
+  }
 
   async function getAllSongs() {
     try {
