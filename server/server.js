@@ -41,8 +41,7 @@ const generateRandomString = (length) => {
 APP.get('/login', function (req, res) {
   const STATE = generateRandomString(16)
   res.cookie(STATEKEY, STATE)
-  // request authorization from spotify api
-  const SCOPE = 'user-read-private user-read-email'
+  const SCOPE = 'playlist-modify-public'
   res.redirect(
     'https://accounts.spotify.com/authorize?' +
       querystring.stringify({
@@ -104,20 +103,25 @@ APP.get('/callback', async (req, res) => {
 
 APP.get('/search', async (req, res) => {
   const INPUT = req.query.input
-  const options = {
-    url: `https://api.spotify.com/v1/search?q=track%3A${INPUT}&type=track&include_external=audio`,
-    headers: {
-      Authorization: 'Bearer ' + accessToken
-    },
-    json: true
-  }
   try {
-    request.get(options, function (error, response, body) {
-      if (error) {
-        throw response.status
+    await fetch(
+      `https://api.spotify.com/v1/search?q=track%3A${INPUT}&type=track&include_external=audio`,
+      {
+        method: 'GET',
+        headers: { Authorization: 'Bearer ' + accessToken },
+        json: true
       }
-      res.send(body)
-    })
+    )
+      .then((response) => {
+        if (response.status >= 400) {
+          throw response.statusText
+        }
+        return response.json()
+      })
+      .then((json) => {
+        console.log('Sending search results to the client.')
+        res.send(json)
+      })
   } catch (error) {
     res.status(500).send(error)
   }
