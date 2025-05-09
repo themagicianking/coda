@@ -106,7 +106,7 @@ APP.get('/search', async (req, res) => {
     return
   }
   const INPUT = req.query.input
-  // try {
+  try {
     await fetch(
       `https://api.spotify.com/v1/search?q=track%3A${INPUT}&type=track&include_external=audio`,
       {
@@ -125,9 +125,9 @@ APP.get('/search', async (req, res) => {
         console.log('Sending search results to the client.')
         res.send(json)
       })
-  // } catch (error) {
-  //   res.status(500).send(error)
-  // }
+  } catch (error) {
+    res.status(500).send(error)
+  }
 })
 
 APP.get('/allsongs', async (req, res) => {
@@ -160,6 +160,40 @@ APP.put('/note', async (req, res) => {
     })
   } catch (error) {
     res.status(501).send(error)
+  }
+})
+
+APP.post('/refresh_token', async (req, res) => {
+  const REFRESH_TOKEN = req.body.refresh_token
+
+  const formData = new URLSearchParams()
+  formData.append('grant_type', 'refresh_token')
+  formData.append('refresh_token', REFRESH_TOKEN)
+
+  try {
+    await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization:
+          'Basic ' +
+          Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64')
+      },
+      body: formData.toString()
+    })
+      .then((response) => {
+        if (response.status >= 400) {
+          throw response.statusText
+        }
+        return response.json()
+      })
+      .then((json) => {
+        console.log('Sending new access token to the client.')
+        res.send(json)
+      })
+  } catch (error) {
+    console.error('Error refreshing token:', error)
+    res.status(500).send('Failed to refresh token.')
   }
 })
 
