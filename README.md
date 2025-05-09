@@ -118,7 +118,7 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - [ ] Create a personalization page
 - [ ] Create a review page
 - [ ] Create a post submission page
-- [ ] Display track art for each song
+- [x] Display track art for each song
 - [ ] Incorporate the [Genius API](https://docs.genius.com) to get lyrics for each song
 - [ ] Create the ability to reorder songs on the selection page
 - [x] Create user visible error messages for every failed API call clientside

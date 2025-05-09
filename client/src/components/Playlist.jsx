@@ -16,6 +16,7 @@ export function Playlist() {
   const [songs, setSongs] = useState([])
   const [error, setError] = useState()
   const SERVER_URL = useContext(ServerContext)
+  const PLAYLIST_ID = localStorage.getItem('PLAYLIST_ID')
   const navigate = useNavigate()
 
   const goHome = () => {
@@ -52,10 +53,21 @@ export function Playlist() {
         <div className="playlist-box">
           <PlaylistDetails details={DETAILS} />
           <PlaylistSongList songs={songs} />
+          <iframe
+            style={{ borderRadius: '12px' }}
+            src={`https://open.spotify.com/embed/playlist/${PLAYLIST_ID}?utm_source=generator&theme=0`}
+            width="100%"
+            height="152"
+            frameBorder="0"
+            allowFullScreen=""
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+          ></iframe>
         </div>
       ) : (
         <p>{error}</p>
       )}
+
       <a>
         <button onClick={goHome}>Home</button>
       </a>
