@@ -11,6 +11,29 @@
   text-align: center;
 }
 
+.selection li {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 1em;
+  padding: 1em;
+}
+
+.selection li img {
+  width: 5em;
+  height: 5em;
+  border-radius: 0.5em;
+  margin-right: 1em;
+}
+
+.selection li p {
+  display: flex;
+  flex-grow: 1;
+  margin: 0;
+  align-content: center;
+}
+
 .lists {
   display: flex;
   flex-grow: 1;

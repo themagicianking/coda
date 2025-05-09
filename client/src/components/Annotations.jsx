@@ -100,22 +100,26 @@ export function Annotations() {
             <SongInfo song={songs[orderNum]} />
             <NoteInput song={songs[orderNum]} updateNote={updateNote} />
           </div>
-          <div className="songnav">
-            {orderNum == 0 ? (
-              <></>
-            ) : (
-              <a role="button" onClick={goToPrevSong}>
-                <button>Previous Song</button>
-              </a>
-            )}
-            {orderNum + 2 > songs.length ? (
-              <></>
-            ) : (
-              <a role="button" onClick={goToNextSong}>
-                <button>Next Song</button>
-              </a>
-            )}
-          </div>
+          {songs.length == 1 ? (
+            <></>
+          ) : (
+            <div className="songnav">
+              {orderNum == 0 ? (
+                <></>
+              ) : (
+                <a role="button" onClick={goToPrevSong}>
+                  <button>Previous Song</button>
+                </a>
+              )}
+              {orderNum + 2 > songs.length ? (
+                <></>
+              ) : (
+                <a role="button" onClick={goToNextSong}>
+                  <button>Next Song</button>
+                </a>
+              )}
+            </div>
+          )}
         </>
       ) : (
         <p>{error}</p>

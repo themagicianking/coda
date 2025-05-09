@@ -6,6 +6,10 @@
   height: 100vh;
 }
 
+.annotations img {
+  border-radius: 0.5em;
+}
+
 .annotations .title {
   padding: 0.5em 0 0 0;
   text-align: center;
