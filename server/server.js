@@ -5,6 +5,7 @@ import 'dotenv/config'
 import crypto from 'crypto'
 import querystring from 'querystring'
 import cookieParser from 'cookie-parser'
+import 'url-search-params-polyfill'
 import request from 'request'
 
 const PORT = process.env.PORT
@@ -18,6 +19,7 @@ const STATEKEY = 'spotify_auth_state'
 const APP = express()
 
 APP.use(cors())
+APP.use(express.urlencoded({ extended: false }))
 APP.use(express.json())
 APP.use(cookieParser())
 
@@ -53,54 +55,50 @@ APP.get('/login', function (req, res) {
   )
 })
 
-APP.get('/callback', function (req, res) {
-  // request refresh and access tokens after checking the state parameter
-
+APP.get('/callback', async (req, res) => {
   const CODE = req.query.code || null
   const STATE = req.query.state || null
   const STORED_STATE = req.cookies ? req.cookies[STATEKEY] : null
+  const formData = new URLSearchParams()
+
+  formData.append('code', CODE)
+  formData.append('redirect_uri', `${SERVER_URL}/callback`)
+  formData.append('grant_type', 'authorization_code')
 
   if (STATE === null || STATE !== STORED_STATE) {
-    res.redirect(
-      '/#' +
-        querystring.stringify({
-          error: 'state_mismatch'
-        })
+    res.send(
+      'Could not get authentication token. The following error occurred: state mismatch.'
     )
   } else {
     res.clearCookie(STATEKEY)
-    const authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      form: {
-        code: CODE,
-        redirect_uri: `${SERVER_URL}/callback`,
-        grant_type: 'authorization_code'
-      },
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded',
-        Authorization:
-          'Basic ' +
-          new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64')
-      },
-      json: true
+    try {
+      await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization:
+            'Basic ' +
+            new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64')
+        },
+        body: formData.toString(),
+        json: true
+      })
+        .then((response) => {
+          if (response.status >= 400) {
+            throw response.statusText
+          }
+          return response.json()
+        })
+        .then((json) => {
+          accessToken = json.access_token
+          // refreshToken = json.refresh_token
+          res.redirect(`${CLIENT_URL}/selection`)
+        })
+    } catch (error) {
+      res.send(
+        `Could not get authentication token. The following error occurred: ${error}`
+      )
     }
-
-    request.post(authOptions, function (error, response, body) {
-      if (!error && response.statusCode === 200) {
-        accessToken = body.access_token
-        // refreshToken = body.refresh_token
-
-        // redirects the user to song selection page
-        res.redirect(`${CLIENT_URL}/selection`)
-      } else {
-        res.redirect(
-          '/#' +
-            querystring.stringify({
-              error: 'invalid_token'
-            })
-        )
-      }
-    })
   }
 })
 
@@ -115,7 +113,7 @@ APP.get('/search', async (req, res) => {
   }
   try {
     request.get(options, function (error, response, body) {
-      if (response.status >= 400) {
+      if (error) {
         throw response.status
       }
       res.send(body)

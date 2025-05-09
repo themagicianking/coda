@@ -18,6 +18,7 @@ export function Search({ handleSelect }) {
           return res.json()
         })
         .then((json) => {
+          console.log(json)
           setResults(json.tracks.items)
         })
     } catch (e) {

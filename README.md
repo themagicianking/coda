@@ -35,8 +35,8 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 
    Fill in `CLIENT_ID` and `CLIENT_SECRET` with the data that's given on your dashboard after you create your app.
 
-8. In the server directory, run `npm run start`.
-9. Navigate into the client directory and run `npm run dev`. Open a new window and navigate to `http://localhost:{your client port}/welcome` (Vite usually defaults to `5173` for the port). The app should be on display!
+8. In the server directory, run `npm install` and then `npm run start`.
+9. Navigate into the client directory, run `npm install` and run `npm run dev`. Open a new window and navigate to `http://localhost:{your client port}/welcome` (Vite usually defaults to `5173` for the port). The app should be on display!
 
 ## Usage
 
@@ -127,3 +127,4 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - [x] Update CSS so that button highlight disappears after click
 - [x] Refactor `formatSong()` to support multiple artists
 - [x] Refactor annotations page to render all songs at once and display one at a time
+- [ ] Refactor requests to Spotify to not use request
