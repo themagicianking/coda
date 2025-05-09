@@ -218,7 +218,7 @@ APP.post('/add_to_playlist', async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer' + ACCESS_TOKEN
+        Authorization: `Bearer ${ACCESS_TOKEN}`
       },
       body: JSON.stringify({
         uris: TRACK_URIS
@@ -314,19 +314,19 @@ APP.post('/song', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   const SONG = req.body
-  // try {
-  await DATABASE.query(
-    `INSERT INTO songs (artist, image, title, lyrics, note) VALUES($1,$2,$3,$4,$5)`,
-    [SONG.artist, SONG.image, SONG.title, SONG.lyrics, SONG.note]
-  ).then(() => {
-    console.log(
-      `Posted the following song to the database: ${JSON.stringify(SONG)}`
-    )
-    res.send(200)
-  })
-  // } catch (error) {
-  //   res.status(501).send(error)
-  // }
+  try {
+    await DATABASE.query(
+      `INSERT INTO songs (uri, artist, image, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6)`,
+      [SONG.uri, SONG.artist, SONG.image, SONG.title, SONG.lyrics, SONG.note]
+    ).then(() => {
+      console.log(
+        `Posted the following song to the database: ${JSON.stringify(SONG)}`
+      )
+      res.send(200)
+    })
+  } catch (error) {
+    res.status(501).send(error)
+  }
 })
 
 APP.delete('/song', async (req, res) => {

@@ -6,6 +6,23 @@ import { useContext } from 'react'
 import { ServerContext } from './ServerContext'
 import './annotations.css'
 
+function getItemWithExpiration(key) {
+  const itemStr = localStorage.getItem(key)
+  if (!itemStr) {
+    return null
+  }
+
+  const item = JSON.parse(itemStr)
+  const now = new Date()
+
+  if (now.getTime() > item.expiration) {
+    localStorage.removeItem(key)
+    return null
+  }
+
+  return item.value
+}
+
 export function Annotations() {
   const SERVER_URL = useContext(ServerContext)
   const [orderNum, setOrderNum] = useState(0)
@@ -60,10 +77,12 @@ export function Annotations() {
 
   async function addToPlaylist(uris) {
     try {
-      await fetch(`${SERVER_URL}/playlist`, {
+      await fetch(`${SERVER_URL}/add_to_playlist`, {
         method: 'POST',
         body: JSON.stringify({
-          songs: uris
+          ACCESS_TOKEN: getItemWithExpiration('ACCESS_TOKEN'),
+          PLAYLIST_ID: localStorage.getItem('PLAYLIST_ID'),
+          TRACK_URIS: uris
         }),
         headers: { 'Content-Type': 'application/json' }
       })
@@ -73,9 +92,10 @@ export function Annotations() {
           }
           return res.json()
         })
-        .then((json) =>
+        .then((json) => {
           console.log(`Playlist created successfully. Server response: ${json}`)
-        )
+          localStorage.setItem('SONGS_POSTED', 'true')
+        })
     } catch (e) {
       console.log(
         `Could not create playlist. The following error occurred: ${e}`
@@ -111,7 +131,7 @@ export function Annotations() {
       navigate('/playlist')
     } else {
       const URIS = songs.map((song) => song.uri)
-      addToPlaylist()
+      addToPlaylist(URIS)
     }
     navigate('/playlist')
   }

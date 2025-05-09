@@ -107,8 +107,10 @@ export function Search({ handleSelect }) {
       song.album.images[1].url = ''
     }
 
+    console.log(song)
+
     return {
-      spotifyid: song.id,
+      uri: song.uri,
       title: song.name,
       artist: artist,
       image: song.album.images[1].url,

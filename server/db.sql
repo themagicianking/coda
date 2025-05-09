@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS songs;
 
 CREATE TABLE songs (
   songorder SERIAL PRIMARY KEY,
+  uri VARCHAR(255) NOT NULL,
   artist VARCHAR(255) NOT NULL,
   image VARCHAR(255),
   title VARCHAR(255) NOT NULL,

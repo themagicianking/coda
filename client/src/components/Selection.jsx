@@ -35,7 +35,7 @@ export function Selection() {
 
   useEffect(() => {
     getAllSongs()
-    if (!localStorage.getItem('PLAYLIST_ID')) {
+    if (localStorage.getItem('PLAYLIST_ID') === null) {
       postPlaylist()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
