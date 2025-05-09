@@ -98,6 +98,31 @@ APP.get('/callback', async (req, res) => {
   }
 })
 
+APP.get('/me', async (req, res) => {
+  const ACCESS_TOKEN = req.query.ACCESS_TOKEN
+
+  try {
+    await fetch('https://api.spotify.com/v1/me', {
+      method: 'GET',
+      headers: { Authorization: 'Bearer ' + ACCESS_TOKEN },
+      json: true
+    })
+      .then((response) => {
+        if (response.status >= 400) {
+          throw response.statusText
+        }
+        return response.json()
+      })
+      .then((json) => {
+        console.log('Sending user profile to the client.')
+        res.send(json)
+      })
+  } catch (error) {
+    console.error('Error fetching user profile:', error)
+    res.status(500).send('Failed to fetch user profile.')
+  }
+})
+
 APP.get('/search', async (req, res) => {
   const ACCESS_TOKEN = req.query.ACCESS_TOKEN
   if (!ACCESS_TOKEN) {
@@ -199,8 +224,8 @@ APP.post('/refresh_token', async (req, res) => {
 APP.post('/playlist', async (req, res) => {
   const ACCESS_TOKEN = req.body.ACCESS_TOKEN
   const USER_ID = req.body.USER_ID
-  const PLAYLIST_NAME = "Untitled Playlist"
-  const DESCRIPTION = "Created with the Coda app via Spotify API"
+  const PLAYLIST_NAME = 'Untitled Playlist'
+  const DESCRIPTION = 'Created with the Coda app via Spotify API'
 
   try {
     await fetch(`https://api.spotify.com/v1/users/${USER_ID}/playlists`, {
