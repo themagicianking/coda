@@ -28,7 +28,7 @@ export function Selection() {
   }
 
   if (REFRESH_TOKEN) {
-    setItemWithExpiration('REFRESH_TOKEN', REFRESH_TOKEN, 60)
+    setItemWithExpiration('REFRESH_TOKEN', REFRESH_TOKEN, 120)
   }
 
   async function getAllSongs() {
