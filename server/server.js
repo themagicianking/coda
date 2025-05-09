@@ -35,6 +35,25 @@ const generateRandomString = (length) => {
   return crypto.randomBytes(60).toString('hex').slice(0, length)
 }
 
+async function getUserId(accessToken) {
+  try {
+    await fetch(`${SERVER_URL}/me?ACCESS_TOKEN=${accessToken}`)
+      .then((response) => {
+        if (response.status >= 400) {
+          throw response.statusText
+        }
+        return response.json()
+      })
+      .then((json) => {
+        console.log('Got user profile information.')
+        return json.id
+      })
+  } catch (error) {
+    console.error('Error fetching user profile:', error)
+    return null
+  }
+}
+
 APP.get('/login', function (req, res) {
   const STATE = generateRandomString(16)
   res.cookie(STATEKEY, STATE)
@@ -223,7 +242,7 @@ APP.post('/refresh_token', async (req, res) => {
 
 APP.post('/playlist', async (req, res) => {
   const ACCESS_TOKEN = req.body.ACCESS_TOKEN
-  const USER_ID = req.body.USER_ID
+  const USER_ID = await getUserId(ACCESS_TOKEN)
   const PLAYLIST_NAME = 'Untitled Playlist'
   const DESCRIPTION = 'Created with the Coda app via Spotify API'
 
@@ -236,7 +255,7 @@ APP.post('/playlist', async (req, res) => {
       },
       body: JSON.stringify({
         name: PLAYLIST_NAME,
-        description: DESCRIPTION || 'New playlist created via API',
+        description: DESCRIPTION,
         public: true
       })
         .then((response) => {
