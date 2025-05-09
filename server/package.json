@@ -16,7 +16,6 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "pg": "^8.14.1",
-    "request": "^2.88.2",
     "url-search-params-polyfill": "^8.2.5"
   }
 }

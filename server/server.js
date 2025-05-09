@@ -6,7 +6,6 @@ import crypto from 'crypto'
 import querystring from 'querystring'
 import cookieParser from 'cookie-parser'
 import 'url-search-params-polyfill'
-import request from 'request'
 
 const PORT = process.env.PORT
 const SERVER_URL = process.env.SERVER_URL
