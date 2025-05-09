@@ -9,11 +9,32 @@ import './annotations.css'
 export function Annotations() {
   const SERVER_URL = useContext(ServerContext)
   const [orderNum, setOrderNum] = useState(0)
-  const [song, setSong] = useState()
+  const [songs, setSongs] = useState()
+  const [note, setNote] = useState('')
   const [error, setError] = useState()
   const [hasPrevSong, setHasPrevSong] = useState(false)
   const [hasNextSong, setHasNextSong] = useState(false)
   const navigate = useNavigate()
+
+  async function getAllSongs() {
+    try {
+      await fetch(`${SERVER_URL}/allsongs`)
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          console.log('Got all songs from the server.')
+          return res.json()
+        })
+        .then((json) => {
+          setSongs(json)
+        })
+    } catch (error) {
+      throw new Error(
+        `Could not get songs from server. The following error occurred: ${error}`
+      )
+    }
+  }
 
   const goToPrevSong = () => {
     putNote()
@@ -31,7 +52,10 @@ export function Annotations() {
   }
 
   const updateNote = (newNote) => {
-    setSong({ ...song, note: newNote })
+    let newSongs = songs.map((song, index) =>
+      index == orderNum ? { ...song, note: newNote } : song
+    )
+    setSongs(newSongs)
   }
 
   async function getNextSong() {
@@ -157,7 +181,8 @@ export function Annotations() {
   }
 
   useEffect(() => {
-    getNextSong()
+    getAllSongs()
+    // getNextSong()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -171,8 +196,13 @@ export function Annotations() {
   return (
     <div className="annotations">
       <h1 className="title">Add Your Notes</h1>
-      {song ? (
-        <>
+      {songs ? (
+        <div className="main">
+          <SongInfo song={songs[orderNum]} />
+          <NoteInput song={songs[orderNum]} updateNote={updateNote} />
+        </div>
+      ) : (
+        /* <>
           <div className="main">
             <SongInfo song={song} />
             <NoteInput song={song} updateNote={updateNote} />
@@ -193,8 +223,7 @@ export function Annotations() {
               <></>
             )}
           </div>
-        </>
-      ) : (
+        </>*/
         <p>Could not fetch song data. The following error occurred: {error}</p>
       )}
 
