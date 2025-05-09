@@ -76,7 +76,7 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - The client renders the `NoteInput` component with the correct values from the `song` prop
 - The client renders the `Result` component with the correct values from the `song` prop
 - The client renders the `Search` component
-- The client renders the `SelectedSongList` component with the correct values from the `list` prop
+- The client renders the `SelectedSongList` component with the correct values from the `songs` prop
 - The client renders the `Selection` component
 - The client renders the `Song` component with the correct values from the `song` prop
 - The client renders the `SongInfo` component with the correct values from the `song` prop
@@ -88,6 +88,10 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - The client renders the main components in the `Annotation` component if `song` is not null
 - The client renders the previous song button in the `Annotation` component if `hasPrevSong` is `true`
 - The client renders the next song button in the `Annotation` component if `hasNextSong` is `true`
+- The client renders the `Playlist` component
+- Write mock API calls to test `getAllSongs()` in the `Playlist` component
+- The client renders the `PlaylistDetails` componet with the correct values from the `details` prop
+- The client renders the `PlaylistSongList` component with the correct values from the `songs` prop
 - Write mock API calls to test `getResults()` in the `Search` component
 - The client renders the ordered list of songs in the `Search` component if `results` is not null and `error` if it is
 - The client renders the `SelectedSongList` component in the `Selection` component if `selected` is not null and `error` if it is

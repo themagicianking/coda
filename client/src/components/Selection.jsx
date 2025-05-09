@@ -102,11 +102,11 @@ export function Selection() {
 
   return (
     <div className="selection">
-      <h1 className='title'>Choose Your Songs</h1>
+      <h1 className="title">Choose Your Songs</h1>
       <div className="lists">
         <Search handleSelect={addSong} />
         {selected ? (
-          <SelectedSongList list={selected} handleRemove={removeSong} />
+          <SelectedSongList songs={selected} handleRemove={removeSong} />
         ) : (
           <p>
             Could not get songs from server. The following error occurred:{' '}
@@ -115,8 +115,12 @@ export function Selection() {
         )}
       </div>
       <div className="nav">
-        <a><button onClick={goToPrev}>Previous</button></a>
-        <a><button onClick={handleNextPage}>Next</button></a>
+        <a>
+          <button onClick={goToPrev}>Previous</button>
+        </a>
+        <a>
+          <button onClick={handleNextPage}>Next</button>
+        </a>
       </div>
     </div>
   )
