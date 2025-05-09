@@ -13,32 +13,29 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 3. Navigate into the server directory and rename the `.envexample` file to `.env`. The values for this file are as follows:
 
    ```
-   PGUSER="user"
-   PGHOST="localhost"
-   PGDATABASE="coda"
-   PGPASSWORD="password"
-   CLIENT_ID="client id"
-   CLIENT_SECRET="client secret"
-   RAILWAY_ENVIRONMENT_NAME="development"
-   REDIRECT_URI="uri"
-   USERID_URI="uri"
-   SELECTION_URI="uri"
+    PORT=5000
+    SERVER_URL="URL"
+    CLIENT_URL="URL"
+    CLIENT_ID="CLIENT_ID"
+    CLIENT_SECRET="CLIENT_SECRET"
+    PGUSER="user"
+    PGHOST="localhost"
+    PGDATABASE="coda"
+    PGPASSWORD="password"
    ```
 
    If you are running the app locally, you will need to set up your database in postgresql first. In psql, run the command `CREATE DATABASE {your database name} WITH OWNER {your username}`. Then, run `psql -X {your database name} < db.sql`. This should create the database with a table to store song data.
 
 4. Fill in `PGDATABASE` with your database name and `PGUSER` with your username.
 5. Fill in `PGPASSWORD` with your computer's password.
-6. For the rest of the credentials, you will need to register with [Spotify's developer API](https://developer.spotify.com). After registering, navigate to your dashboard and create a new app.
+6. Fill in `CLIENT_URL` with `http://localhost:{your client port}`.
+7. For the rest of the credentials, you will need to register with [Spotify's developer API](https://developer.spotify.com). After registering, navigate to your dashboard and create a new app.
 
-   When asked to give a redirect uri, input `http://localhost:{your server port}/callback`. In your `.env` file, input the same value for `REDIRECT_URI`.
+   When asked to give a redirect uri, input `http://localhost:{your server port}/callback`. In your `.env` file, input `http://localhost:{your server port}` for `SERVER_URL`.
 
    Fill in `CLIENT_ID` and `CLIENT_SECRET` with the data that's given on your dashboard after you create your app.
-
-7. Fill in `USERID_URI`with `http://localhost:{your server port}/userid`.
-8. Fill in `SELECTION_URI` with `http://localhost:{your client port}/selection`.
-9. In the server directory, run `npm run start`.
-10. Navigate into the client directory and run `npm run dev`. Open a new window and navigate to `http://localhost:{your client port}/welcome` (Vite usually defaults to 5173 for the port). The app should be on display!
+8. In the server directory, run `npm run start`.
+9. Navigate into the client directory and run `npm run dev`. Open a new window and navigate to `http://localhost:{your client port}/welcome` (Vite usually defaults to `5173` for the port). The app should be on display!
 
 ## Usage
 
@@ -112,8 +109,8 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 ## To Do
 
 - [ ] Refactor back end to store/use as much data as possible in Spotify
-- [ ] Write function that automatically refreshes `accessToken` if it is expired
-- [ ] Break components into smaller pieces where necessary
+- [ ] **Write function that automatically refreshes `accessToken` if it is expired**
+- [ ] **Break components into smaller pieces where necessary**
 - [ ] Write all planned tests
 - [ ] Add an imbedded music player to the playlist page
 - [ ] Create a personalization page
@@ -122,8 +119,8 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - [ ] Display track art for each song
 - [ ] Incorporate the [Genius API](https://docs.genius.com) to get lyrics for each song
 - [ ] Create the ability to reorder songs on the selection page
-- [ ] Create user visible error messages for every failed API call clientside
-- [ ] Refactor server to use one server url in `.env`
+- [ ] **Create user visible error messages for every failed API call clientside**
+- [x] **Refactor server to use one server url in `.env`**
 - [ ] Update CSS to convert cassette image into a cropped image with overlay rather than background image for a component
-- [ ] Update CSS so that button highlight disappears after click
-- [ ] Refactor `formatSong()` to support multiple artists
+- [ ] **Update CSS so that button highlight disappears after click**
+- [ ] **Refactor `formatSong()` to support multiple artists**

@@ -7,9 +7,20 @@ import querystring from 'querystring'
 import cookieParser from 'cookie-parser'
 import request from 'request'
 
+const PORT = process.env.PORT
+const SERVER_URL = process.env.SERVER_URL
+const CLIENT_URL = process.env.CLIENT_URL
+const CLIENT_ID = process.env.CLIENT_ID
+const CLIENT_SECRET = process.env.CLIENT_SECRET
+
+const STATEKEY = 'spotify_auth_state'
+
 const APP = express()
-const PORT = 5000
-const ENVIRONMENT = process.env.RAILWAY_ENVIRONMENT_NAME
+
+APP.use(cors())
+APP.use(express.json())
+APP.use(cookieParser())
+
 const { Pool } = pkg
 
 const pool = new Pool({
@@ -18,22 +29,12 @@ const pool = new Pool({
   database: process.env.PGDATABASE,
   password: process.env.PGPASSWORD
 })
+
 let accessToken = ''
-
-APP.use(cors())
-APP.use(express.json())
-APP.use(cookieParser())
-
-const CLIENT_ID = process.env.CLIENT_ID
-const CLIENT_SECRET = process.env.CLIENT_SECRET
-const REDIRECT_URI = process.env.REDIRECT_URI
-const SELECTION_URI = process.env.SELECTION_URI
 
 const generateRandomString = (length) => {
   return crypto.randomBytes(60).toString('hex').slice(0, length)
 }
-
-const STATEKEY = 'spotify_auth_state'
 
 APP.get('/login', function (req, res) {
   const STATE = generateRandomString(16)
@@ -46,7 +47,7 @@ APP.get('/login', function (req, res) {
         response_type: 'code',
         client_id: CLIENT_ID,
         scope: SCOPE,
-        redirect_uri: REDIRECT_URI,
+        redirect_uri: `${SERVER_URL}/callback`,
         state: STATE
       })
   )
@@ -72,7 +73,7 @@ APP.get('/callback', function (req, res) {
       url: 'https://accounts.spotify.com/api/token',
       form: {
         code: CODE,
-        redirect_uri: REDIRECT_URI,
+        redirect_uri: `${SERVER_URL}/callback`,
         grant_type: 'authorization_code'
       },
       headers: {
@@ -90,7 +91,7 @@ APP.get('/callback', function (req, res) {
         // refreshToken = body.refresh_token
 
         // redirects the user to song selection page
-        res.redirect(SELECTION_URI)
+        res.redirect(`${CLIENT_URL}/selection`)
       } else {
         res.redirect(
           '/#' +
@@ -125,10 +126,12 @@ APP.get('/allsongs', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   try {
-    await DATABASE.query('SELECT * FROM songs ORDER BY songorder;').then((songs) => {
-      console.log('Sending all songs to the client.')
-      res.send(songs.rows)
-    })
+    await DATABASE.query('SELECT * FROM songs ORDER BY songorder;').then(
+      (songs) => {
+        console.log('Sending all songs to the client.')
+        res.send(songs.rows)
+      }
+    )
   } catch (error) {
     res.status(500).send(error)
   }
