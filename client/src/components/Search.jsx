@@ -30,10 +30,17 @@ export function Search({ handleSelect }) {
   }
 
   function formatSong(song) {
+    let artist = song.artists[0].name
+    if (song.artists.length > 1) {
+      for (let i = 1; i < song.artists.length; i++) {
+        artist = artist + ` & ${song.artists[i].name}`
+      }
+    }
+
     return {
       spotifyid: song.id,
       title: song.name,
-      artist: song.artists[0].name,
+      artist: artist,
       note: ''
     }
   }

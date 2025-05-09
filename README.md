@@ -116,7 +116,7 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 
 - [ ] Refactor back end to store/use as much data as possible in Spotify
 - [ ] **Write function that automatically refreshes `accessToken` if it is expired**
-- [ ] **Break components into smaller pieces where necessary**
+- [x] Break components into smaller pieces where necessary
 - [ ] Write all planned tests
 - [ ] Add an imbedded music player to the playlist page
 - [ ] Create a personalization page
@@ -129,5 +129,5 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - [x] Refactor server to use one server url in `.env`
 - [ ] Update CSS to convert cassette image into a cropped image with overlay rather than background image for a component
 - [ ] **Update CSS so that button highlight disappears after click**
-- [ ] **Refactor `formatSong()` to support multiple artists**
+- [x] Refactor `formatSong()` to support multiple artists
 - [ ] Refactor annotations page to render all songs at once and display one at a time
