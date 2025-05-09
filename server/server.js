@@ -36,6 +36,7 @@ const generateRandomString = (length) => {
 }
 
 async function getUserId(accessToken) {
+  let userId = null
   try {
     await fetch(`${SERVER_URL}/me?ACCESS_TOKEN=${accessToken}`)
       .then((response) => {
@@ -46,12 +47,13 @@ async function getUserId(accessToken) {
       })
       .then((json) => {
         console.log('Got user profile information.')
-        return json.id
+        userId = json.id
       })
   } catch (error) {
     console.error('Error fetching user profile:', error)
     return null
   }
+  return userId
 }
 
 APP.get('/login', function (req, res) {
@@ -133,7 +135,7 @@ APP.get('/me', async (req, res) => {
         return response.json()
       })
       .then((json) => {
-        console.log('Sending user profile to the client.')
+        console.log('Got user profile information.')
         res.send(json)
       })
   } catch (error) {
@@ -258,18 +260,18 @@ APP.post('/playlist', async (req, res) => {
         description: DESCRIPTION,
         public: true
       })
-        .then((response) => {
-          if (response.status >= 400) {
-            throw response.statusText
-          }
-          console.log('Playlist created successfully.')
-          return response.json()
-        })
-        .then((json) => {
-          console.log('Sending playlist details to the client.')
-          res.send(json)
-        })
     })
+      .then((response) => {
+        if (response.status >= 400) {
+          throw response.statusText
+        }
+        console.log('Playlist created successfully.')
+        return response.json()
+      })
+      .then((json) => {
+        console.log('Sending playlist details to the client.')
+        res.send(json)
+      })
   } catch (error) {
     console.error('Error creating playlist:', error)
     res.status(500).send('Failed to create playlist.')

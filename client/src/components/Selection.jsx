@@ -23,6 +23,8 @@ export function Selection() {
   const ACCESS_TOKEN = urlParams.get('ACCESS_TOKEN')
   const REFRESH_TOKEN = urlParams.get('REFRESH_TOKEN')
 
+  // todo: refactor so selection page checks for access token expiration as well
+
   if (ACCESS_TOKEN) {
     setItemWithExpiration('ACCESS_TOKEN', ACCESS_TOKEN, 60)
   }
@@ -30,6 +32,16 @@ export function Selection() {
   if (REFRESH_TOKEN) {
     setItemWithExpiration('REFRESH_TOKEN', REFRESH_TOKEN, 120)
   }
+
+  useEffect(() => {
+    getAllSongs()
+    if (!localStorage.getItem('PLAYLIST_ID')) {
+      postPlaylist()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {}, [selected])
 
   async function getAllSongs() {
     try {
@@ -50,18 +62,31 @@ export function Selection() {
     }
   }
 
-  useEffect(() => {
-    getAllSongs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {}, [selected])
-
-  const addSong = (song) => {
-    postSong(song)
-  }
-  const removeSong = (songorder) => {
-    deleteSong(songorder)
+  async function postPlaylist() {
+    try {
+      await fetch(`${SERVER_URL}/playlist`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ACCESS_TOKEN: ACCESS_TOKEN })
+      })
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          console.log(
+            `Playlist posted successfully, server sent response ${res.status}`
+          )
+          return res.json()
+        })
+        .then((json) => {
+          localStorage.setItem('PLAYLIST_ID', json.id)
+          console.log(`Successfully created playlist with ID: ${json.id}`)
+        })
+    } catch (e) {
+      setError(
+        `Could not add playlist to server. The following error occurred: ${e}`
+      )
+    }
   }
 
   async function postSong(song) {
@@ -114,11 +139,19 @@ export function Selection() {
     }
   }
 
-  const goToPrev = () => {
+  const addSong = (song) => {
+    postSong(song)
+  }
+
+  const removeSong = (songorder) => {
+    deleteSong(songorder)
+  }
+
+  const goToPrevPage = () => {
     navigate('/welcome')
   }
 
-  const handleNextPage = () => {
+  const goToNextPage = () => {
     navigate('/annotations')
   }
 
@@ -135,10 +168,10 @@ export function Selection() {
       </div>
       <div className="nav">
         <a>
-          <button onClick={goToPrev}>Previous</button>
+          <button onClick={goToPrevPage}>Previous</button>
         </a>
         <a>
-          <button onClick={handleNextPage}>Next</button>
+          <button onClick={goToNextPage}>Next</button>
         </a>
       </div>
     </div>
