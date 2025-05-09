@@ -48,7 +48,10 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 3. On the annotations page, each of the songs you selected will be displayed along with a text box. You can now add your notes to each song. Notes will automatically be saved when you click prev/next song and prev/next page.
 4. On the playlist page, you may view all of the songs you have chosen with the notes you've given them. Clicking "home" will return you to the welcome page. Currently, your playlist data will persist when navigating home.
 
-<!-- todo: add troubleshooting section -->
+## Troubleshooting
+
+- As of right now, the app does not automatically refresh the Spotify access token when it expires (it lasts for one hour). This can be fixed by simply clicking the "click here to get started" button on the welcome page.
+- You or other people may receive a ``check settings...is not valid JSON`` error on the selection page if deploying the app publicly. This is because if your app is set to development mode in your Spotify developer dashboard, you must manually authorize users in the app's settings on your Spotify developer account in order for them to be able to use the app.
 
 ## Features
 
