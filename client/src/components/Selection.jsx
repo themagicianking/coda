@@ -9,7 +9,7 @@ function setItemWithExpiration(key, value, expirationInMinutes) {
   const now = new Date()
   const item = {
     value: value,
-    expiration: now.getTime() + expirationInMinutes * 60 * 1000 // Convert minutes to milliseconds
+    expiration: now.getTime() + expirationInMinutes * 60 * 1000
   }
   localStorage.setItem(key, JSON.stringify(item))
 }
@@ -21,9 +21,14 @@ export function Selection() {
   const navigate = useNavigate()
   const urlParams = new URLSearchParams(window.location.search)
   const ACCESS_TOKEN = urlParams.get('ACCESS_TOKEN')
+  const REFRESH_TOKEN = urlParams.get('REFRESH_TOKEN')
 
   if (ACCESS_TOKEN) {
     setItemWithExpiration('ACCESS_TOKEN', ACCESS_TOKEN, 60)
+  }
+
+  if (REFRESH_TOKEN) {
+    setItemWithExpiration('REFRESH_TOKEN', REFRESH_TOKEN, 60)
   }
 
   async function getAllSongs() {

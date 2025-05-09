@@ -3,32 +3,41 @@ import { ServerContext } from './ServerContext.jsx'
 import { Result } from './Result.jsx'
 import './selection.css'
 
+function setItemWithExpiration(key, value, expirationInMinutes) {
+  const now = new Date()
+  const item = {
+    value: value,
+    expiration: now.getTime() + expirationInMinutes * 60 * 1000
+  }
+  localStorage.setItem(key, JSON.stringify(item))
+}
+
 function getItemWithExpiration(key) {
   const itemStr = localStorage.getItem(key)
   if (!itemStr) {
-    return null // Item doesn't exist
+    return null
   }
 
   const item = JSON.parse(itemStr)
   const now = new Date()
 
-  // Check if the item is expired
   if (now.getTime() > item.expiration) {
-    localStorage.removeItem(key) // Remove expired item
+    localStorage.removeItem(key)
     return null
   }
 
-  return item.value // Return the value if not expired
+  return item.value
 }
 
 export function Search({ handleSelect }) {
   const [results, setResults] = useState()
   const [error, setError] = useState()
   const SERVER_URL = useContext(ServerContext)
-  const ACCESS_TOKEN = getItemWithExpiration('ACCESS_TOKEN')
 
   async function getResults(input) {
+    const ACCESS_TOKEN = await getValidAccessToken()
     try {
+      console.log(ACCESS_TOKEN)
       await fetch(
         `${SERVER_URL}/search?input=${input}&ACCESS_TOKEN=${ACCESS_TOKEN}`
       )
@@ -46,6 +55,40 @@ export function Search({ handleSelect }) {
       setError(
         `Could not get search results from server. The following error occurred: ${e}`
       )
+    }
+  }
+
+  async function getValidAccessToken() {
+    if (!getItemWithExpiration('ACCESS_TOKEN')) {
+      const refreshToken = getItemWithExpiration('REFRESH_TOKEN')
+      if (refreshToken) {
+        return await refreshAccessToken(refreshToken)
+      } else {
+        console.error('No refresh token available.')
+        return null
+      }
+    }
+    return getItemWithExpiration('ACCESS_TOKEN')
+  }
+
+  async function refreshAccessToken(refreshToken) {
+    try {
+      const response = await fetch(`${SERVER_URL}/refresh_token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ REFRESH_TOKEN: refreshToken })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to refresh access token.')
+      }
+
+      const data = await response.json()
+      setItemWithExpiration('ACCESS_TOKEN', data.ACCESS_TOKEN)
+      return data.ACCESS_TOKEN
+    } catch (error) {
+      console.error('Error refreshing access token:', error)
+      return null
     }
   }
 

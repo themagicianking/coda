@@ -86,9 +86,8 @@ APP.get('/callback', async (req, res) => {
           return response.json()
         })
         .then((json) => {
-          // refreshToken = json.refresh_token
           res.redirect(
-            `${CLIENT_URL}/selection?ACCESS_TOKEN=${json.access_token}`
+            `${CLIENT_URL}/selection?ACCESS_TOKEN=${json.access_token}&REFRESH_TOKEN=${json.refresh_token}`
           )
         })
     } catch (error) {
@@ -164,7 +163,7 @@ APP.put('/note', async (req, res) => {
 })
 
 APP.post('/refresh_token', async (req, res) => {
-  const REFRESH_TOKEN = req.body.refresh_token
+  const REFRESH_TOKEN = req.body.REFRESH_TOKEN
 
   const formData = new URLSearchParams()
   formData.append('grant_type', 'refresh_token')
