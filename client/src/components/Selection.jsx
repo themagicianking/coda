@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useContext, useEffect, useState } from 'react'
 import { ServerContext } from './ServerContext.jsx'
 import { Search } from './Search.jsx'
-import { SongList } from './SongList.jsx'
+import { SelectedSongList } from './SelectedSongList.jsx'
 import './selection.css'
 
 export function Selection() {
@@ -106,7 +106,7 @@ export function Selection() {
       <div className="lists">
         <Search handleSelect={addSong} />
         {selected ? (
-          <SongList list={selected} handleRemove={removeSong} />
+          <SelectedSongList list={selected} handleRemove={removeSong} />
         ) : (
           <p>
             Could not get songs from server. The following error occurred:{' '}

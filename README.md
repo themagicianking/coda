@@ -34,6 +34,7 @@ _This project also utilizes Skeleton CSS and React Testing Library._
    When asked to give a redirect uri, input `http://localhost:{your server port}/callback`. In your `.env` file, input `http://localhost:{your server port}` for `SERVER_URL`.
 
    Fill in `CLIENT_ID` and `CLIENT_SECRET` with the data that's given on your dashboard after you create your app.
+
 8. In the server directory, run `npm run start`.
 9. Navigate into the client directory and run `npm run dev`. Open a new window and navigate to `http://localhost:{your client port}/welcome` (Vite usually defaults to `5173` for the port). The app should be on display!
 
@@ -75,10 +76,10 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - The client renders the `NoteInput` component with the correct values from the `song` prop
 - The client renders the `Result` component with the correct values from the `song` prop
 - The client renders the `Search` component
+- The client renders the `SelectedSongList` component with the correct values from the `list` prop
 - The client renders the `Selection` component
 - The client renders the `Song` component with the correct values from the `song` prop
 - The client renders the `SongInfo` component with the correct values from the `song` prop
-- The client renders the `SongList` component with the correct values from the `list` prop
 - The client renders the `Welcome` component
 
 ### Planned Tests
@@ -89,10 +90,11 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - The client renders the next song button in the `Annotation` component if `hasNextSong` is `true`
 - Write mock API calls to test `getResults()` in the `Search` component
 - The client renders the ordered list of songs in the `Search` component if `results` is not null and `error` if it is
+- The client renders the `SelectedSongList` component in the `Selection` component if `selected` is not null and `error` if it is
 - Write mock API calls to test `getAllSongs()`, `postSong()`, `deleteSong()` in the `Selection` component
-- The client renders the `SongList` component in the `Selection` component if `selected` is not null and `error` if it is
-- The client renders lyrics in the `SongInfo` component if lyrics are not null in the `song` prop and a message about no lyrics being found if they are null
 - The client renders the ordered list of songs in the `SongList` component if the `list` prop has a length > 0 and `<p>None yet!</p>` if not
+- The client renders lyrics in the `SongInfo` component if lyrics are not null in the `song` prop and a message about no lyrics being found if they are null
+
 - Write mock API calls to test all server endpoints
   - GET login
   - GET callback
@@ -120,7 +122,8 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - [ ] Incorporate the [Genius API](https://docs.genius.com) to get lyrics for each song
 - [ ] Create the ability to reorder songs on the selection page
 - [ ] **Create user visible error messages for every failed API call clientside**
-- [x] **Refactor server to use one server url in `.env`**
+- [x] Refactor server to use one server url in `.env`
 - [ ] Update CSS to convert cassette image into a cropped image with overlay rather than background image for a component
 - [ ] **Update CSS so that button highlight disappears after click**
 - [ ] **Refactor `formatSong()` to support multiple artists**
+- [ ] Refactor annotations page to render all songs at once and display one at a time

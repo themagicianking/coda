@@ -1,7 +1,7 @@
 import { Song } from './Song.jsx'
 import "./selection.css"
 
-export function SongList({ list, handleRemove }) {
+export function SelectedSongList({ list, handleRemove }) {
   return (
     <article>
       <h2>Selected Songs</h2>
