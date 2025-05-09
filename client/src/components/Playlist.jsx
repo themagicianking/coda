@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from 'react'
 import { ServerContext } from './ServerContext.jsx'
 import { useNavigate } from 'react-router-dom'
-import { SongCard } from './SongCard'
+import { PlaylistDetails } from './PlaylistDetails.jsx'
+import { PlaylistSongList } from './PlaylistSongList.jsx'
 import './playlist.css'
 
-const PERSONALIZATION = {
+const DETAILS = {
   title: 'A Playlist',
   sender: 'Me',
   recipient: 'You',
@@ -46,19 +47,9 @@ export function Playlist() {
 
   return (
     <div className="playlist">
-      <div className="card">
-        <div className="title">
-          <h1>{PERSONALIZATION.title}</h1>
-          <h2>
-            From {PERSONALIZATION.sender} to {PERSONALIZATION.recipient}
-          </h2>
-        </div>
-        <p className="description">{PERSONALIZATION.description}</p>
-        <ol className="songs">
-          {songs.map((song) => (
-            <SongCard key={song.songorder} song={song} />
-          ))}
-        </ol>
+      <div className="playlist-box">
+        <PlaylistDetails details={DETAILS} />
+        <PlaylistSongList songs={songs} />
       </div>
       <a>
         <button onClick={goHome}>Home</button>
