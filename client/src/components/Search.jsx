@@ -37,7 +37,6 @@ export function Search({ handleSelect }) {
   async function getResults(input) {
     const ACCESS_TOKEN = await getValidAccessToken()
     try {
-      console.log(ACCESS_TOKEN)
       await fetch(
         `${SERVER_URL}/search?input=${input}&ACCESS_TOKEN=${ACCESS_TOKEN}`
       )
@@ -48,7 +47,6 @@ export function Search({ handleSelect }) {
           return res.json()
         })
         .then((json) => {
-          console.log(json)
           setResults(json.tracks.items)
         })
     } catch (e) {
