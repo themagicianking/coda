@@ -5,6 +5,15 @@ import { Search } from './Search.jsx'
 import { SelectedSongList } from './SelectedSongList.jsx'
 import './selection.css'
 
+function setItemWithExpiration(key, value, expirationInMinutes) {
+  const now = new Date()
+  const item = {
+    value: value,
+    expiration: now.getTime() + expirationInMinutes * 60 * 1000 // Convert minutes to milliseconds
+  }
+  localStorage.setItem(key, JSON.stringify(item))
+}
+
 export function Selection() {
   const SERVER_URL = useContext(ServerContext)
   const [selected, setSelected] = useState()
@@ -14,7 +23,7 @@ export function Selection() {
   const ACCESS_TOKEN = urlParams.get('ACCESS_TOKEN')
 
   if (ACCESS_TOKEN) {
-    localStorage.setItem('ACCESS_TOKEN', ACCESS_TOKEN)
+    setItemWithExpiration('ACCESS_TOKEN', ACCESS_TOKEN, 60)
   }
 
   async function getAllSongs() {

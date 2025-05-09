@@ -3,11 +3,29 @@ import { ServerContext } from './ServerContext.jsx'
 import { Result } from './Result.jsx'
 import './selection.css'
 
+function getItemWithExpiration(key) {
+  const itemStr = localStorage.getItem(key)
+  if (!itemStr) {
+    return null // Item doesn't exist
+  }
+
+  const item = JSON.parse(itemStr)
+  const now = new Date()
+
+  // Check if the item is expired
+  if (now.getTime() > item.expiration) {
+    localStorage.removeItem(key) // Remove expired item
+    return null
+  }
+
+  return item.value // Return the value if not expired
+}
+
 export function Search({ handleSelect }) {
   const [results, setResults] = useState()
   const [error, setError] = useState()
   const SERVER_URL = useContext(ServerContext)
-  const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN')
+  const ACCESS_TOKEN = getItemWithExpiration('ACCESS_TOKEN')
 
   async function getResults(input) {
     try {

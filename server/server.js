@@ -31,8 +31,6 @@ const pool = new Pool({
   password: process.env.PGPASSWORD
 })
 
-let accessToken = ''
-
 const generateRandomString = (length) => {
   return crypto.randomBytes(60).toString('hex').slice(0, length)
 }
@@ -108,7 +106,7 @@ APP.get('/search', async (req, res) => {
     return
   }
   const INPUT = req.query.input
-  try {
+  // try {
     await fetch(
       `https://api.spotify.com/v1/search?q=track%3A${INPUT}&type=track&include_external=audio`,
       {
@@ -127,9 +125,9 @@ APP.get('/search', async (req, res) => {
         console.log('Sending search results to the client.')
         res.send(json)
       })
-  } catch (error) {
-    res.status(500).send(error)
-  }
+  // } catch (error) {
+  //   res.status(500).send(error)
+  // }
 })
 
 APP.get('/allsongs', async (req, res) => {
