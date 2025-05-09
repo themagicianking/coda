@@ -102,13 +102,18 @@ APP.get('/callback', async (req, res) => {
 })
 
 APP.get('/search', async (req, res) => {
+  const ACCESS_TOKEN = req.query.ACCESS_TOKEN
+  if (!ACCESS_TOKEN) {
+    res.status(401).send('No access token provided.')
+    return
+  }
   const INPUT = req.query.input
   try {
     await fetch(
       `https://api.spotify.com/v1/search?q=track%3A${INPUT}&type=track&include_external=audio`,
       {
         method: 'GET',
-        headers: { Authorization: 'Bearer ' + accessToken },
+        headers: { Authorization: 'Bearer ' + ACCESS_TOKEN },
         json: true
       }
     )

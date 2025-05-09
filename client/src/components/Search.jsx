@@ -7,10 +7,13 @@ export function Search({ handleSelect }) {
   const [results, setResults] = useState()
   const [error, setError] = useState()
   const SERVER_URL = useContext(ServerContext)
+  const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN')
 
   async function getResults(input) {
     try {
-      await fetch(`${SERVER_URL}/search?input=${input}`)
+      await fetch(
+        `${SERVER_URL}/search?input=${input}&ACCESS_TOKEN=${ACCESS_TOKEN}`
+      )
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
