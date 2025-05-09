@@ -25,7 +25,7 @@ export function Selection() {
           setSelected(json)
         })
     } catch (e) {
-      setError(e.message)
+      setError(e)
     }
   }
 
@@ -61,9 +61,9 @@ export function Selection() {
         .then(() => {
           getAllSongs()
         })
-    } catch (error) {
-      throw new Error(
-        `Could not add song to server. The following error occurred: ${error}`
+    } catch (e) {
+      setError(
+        `Could not add song to server. The following error occurred: ${e}`
       )
     }
   }
@@ -86,9 +86,9 @@ export function Selection() {
         .then(() => {
           getAllSongs()
         })
-    } catch (error) {
-      throw new Error(
-        `Could not delete song from database. The following error occurred: ${error}`
+    } catch (e) {
+      setError(
+        `Could not delete song from database. The following error occurred: ${e}`
       )
     }
   }
@@ -109,10 +109,7 @@ export function Selection() {
         {selected ? (
           <SelectedSongList songs={selected} handleRemove={removeSong} />
         ) : (
-          <p>
-            Could not get songs from server. The following error occurred:{' '}
-            {error}
-          </p>
+          <p>{error}</p>
         )}
       </div>
       <div className="nav">

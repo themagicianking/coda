@@ -115,6 +115,9 @@ APP.get('/search', async (req, res) => {
   }
   try {
     request.get(options, function (error, response, body) {
+      if (response.status >= 400) {
+        throw response.status
+      }
       res.send(body)
     })
   } catch (error) {
@@ -133,7 +136,7 @@ APP.get('/allsongs', async (req, res) => {
       }
     )
   } catch (error) {
-    res.status(500).send(error)
+    res.status(500).send(error.message)
   }
 })
 

@@ -18,14 +18,12 @@ export function Search({ handleSelect }) {
           return res.json()
         })
         .then((json) => {
-          try {
-            setResults(json.tracks.items)
-          } catch {
-            setError('Could not retrieve Spotify search results.')
-          }
+          setResults(json.tracks.items)
         })
     } catch (e) {
-      setError(`Could not connect to API. The following error occurred: ${e}`)
+      setError(
+        `Could not get search results from server. The following error occurred: ${e}`
+      )
     }
   }
 
