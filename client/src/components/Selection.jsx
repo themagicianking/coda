@@ -21,11 +21,12 @@ export function Selection() {
           return res.json()
         })
         .then((json) => {
-          console.log(json)
           setSelected(json)
         })
     } catch (e) {
-      setError(e)
+      setError(
+        `Could not get songs from server. The following error occurred: ${e}`
+      )
     }
   }
 

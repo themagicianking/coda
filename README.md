@@ -121,7 +121,7 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - [ ] Display track art for each song
 - [ ] Incorporate the [Genius API](https://docs.genius.com) to get lyrics for each song
 - [ ] Create the ability to reorder songs on the selection page
-- [ ] **Create user visible error messages for every failed API call clientside**
+- [x] Create user visible error messages for every failed API call clientside
 - [x] Refactor server to use one server url in `.env`
 - [ ] Update CSS to convert cassette image into a cropped image with overlay rather than background image for a component
 - [x] Update CSS so that button highlight disappears after click

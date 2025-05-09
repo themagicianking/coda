@@ -14,6 +14,7 @@ const DETAILS = {
 
 export function Playlist() {
   const [songs, setSongs] = useState([])
+  const [error, setError] = useState()
   const SERVER_URL = useContext(ServerContext)
   const navigate = useNavigate()
 
@@ -28,14 +29,13 @@ export function Playlist() {
           if (res.status >= 400) {
             throw res.status
           }
-          console.log('Got all songs from the server.')
           return res.json()
         })
         .then((json) => {
           setSongs(json)
         })
     } catch (error) {
-      throw new Error(
+      setError(
         `Could not get songs from server. The following error occurred: ${error}`
       )
     }
@@ -48,10 +48,14 @@ export function Playlist() {
 
   return (
     <div className="playlist">
-      <div className="playlist-box">
-        <PlaylistDetails details={DETAILS} />
-        <PlaylistSongList songs={songs} />
-      </div>
+      {songs ? (
+        <div className="playlist-box">
+          <PlaylistDetails details={DETAILS} />
+          <PlaylistSongList songs={songs} />
+        </div>
+      ) : (
+        <p>{error}</p>
+      )}
       <a>
         <button onClick={goHome}>Home</button>
       </a>

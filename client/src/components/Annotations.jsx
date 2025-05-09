@@ -49,11 +49,11 @@ export function Annotations() {
           }
           return res.json()
         })
-        .then((json) => console.log(`Server response: ${json}`))
-    } catch (error) {
-      throw new Error(
-        `Could not update server. The following error occurred: ${error}`
-      )
+        .then((json) =>
+          console.log(`Note updated successfully. Server response: ${json}`)
+        )
+    } catch (e) {
+      console.log(`Could not update server. The following error occurred: ${e}`)
     }
   }
 
