@@ -4,7 +4,10 @@ export function Song({ song, handleRemove }) {
   }
   return (
     <li>
-      {song.title} by {song.artist}
+      <img src={song.image} alt="Album cover" />
+      <p>
+        {song.title} by {song.artist}
+      </p>
       <button onClick={updateSelections}>Remove</button>
     </li>
   )

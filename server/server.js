@@ -5,11 +5,23 @@ import 'dotenv/config'
 import crypto from 'crypto'
 import querystring from 'querystring'
 import cookieParser from 'cookie-parser'
-import request from 'request'
+import 'url-search-params-polyfill'
+
+const PORT = process.env.PORT
+const SERVER_URL = process.env.SERVER_URL
+const CLIENT_URL = process.env.CLIENT_URL
+const CLIENT_ID = process.env.CLIENT_ID
+const CLIENT_SECRET = process.env.CLIENT_SECRET
+
+const STATEKEY = 'spotify_auth_state'
 
 const APP = express()
-const PORT = 5000
-const ENVIRONMENT = process.env.RAILWAY_ENVIRONMENT_NAME
+
+APP.use(cors())
+APP.use(express.urlencoded({ extended: false }))
+APP.use(express.json())
+APP.use(cookieParser())
+
 const { Pool } = pkg
 
 const pool = new Pool({
@@ -18,106 +30,146 @@ const pool = new Pool({
   database: process.env.PGDATABASE,
   password: process.env.PGPASSWORD
 })
-let accessToken = ''
-
-APP.use(cors())
-APP.use(express.json())
-APP.use(cookieParser())
-
-const CLIENT_ID = process.env.CLIENT_ID
-const CLIENT_SECRET = process.env.CLIENT_SECRET
-const REDIRECT_URI = process.env.REDIRECT_URI
-const SELECTION_URI = process.env.SELECTION_URI
 
 const generateRandomString = (length) => {
   return crypto.randomBytes(60).toString('hex').slice(0, length)
 }
 
-const STATEKEY = 'spotify_auth_state'
+async function getUserId(accessToken) {
+  let userId = null
+  try {
+    await fetch(`${SERVER_URL}/me?ACCESS_TOKEN=${accessToken}`)
+      .then((response) => {
+        if (response.status >= 400) {
+          throw response.statusText
+        }
+        return response.json()
+      })
+      .then((json) => {
+        console.log('Got user profile information.')
+        userId = json.id
+      })
+  } catch (error) {
+    console.error('Error fetching user profile:', error)
+    return null
+  }
+  return userId
+}
 
 APP.get('/login', function (req, res) {
   const STATE = generateRandomString(16)
   res.cookie(STATEKEY, STATE)
-  // request authorization from spotify api
-  const SCOPE = 'user-read-private user-read-email'
+  const SCOPE = 'playlist-modify-public'
   res.redirect(
     'https://accounts.spotify.com/authorize?' +
       querystring.stringify({
         response_type: 'code',
         client_id: CLIENT_ID,
         scope: SCOPE,
-        redirect_uri: REDIRECT_URI,
+        redirect_uri: `${SERVER_URL}/callback`,
         state: STATE
       })
   )
 })
 
-APP.get('/callback', function (req, res) {
-  // request refresh and access tokens after checking the state parameter
-
+APP.get('/callback', async (req, res) => {
   const CODE = req.query.code || null
   const STATE = req.query.state || null
   const STORED_STATE = req.cookies ? req.cookies[STATEKEY] : null
+  const formData = new URLSearchParams()
+
+  formData.append('code', CODE)
+  formData.append('redirect_uri', `${SERVER_URL}/callback`)
+  formData.append('grant_type', 'authorization_code')
 
   if (STATE === null || STATE !== STORED_STATE) {
-    res.redirect(
-      '/#' +
-        querystring.stringify({
-          error: 'state_mismatch'
-        })
+    res.send(
+      'Could not get authentication token. The following error occurred: state mismatch.'
     )
   } else {
     res.clearCookie(STATEKEY)
-    const authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      form: {
-        code: CODE,
-        redirect_uri: REDIRECT_URI,
-        grant_type: 'authorization_code'
-      },
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded',
-        Authorization:
-          'Basic ' +
-          new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64')
-      },
-      json: true
+    try {
+      await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization:
+            'Basic ' +
+            new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64')
+        },
+        body: formData.toString(),
+        json: true
+      })
+        .then((response) => {
+          if (response.status >= 400) {
+            throw response.statusText
+          }
+          return response.json()
+        })
+        .then((json) => {
+          res.redirect(
+            `${CLIENT_URL}/selection?ACCESS_TOKEN=${json.access_token}&REFRESH_TOKEN=${json.refresh_token}`
+          )
+        })
+    } catch (error) {
+      res.send(
+        `Could not get authentication token. The following error occurred: ${error}`
+      )
     }
+  }
+})
 
-    request.post(authOptions, function (error, response, body) {
-      if (!error && response.statusCode === 200) {
-        accessToken = body.access_token
-        // todo: write function that uses refresh token to get new auth code
-        // when old auth code has expired
-        // refreshToken = body.refresh_token
+APP.get('/me', async (req, res) => {
+  const ACCESS_TOKEN = req.query.ACCESS_TOKEN
 
-        // redirects the user to song selection page
-        res.redirect(SELECTION_URI)
-      } else {
-        res.redirect(
-          '/#' +
-            querystring.stringify({
-              error: 'invalid_token'
-            })
-        )
-      }
+  try {
+    await fetch('https://api.spotify.com/v1/me', {
+      method: 'GET',
+      headers: { Authorization: 'Bearer ' + ACCESS_TOKEN },
+      json: true
     })
+      .then((response) => {
+        if (response.status >= 400) {
+          throw response.statusText
+        }
+        return response.json()
+      })
+      .then((json) => {
+        console.log('Got user profile information.')
+        res.send(json)
+      })
+  } catch (error) {
+    console.error('Error fetching user profile:', error)
+    res.status(500).send('Failed to fetch user profile.')
   }
 })
 
 APP.get('/search', async (req, res) => {
-  const INPUT = req.query.input
-  const options = {
-    url: `https://api.spotify.com/v1/search?q=track%3A${INPUT}&type=track&include_external=audio`,
-    headers: {
-      Authorization: 'Bearer ' + accessToken
-    },
-    json: true
+  const ACCESS_TOKEN = req.query.ACCESS_TOKEN
+  if (!ACCESS_TOKEN) {
+    res.status(401).send('No access token provided.')
+    return
   }
+  const INPUT = req.query.input
   try {
-    request.get(options, function (error, response, body) {
-      res.send(body)
-    })
+    await fetch(
+      `https://api.spotify.com/v1/search?q=track%3A${INPUT}&type=track&include_external=audio`,
+      {
+        method: 'GET',
+        headers: { Authorization: 'Bearer ' + ACCESS_TOKEN },
+        json: true
+      }
+    )
+      .then((response) => {
+        if (response.status >= 400) {
+          throw response.statusText
+        }
+        return response.json()
+      })
+      .then((json) => {
+        console.log('Sending search results to the client.')
+        res.send(json)
+      })
   } catch (error) {
     res.status(500).send(error)
   }
@@ -127,82 +179,12 @@ APP.get('/allsongs', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   try {
-    await DATABASE.query('SELECT * FROM songs ORDER BY songorder;').then((songs) => {
-      console.log('Sending all songs to the client.')
-      res.send(songs.rows)
-    })
-  } catch (error) {
-    res.status(500).send(error)
-  }
-})
-
-APP.get('/prevsong', async (req, res) => {
-  const DATABASE = await pool.connect()
-  DATABASE.release()
-  const SONGORDER = req.query.songorder
-  try {
-    await DATABASE.query(
-      `SELECT * FROM songs WHERE songorder < ${SONGORDER} ORDER BY songorder DESC LIMIT 1`
-    ).then((song) => {
-      console.log(
-        `Sending song previous in the order from ${SONGORDER} to the client`
-      )
-      res.json(song.rows[0])
-    })
-  } catch (error) {
-    res.status(500).json(error)
-  }
-})
-
-APP.get('/prevsongexists', async (req, res) => {
-  const DATABASE = await pool.connect()
-  DATABASE.release()
-  const SONGORDER = req.query.songorder
-  try {
-    await DATABASE.query(
-      `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder <= ${SONGORDER}) AS "exists"`
-    ).then((songs) => {
-      console.log(
-        `Sending existence status of song with songorder less than or equal to ${SONGORDER} to client.`
-      )
-      res.send(songs.rows[0])
-    })
-  } catch (error) {
-    res.status(500).send(error)
-  }
-})
-
-APP.get('/nextsong', async (req, res) => {
-  const DATABASE = await pool.connect()
-  DATABASE.release()
-  const SONGORDER = req.query.songorder
-  try {
-    await DATABASE.query(
-      `SELECT * FROM songs WHERE songorder > ${SONGORDER} ORDER BY songorder LIMIT 1`
-    ).then((song) => {
-      console.log(
-        `Sending song next in the order from ${SONGORDER} to the client`
-      )
-      res.json(song.rows[0])
-    })
-  } catch (error) {
-    res.status(500).json(error)
-  }
-})
-
-APP.get('/nextsongexists', async (req, res) => {
-  const DATABASE = await pool.connect()
-  DATABASE.release()
-  const SONGORDER = req.query.songorder
-  try {
-    await DATABASE.query(
-      `SELECT EXISTS (SELECT 1 FROM songs WHERE songorder >= ${SONGORDER}) AS "exists"`
-    ).then((songs) => {
-      console.log(
-        `Sending existence status of song with songorder more than or equal to ${SONGORDER} to client.`
-      )
-      res.send(songs.rows[0])
-    })
+    await DATABASE.query('SELECT * FROM songs ORDER BY songorder;').then(
+      (songs) => {
+        console.log('Sending all songs to the client.')
+        res.send(songs.rows)
+      }
+    )
   } catch (error) {
     res.status(500).send(error)
   }
@@ -226,14 +208,116 @@ APP.put('/note', async (req, res) => {
   }
 })
 
+APP.post('/add_to_playlist', async (req, res) => {
+  const ACCESS_TOKEN = req.body.ACCESS_TOKEN
+  const PLAYLIST_ID = req.body.PLAYLIST_ID
+  const TRACK_URIS = req.body.TRACK_URIS
+
+  try {
+    await fetch(`https://api.spotify.com/v1/playlists/${PLAYLIST_ID}/tracks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${ACCESS_TOKEN}`
+      },
+      body: JSON.stringify({
+        uris: TRACK_URIS
+      })
+    })
+      .then((response) => {
+        if (response.status >= 400) {
+          throw response.statusText
+        }
+        return response.json()
+      })
+      .then((json) => {
+        console.log('Tracks added to playlist successfully.')
+        res.status(201).send(json)
+      })
+  } catch (error) {
+    console.error('Error adding tracks to playlist:', error)
+    res.status(500).send('Failed to add tracks to playlist.')
+  }
+})
+
+APP.post('/refresh_token', async (req, res) => {
+  const REFRESH_TOKEN = req.body.REFRESH_TOKEN
+
+  const formData = new URLSearchParams()
+  formData.append('grant_type', 'refresh_token')
+  formData.append('refresh_token', REFRESH_TOKEN)
+
+  try {
+    await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization:
+          'Basic ' +
+          Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64')
+      },
+      body: formData.toString()
+    })
+      .then((response) => {
+        if (response.status >= 400) {
+          throw response.statusText
+        }
+        return response.json()
+      })
+      .then((json) => {
+        console.log('Sending new access token to the client.')
+        res.send(json)
+      })
+  } catch (error) {
+    console.error('Error refreshing token:', error)
+    res.status(500).send('Failed to refresh token.')
+  }
+})
+
+APP.post('/playlist', async (req, res) => {
+  const ACCESS_TOKEN = req.body.ACCESS_TOKEN
+  const USER_ID = await getUserId(ACCESS_TOKEN)
+  const PLAYLIST_NAME = 'Untitled Playlist'
+  const DESCRIPTION = 'Created with the Coda app via Spotify API'
+
+  try {
+    await fetch(`https://api.spotify.com/v1/users/${USER_ID}/playlists`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${ACCESS_TOKEN}`
+      },
+      body: JSON.stringify({
+        name: PLAYLIST_NAME,
+        description: DESCRIPTION,
+        public: true
+      })
+    })
+      .then((response) => {
+        if (response.status >= 400) {
+          throw response.statusText
+        }
+        console.log('Playlist created successfully.')
+        return response.json()
+      })
+      .then((json) => {
+        console.log('Sending playlist details to the client.')
+        res.send(json)
+      })
+  } catch (error) {
+    console.error('Error creating playlist:', error)
+    res.status(500).send('Failed to create playlist.')
+  }
+})
+
 APP.post('/song', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   const SONG = req.body
   try {
     await DATABASE.query(
-      `INSERT INTO songs (spotifyid, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5)`,
-      [SONG.spotifyid, SONG.artist, SONG.title, SONG.lyrics, SONG.note]
+      `INSERT INTO songs (uri, artist, image, title, lyrics, note) VALUES($1,$2,$3,$4,$5,$6)`,
+      [SONG.uri, SONG.artist, SONG.image, SONG.title, SONG.lyrics, SONG.note]
     ).then(() => {
       console.log(
         `Posted the following song to the database: ${JSON.stringify(SONG)}`

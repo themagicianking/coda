@@ -1,5 +1,3 @@
-/* todo: remove highlight on unfocus on buttons */
-
 .selection {
   display: flex;
   flex-direction: column;
@@ -11,6 +9,29 @@
 .selection .title {
   padding: 0.5em 0 0 0;
   text-align: center;
+}
+
+.selection li {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 1em;
+  padding: 1em;
+}
+
+.selection li img {
+  width: 5em;
+  height: 5em;
+  border-radius: 0.5em;
+  margin-right: 1em;
+}
+
+.selection li p {
+  display: flex;
+  flex-grow: 1;
+  margin: 0;
+  align-content: center;
 }
 
 .lists {
@@ -31,7 +52,7 @@
   border-radius: 1em;
   box-shadow: 0.25em 0.25em 0.5em 0em #9c9c9c;
   margin: 1em;
-  width: 50%;
+  min-width: 50%;
   background-color: #94e561;
   padding: 1em;
 }

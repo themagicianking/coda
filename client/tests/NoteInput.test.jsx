@@ -12,7 +12,7 @@ const SONG = {
 }
 
 describe('NoteInput', () => {
-  it('renders the NoteInput component with the correct note value', () => {
+  it('renders the NoteInput component with the correct values from the song prop', () => {
     render(<NoteInput song={SONG} />)
     expect(screen.getByDisplayValue(SONG.note)).toBeInTheDocument()
 

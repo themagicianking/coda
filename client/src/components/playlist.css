@@ -6,7 +6,7 @@
   height: 100vh;
 }
 
-.card {
+.playlist-box {
   display: flex;
   flex-direction: column;
   height: 85%;

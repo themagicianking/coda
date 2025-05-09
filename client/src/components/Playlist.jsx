@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { ServerContext } from './ServerContext.jsx'
 import { useNavigate } from 'react-router-dom'
-import { SongCard } from './SongCard'
+import { PlaylistDetails } from './PlaylistDetails.jsx'
+import { PlaylistSongList } from './PlaylistSongList.jsx'
 import './playlist.css'
 
-const PERSONALIZATION = {
+const DETAILS = {
   title: 'A Playlist',
   sender: 'Me',
   recipient: 'You',
@@ -12,6 +14,9 @@ const PERSONALIZATION = {
 
 export function Playlist() {
   const [songs, setSongs] = useState([])
+  const [error, setError] = useState()
+  const SERVER_URL = useContext(ServerContext)
+  const PLAYLIST_ID = localStorage.getItem('PLAYLIST_ID')
   const navigate = useNavigate()
 
   const goHome = () => {
@@ -20,19 +25,18 @@ export function Playlist() {
 
   async function getAllSongs() {
     try {
-      await fetch('http://localhost:5000/allsongs')
+      await fetch(`${SERVER_URL}/allsongs`)
         .then((res) => {
           if (res.status >= 400) {
             throw res.status
           }
-          console.log('Got all songs from the server.')
           return res.json()
         })
         .then((json) => {
           setSongs(json)
         })
     } catch (error) {
-      throw new Error(
+      setError(
         `Could not get songs from server. The following error occurred: ${error}`
       )
     }
@@ -40,24 +44,30 @@ export function Playlist() {
 
   useEffect(() => {
     getAllSongs()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <div className="playlist">
-      <div className="card">
-        <div className="title">
-          <h1>{PERSONALIZATION.title}</h1>
-          <h2>
-            From {PERSONALIZATION.sender} to {PERSONALIZATION.recipient}
-          </h2>
+      {songs ? (
+        <div className="playlist-box">
+          <PlaylistDetails details={DETAILS} />
+          <PlaylistSongList songs={songs} />
+          <iframe
+            style={{ borderRadius: '12px' }}
+            src={`https://open.spotify.com/embed/playlist/${PLAYLIST_ID}?utm_source=generator&theme=0`}
+            width="100%"
+            height="152"
+            frameBorder="0"
+            allowFullScreen=""
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+          ></iframe>
         </div>
-        <p className="description">{PERSONALIZATION.description}</p>
-        <ol className="songs">
-          {songs.map((song) => (
-            <SongCard key={song.songorder} song={song} />
-          ))}
-        </ol>
-      </div>
+      ) : (
+        <p>{error}</p>
+      )}
+
       <a>
         <button onClick={goHome}>Home</button>
       </a>

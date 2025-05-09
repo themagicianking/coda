@@ -2,16 +2,46 @@ import { useNavigate } from 'react-router-dom'
 import { useContext, useEffect, useState } from 'react'
 import { ServerContext } from './ServerContext.jsx'
 import { Search } from './Search.jsx'
-import { SongList } from './SongList.jsx'
+import { SelectedSongList } from './SelectedSongList.jsx'
 import './selection.css'
+
+function setItemWithExpiration(key, value, expirationInMinutes) {
+  const now = new Date()
+  const item = {
+    value: value,
+    expiration: now.getTime() + expirationInMinutes * 60 * 1000
+  }
+  localStorage.setItem(key, JSON.stringify(item))
+}
 
 export function Selection() {
   const SERVER_URL = useContext(ServerContext)
   const [selected, setSelected] = useState()
   const [error, setError] = useState()
   const navigate = useNavigate()
+  const urlParams = new URLSearchParams(window.location.search)
+  const ACCESS_TOKEN = urlParams.get('ACCESS_TOKEN')
+  const REFRESH_TOKEN = urlParams.get('REFRESH_TOKEN')
 
-  // todo: set user visible error messages for posting and deleting songs
+  // todo: refactor so selection page checks for access token expiration as well
+
+  if (ACCESS_TOKEN) {
+    setItemWithExpiration('ACCESS_TOKEN', ACCESS_TOKEN, 60)
+  }
+
+  if (REFRESH_TOKEN) {
+    setItemWithExpiration('REFRESH_TOKEN', REFRESH_TOKEN, 120)
+  }
+
+  useEffect(() => {
+    getAllSongs()
+    if (localStorage.getItem('PLAYLIST_ID') === null) {
+      postPlaylist()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {}, [selected])
 
   async function getAllSongs() {
     try {
@@ -23,25 +53,40 @@ export function Selection() {
           return res.json()
         })
         .then((json) => {
-          console.log(json)
           setSelected(json)
         })
     } catch (e) {
-      setError(e.message)
+      setError(
+        `Could not get songs from server. The following error occurred: ${e}`
+      )
     }
   }
 
-  useEffect(() => {
-    getAllSongs()
-  }, [])
-
-  useEffect(() => {}, [selected])
-
-  const addSong = (song) => {
-    postSong(song)
-  }
-  const removeSong = (songorder) => {
-    deleteSong(songorder)
+  async function postPlaylist() {
+    try {
+      await fetch(`${SERVER_URL}/playlist`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ACCESS_TOKEN: ACCESS_TOKEN })
+      })
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          console.log(
+            `Playlist posted successfully, server sent response ${res.status}`
+          )
+          return res.json()
+        })
+        .then((json) => {
+          localStorage.setItem('PLAYLIST_ID', json.id)
+          console.log(`Successfully created playlist with ID: ${json.id}`)
+        })
+    } catch (e) {
+      setError(
+        `Could not add playlist to server. The following error occurred: ${e}`
+      )
+    }
   }
 
   async function postSong(song) {
@@ -62,9 +107,9 @@ export function Selection() {
         .then(() => {
           getAllSongs()
         })
-    } catch (error) {
-      throw new Error(
-        `Could not add song to server. The following error occurred: ${error}`
+    } catch (e) {
+      setError(
+        `Could not add song to server. The following error occurred: ${e}`
       )
     }
   }
@@ -87,38 +132,47 @@ export function Selection() {
         .then(() => {
           getAllSongs()
         })
-    } catch (error) {
-      throw new Error(
-        `Could not delete song from database. The following error occurred: ${error}`
+    } catch (e) {
+      setError(
+        `Could not delete song from database. The following error occurred: ${e}`
       )
     }
   }
 
-  const goToPrev = () => {
+  const addSong = (song) => {
+    postSong(song)
+  }
+
+  const removeSong = (songorder) => {
+    deleteSong(songorder)
+  }
+
+  const goToPrevPage = () => {
     navigate('/welcome')
   }
 
-  const handleNextPage = () => {
+  const goToNextPage = () => {
     navigate('/annotations')
   }
 
   return (
     <div className="selection">
-      <h1 className='title'>Choose Your Songs</h1>
+      <h1 className="title">Choose Your Songs</h1>
       <div className="lists">
         <Search handleSelect={addSong} />
         {selected ? (
-          <SongList list={selected} handleRemove={removeSong} />
+          <SelectedSongList songs={selected} handleRemove={removeSong} />
         ) : (
-          <p>
-            Could not get songs from server. The following error occurred:{' '}
-            {error}
-          </p>
+          <p>{error}</p>
         )}
       </div>
       <div className="nav">
-        <a><button onClick={goToPrev}>Previous</button></a>
-        <a><button onClick={handleNextPage}>Next</button></a>
+        <a>
+          <button onClick={goToPrevPage}>Previous</button>
+        </a>
+        <a>
+          <button onClick={goToNextPage}>Next</button>
+        </a>
       </div>
     </div>
   )

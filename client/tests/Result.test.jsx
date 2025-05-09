@@ -12,7 +12,7 @@ const SONG = {
 }
 
 describe('Result', () => {
-  it('renders the Result component with the correct title and artist information', () => {
+  it('renders the Result component with the correct with the correct values from the song prop', () => {
     render(<Result song={SONG} />)
     expect(
       screen.getByText(`${SONG.title} by ${SONG.artist}`)
