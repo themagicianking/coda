@@ -87,8 +87,6 @@ APP.get('/callback', function (req, res) {
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
         accessToken = body.access_token
-        // todo: write function that uses refresh token to get new auth code
-        // when old auth code has expired
         // refreshToken = body.refresh_token
 
         // redirects the user to song selection page

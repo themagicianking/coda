@@ -4,7 +4,6 @@ export function SongInfo({ song }) {
   return (
     <article>
       <div className="header">
-        {/* todo: display track art and display svg if art is not present. */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           x="0px"

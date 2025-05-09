@@ -30,8 +30,6 @@ export function Search({ handleSelect }) {
   }
 
   function formatSong(song) {
-    // todo: incorporate songs with multiple artists
-    // todo: figure out if it's possible to get lyrics
     return {
       spotifyid: song.id,
       title: song.name,

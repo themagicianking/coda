@@ -37,7 +37,6 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 
 7. Fill in `USERID_URI`with `http://localhost:{your server port}/userid`.
 8. Fill in `SELECTION_URI` with `http://localhost:{your client port}/selection`.
-<!-- to do: refactor code so it uses server url and client url -->
 9. In the server directory, run `npm run start`.
 10. Navigate into the client directory and run `npm run dev`. Open a new window and navigate to `http://localhost:{your client port}/welcome` (Vite usually defaults to 5173 for the port). The app should be on display!
 
@@ -109,3 +108,22 @@ _This project also utilizes Skeleton CSS and React Testing Library._
   - PUT note
   - POST song
   - DELETE song
+
+## To Do
+
+- [ ] Refactor back end to store/use as much data as possible in Spotify
+- [ ] Write function that automatically refreshes `accessToken` if it is expired
+- [ ] Break components into smaller pieces where necessary
+- [ ] Write all planned tests
+- [ ] Add an imbedded music player to the playlist page
+- [ ] Create a personalization page
+- [ ] Create a review page
+- [ ] Create a post submission page
+- [ ] Display track art for each song
+- [ ] Incorporate the [Genius API](https://docs.genius.com) to get lyrics for each song
+- [ ] Create the ability to reorder songs on the selection page
+- [ ] Create user visible error messages for every failed API call clientside
+- [ ] Refactor server to use one server url in `.env`
+- [ ] Update CSS to convert cassette image into a cropped image with overlay rather than background image for a component
+- [ ] Update CSS so that button highlight disappears after click
+- [ ] Refactor `formatSong()` to support multiple artists

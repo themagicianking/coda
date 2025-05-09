@@ -11,8 +11,6 @@ export function Selection() {
   const [error, setError] = useState()
   const navigate = useNavigate()
 
-  // todo: set user visible error messages for posting and deleting songs
-
   async function getAllSongs() {
     try {
       await fetch(`${SERVER_URL}/allsongs`)
