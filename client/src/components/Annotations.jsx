@@ -57,6 +57,13 @@ export function Annotations() {
     }
   }
 
+  const updateNote = (newNote) => {
+    let newSongs = songs.map((song, index) =>
+      index == orderNum ? { ...song, note: newNote } : song
+    )
+    setSongs(newSongs)
+  }
+
   const goToPrevSong = () => {
     putNote()
     setOrderNum(orderNum - 1)
@@ -67,16 +74,14 @@ export function Annotations() {
     setOrderNum(orderNum + 1)
   }
 
+  const goToPrevPage = () => {
+    putNote()
+    navigate('/selection')
+  }
+
   const goToNextPage = () => {
     putNote()
     navigate('/playlist')
-  }
-
-  const updateNote = (newNote) => {
-    let newSongs = songs.map((song, index) =>
-      index == orderNum ? { ...song, note: newNote } : song
-    )
-    setSongs(newSongs)
   }
 
   useEffect(() => {
@@ -85,11 +90,6 @@ export function Annotations() {
   }, [])
 
   useEffect(() => {}, [orderNum])
-
-  const handlePrevPage = () => {
-    putNote()
-    navigate('/selection')
-  }
 
   return (
     <div className="annotations">
@@ -122,7 +122,7 @@ export function Annotations() {
       )}
 
       <div className="nav">
-        <a role="button" onClick={handlePrevPage}>
+        <a role="button" onClick={goToPrevPage}>
           <button>Previous</button>
         </a>
 

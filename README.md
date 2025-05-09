@@ -84,10 +84,10 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 
 ### Planned Tests
 
-- Write mock API calls to test `getNextSong()`, `getPrevSong()`, `putNote()`, `updateNext()`, and `updatePrev()` in the `Annotation` component.
-- The client renders the main components in the `Annotation` component if `song` is not null
-- The client renders the previous song button in the `Annotation` component if `hasPrevSong` is `true`
-- The client renders the next song button in the `Annotation` component if `hasNextSong` is `true`
+- Write mock API calls to test `getAllSongs()` and `putNote()` in the `Annotation` component.
+- The client renders the main components in the `Annotation` component if `songs` is not null and `error` if it is
+- The client renders the previous song button in the `Annotation` component if `orderNum` is > 0
+- The client renders the next song button in the `Annotation` component if `orderNum + 2` is < `songs.length`
 - The client renders the `Playlist` component
 - Write mock API calls to test `getAllSongs()` in the `Playlist` component
 - The client renders the `PlaylistDetails` componet with the correct values from the `details` prop
@@ -104,10 +104,6 @@ _This project also utilizes Skeleton CSS and React Testing Library._
   - GET callback
   - GET search
   - GET allsongs
-  - GET prevsongs
-  - GET prevsongexists
-  - GET nextsong
-  - GET nextsongexists
   - PUT note
   - POST song
   - DELETE song
@@ -130,4 +126,4 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - [ ] Update CSS to convert cassette image into a cropped image with overlay rather than background image for a component
 - [x] Update CSS so that button highlight disappears after click
 - [x] Refactor `formatSong()` to support multiple artists
-- [ ] Refactor annotations page to render all songs at once and display one at a time
+- [x] Refactor annotations page to render all songs at once and display one at a time
