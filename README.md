@@ -111,7 +111,7 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 ## To Do
 
 - [ ] Refactor back end to store/use as much data as possible in Spotify
-- [ ] **Write function that automatically refreshes `accessToken` if it is expired**
+- [x] Write function that automatically refreshes `accessToken` if it is expired
 - [x] Break components into smaller pieces where necessary
 - [ ] Write all planned tests
 - [ ] Add an imbedded music player to the playlist page

@@ -196,6 +196,42 @@ APP.post('/refresh_token', async (req, res) => {
   }
 })
 
+APP.post('/playlist', async (req, res) => {
+  const ACCESS_TOKEN = req.body.ACCESS_TOKEN
+  const USER_ID = req.body.USER_ID
+  const PLAYLIST_NAME = "Untitled Playlist"
+  const DESCRIPTION = "Created with the Coda app via Spotify API"
+
+  try {
+    await fetch(`https://api.spotify.com/v1/users/${USER_ID}/playlists`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${ACCESS_TOKEN}`
+      },
+      body: JSON.stringify({
+        name: PLAYLIST_NAME,
+        description: DESCRIPTION || 'New playlist created via API',
+        public: true
+      })
+        .then((response) => {
+          if (response.status >= 400) {
+            throw response.statusText
+          }
+          console.log('Playlist created successfully.')
+          return response.json()
+        })
+        .then((json) => {
+          console.log('Sending playlist details to the client.')
+          res.send(json)
+        })
+    })
+  } catch (error) {
+    console.error('Error creating playlist:', error)
+    res.status(500).send('Failed to create playlist.')
+  }
+})
+
 APP.post('/song', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
