@@ -11,6 +11,7 @@ export function Annotations() {
   const [orderNum, setOrderNum] = useState(0)
   const [songs, setSongs] = useState()
   const [error, setError] = useState()
+  const SONGS_POSTED = localStorage.getItem('SONGS_POSTED')
   const navigate = useNavigate()
 
   async function getAllSongs() {
@@ -57,6 +58,31 @@ export function Annotations() {
     }
   }
 
+  async function addToPlaylist(uris) {
+    try {
+      await fetch(`${SERVER_URL}/playlist`, {
+        method: 'POST',
+        body: JSON.stringify({
+          songs: uris
+        }),
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then((res) => {
+          if (res.status >= 400) {
+            throw res.status
+          }
+          return res.json()
+        })
+        .then((json) =>
+          console.log(`Playlist created successfully. Server response: ${json}`)
+        )
+    } catch (e) {
+      console.log(
+        `Could not create playlist. The following error occurred: ${e}`
+      )
+    }
+  }
+
   const updateNote = (newNote) => {
     let newSongs = songs.map((song, index) =>
       index == orderNum ? { ...song, note: newNote } : song
@@ -81,6 +107,12 @@ export function Annotations() {
 
   const goToNextPage = () => {
     putNote()
+    if (SONGS_POSTED == 'true') {
+      navigate('/playlist')
+    } else {
+      const URIS = songs.map((song) => song.uri)
+      addToPlaylist()
+    }
     navigate('/playlist')
   }
 
