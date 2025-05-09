@@ -128,6 +128,6 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - [ ] **Create user visible error messages for every failed API call clientside**
 - [x] Refactor server to use one server url in `.env`
 - [ ] Update CSS to convert cassette image into a cropped image with overlay rather than background image for a component
-- [ ] **Update CSS so that button highlight disappears after click**
+- [x] Update CSS so that button highlight disappears after click
 - [x] Refactor `formatSong()` to support multiple artists
 - [ ] Refactor annotations page to render all songs at once and display one at a time
