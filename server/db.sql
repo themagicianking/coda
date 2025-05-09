@@ -2,8 +2,8 @@ DROP TABLE IF EXISTS songs;
 
 CREATE TABLE songs (
   songorder SERIAL PRIMARY KEY,
-  spotifyid VARCHAR(255) NOT NULL,
   artist VARCHAR(255) NOT NULL,
+  image VARCHAR(255),
   title VARCHAR(255) NOT NULL,
   lyrics VARCHAR(5000),
   note VARCHAR(5000) NOT NULL

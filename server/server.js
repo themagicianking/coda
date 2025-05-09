@@ -282,19 +282,19 @@ APP.post('/song', async (req, res) => {
   const DATABASE = await pool.connect()
   DATABASE.release()
   const SONG = req.body
-  try {
+  // try {
     await DATABASE.query(
-      `INSERT INTO songs (spotifyid, artist, title, lyrics, note) VALUES($1,$2,$3,$4,$5)`,
-      [SONG.spotifyid, SONG.artist, SONG.title, SONG.lyrics, SONG.note]
+      `INSERT INTO songs (artist, image, title, lyrics, note) VALUES($1,$2,$3,$4,$5)`,
+      [SONG.artist, SONG.image, SONG.title, SONG.lyrics, SONG.note]
     ).then(() => {
       console.log(
         `Posted the following song to the database: ${JSON.stringify(SONG)}`
       )
       res.send(200)
     })
-  } catch (error) {
-    res.status(501).send(error)
-  }
+  // } catch (error) {
+  //   res.status(501).send(error)
+  // }
 })
 
 APP.delete('/song', async (req, res) => {

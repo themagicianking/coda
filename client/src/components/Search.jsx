@@ -102,6 +102,7 @@ export function Search({ handleSelect }) {
       spotifyid: song.id,
       title: song.name,
       artist: artist,
+      image: song.album.images[1].url,
       note: ''
     }
   }
