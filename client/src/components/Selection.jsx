@@ -31,6 +31,7 @@ export function Selection() {
 
   useEffect(() => {
     getAllSongs()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {}, [selected])
