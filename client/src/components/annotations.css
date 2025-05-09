@@ -54,7 +54,7 @@
   border-radius: 1em;
 }
 
-.annotationNav {
+.songnav {
   display: flex;
   justify-content: center;
   border-radius: 1em;
@@ -63,7 +63,7 @@
   padding: 1em;
 }
 
-.annotationNav button {
+.songnav button {
   margin: 0.5em;
   width: 20em;
   border: none;
@@ -72,11 +72,11 @@
   outline: black;
 }
 
-.annotationNav a * {
+.songnav a * {
   color: #1f1f27;
 }
 
-.annotationNav a:hover * {
+.songnav a:hover * {
   border-color: #1f1f27;
   background-color: #1f1f27;
   color: #21d460;

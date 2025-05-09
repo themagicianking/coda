@@ -43,7 +43,7 @@ export function Annotations() {
 
   const goToNextSong = () => {
     putNote()
-    getNextSong()
+    setOrderNum(orderNum + 1)
   }
 
   const goToNextPage = () => {
@@ -58,31 +58,32 @@ export function Annotations() {
     setSongs(newSongs)
   }
 
-  async function getNextSong() {
-    try {
-      await fetch(`${SERVER_URL}/nextsong?songorder=${orderNum}`)
-        .then((res) => {
-          if (res.status >= 400) {
-            throw res.status
-          }
-          return res.json()
-        })
-        .then((json) => {
-          setSong(json)
-          setOrderNum(json.songorder)
-          return json.songorder
-        })
-        .then((currentOrderNum) => {
-          let nextOrderNum = currentOrderNum + 1
-          let prevOrderNum = currentOrderNum - 1
-          updatePrev(prevOrderNum)
-          updateNext(nextOrderNum)
-        })
-    } catch (error) {
-      setSong(false)
-      setError(error)
-    }
-  }
+  // async function getNextSong() {
+  // setOrderNum(orderNum + 1)
+  // try {
+  //   await fetch(`${SERVER_URL}/nextsong?songorder=${orderNum}`)
+  //     .then((res) => {
+  //       if (res.status >= 400) {
+  //         throw res.status
+  //       }
+  //       return res.json()
+  //     })
+  //     .then((json) => {
+  //       setSong(json)
+  //       setOrderNum(json.songorder)
+  //       return json.songorder
+  //     })
+  //     .then((currentOrderNum) => {
+  //       let nextOrderNum = currentOrderNum + 1
+  //       let prevOrderNum = currentOrderNum - 1
+  //       updatePrev(prevOrderNum)
+  //       updateNext(nextOrderNum)
+  //     })
+  // } catch (error) {
+  //   setSong(false)
+  //   setError(error)
+  // }
+  // }
 
   async function getPrevSong() {
     try {
@@ -117,7 +118,10 @@ export function Annotations() {
     try {
       await fetch(`${SERVER_URL}/note`, {
         method: 'PUT',
-        body: JSON.stringify({ note: song.note, songorder: song.songorder }),
+        body: JSON.stringify({
+          note: songs[orderNum].note,
+          songorder: songs[orderNum].songorder
+        }),
         headers: { 'Content-Type': 'application/json' }
       })
         .then((res) => {
@@ -197,10 +201,28 @@ export function Annotations() {
     <div className="annotations">
       <h1 className="title">Add Your Notes</h1>
       {songs ? (
-        <div className="main">
-          <SongInfo song={songs[orderNum]} />
-          <NoteInput song={songs[orderNum]} updateNote={updateNote} />
-        </div>
+        <>
+          <div className="main">
+            <SongInfo song={songs[orderNum]} />
+            <NoteInput song={songs[orderNum]} updateNote={updateNote} />
+          </div>
+          <div className="songnav">
+            {orderNum == 0 ? (
+              <></>
+            ) : (
+              <a role="button" onClick={goToPrevSong}>
+                <button>Previous Song</button>
+              </a>
+            )}
+            {orderNum + 1 <= songs.length ? (
+              <a role="button" onClick={goToNextSong}>
+                <button>Next Song</button>
+              </a>
+            ) : (
+              <></>
+            )}
+          </div>
+        </>
       ) : (
         /* <>
           <div className="main">
