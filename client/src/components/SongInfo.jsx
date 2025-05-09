@@ -26,7 +26,7 @@ export function SongInfo({ song }) {
         ) : (
           <p>
             No lyrics could be found for this song (yet). This feature is coming
-            {/* soon! Hi im going to type more blah balh blah et cetera lets add some more tex i just wanna see if this can scroll how much text am i gonna fucking need to fill this i have no idea ummm okay some more text maybe actual lyrics hold on to me as we go as we roll down this unfamiliar road and though its uhh something something something whats another song i know */}
+            soon!
           </p>
         )}
       </div>

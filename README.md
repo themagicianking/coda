@@ -68,11 +68,44 @@ _This project also utilizes Skeleton CSS and React Testing Library._
 - A post-submission page with a sharing link to the created playlist and a link back to the main page.
 - An imbedded music player on the playlist page.
 
-  ## Testing
+## Testing
 
-  This project does not yet have any testing. Planned tests are as follows:
+### Current Tests
 
-- Test every component for basic rendering
-- Mock API call and test that data is rendered correctly, and that error message displays correctly if API responds with an error
-- Test that forms submit correctly and do not allow submission without required fields
-- Test that dragging and dropping songs reorders them correctly
+- The client renders the `AboutApp` component
+- The client renders the `Annotation` component
+- The client renders the `App` component
+- The client renders the `Credits` component
+- The client renders the `NoteInput` component with the correct values from the `song` prop
+- The client renders the `Result` component with the correct values from the `song` prop
+- The client renders the `Search` component
+- The client renders the `Selection` component
+- The client renders the `Song` component with the correct values from the `song` prop
+- The client renders the `SongInfo` component with the correct values from the `song` prop
+- The client renders the `SongList` component with the correct values from the `list` prop
+- The client renders the `Welcome` component
+
+### Planned Tests
+
+- Write mock API calls to test `getNextSong()`, `getPrevSong()`, `putNote()`, `updateNext()`, and `updatePrev()` in the `Annotation` component.
+- The client renders the main components in the `Annotation` component if `song` is not null
+- The client renders the previous song button in the `Annotation` component if `hasPrevSong` is `true`
+- The client renders the next song button in the `Annotation` component if `hasNextSong` is `true`
+- Write mock API calls to test `getResults()` in the `Search` component
+- The client renders the ordered list of songs in the `Search` component if `results` is not null and `error` if it is
+- Write mock API calls to test `getAllSongs()`, `postSong()`, `deleteSong()` in the `Selection` component
+- The client renders the `SongList` component in the `Selection` component if `selected` is not null and `error` if it is
+- The client renders lyrics in the `SongInfo` component if lyrics are not null in the `song` prop and a message about no lyrics being found if they are null
+- The client renders the ordered list of songs in the `SongList` component if the `list` prop has a length > 0 and `<p>None yet!</p>` if not
+- Write mock API calls to test all server endpoints
+  - GET login
+  - GET callback
+  - GET search
+  - GET allsongs
+  - GET prevsongs
+  - GET prevsongexists
+  - GET nextsong
+  - GET nextsongexists
+  - PUT note
+  - POST song
+  - DELETE song

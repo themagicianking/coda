@@ -14,7 +14,7 @@ const SONGLIST = [
 ]
 
 describe('SongList', () => {
-  it('renders the SongList component with information from songs in the list prop', () => {
+  it('renders the SongList component with the correct values from the list prop', () => {
     render(<SongList list={SONGLIST} />)
 
     expect(
