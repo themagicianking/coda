@@ -10,10 +10,7 @@ export function Annotations() {
   const SERVER_URL = useContext(ServerContext)
   const [orderNum, setOrderNum] = useState(0)
   const [songs, setSongs] = useState()
-  const [note, setNote] = useState('')
   const [error, setError] = useState()
-  const [hasPrevSong, setHasPrevSong] = useState(false)
-  const [hasNextSong, setHasNextSong] = useState(false)
   const navigate = useNavigate()
 
   async function getAllSongs() {
@@ -38,7 +35,7 @@ export function Annotations() {
 
   const goToPrevSong = () => {
     putNote()
-    getPrevSong()
+    setOrderNum(orderNum - 1)
   }
 
   const goToNextSong = () => {
@@ -214,12 +211,12 @@ export function Annotations() {
                 <button>Previous Song</button>
               </a>
             )}
-            {orderNum + 1 <= songs.length ? (
+            {orderNum + 2 > songs.length ? (
+              <></>
+            ) : (
               <a role="button" onClick={goToNextSong}>
                 <button>Next Song</button>
               </a>
-            ) : (
-              <></>
             )}
           </div>
         </>
