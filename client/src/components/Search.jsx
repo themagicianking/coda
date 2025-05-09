@@ -98,6 +98,15 @@ export function Search({ handleSelect }) {
       }
     }
 
+    try {
+      if (song.album.images[1].url === undefined) {
+        song.album.images[1].url = song.album.images[0].url
+      }
+    } catch (e) {
+      console.error('Error fetching album image:', e)
+      song.album.images[1].url = ''
+    }
+
     return {
       spotifyid: song.id,
       title: song.name,
