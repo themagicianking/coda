@@ -135,7 +135,16 @@ export function Selection() {
   }
 
   const goToNextPage = () => {
-    navigate('/annotations')
+    selected.length > 0 ? navigate('/annotations') : showSnackbar()
+  }
+
+  function showSnackbar() {
+    const snackbar = document.getElementById('snackbar')
+    snackbar.className = 'show'
+
+    setTimeout(function () {
+      snackbar.className = snackbar.className.replace('show', '')
+    }, 3000)
   }
 
   return (
@@ -157,6 +166,7 @@ export function Selection() {
           <button onClick={goToNextPage}>Next</button>
         </a>
       </div>
+      <div id="snackbar">You must select at least one song!</div>
     </div>
   )
 }
