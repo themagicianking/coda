@@ -1,44 +1,19 @@
 import { useContext, useState } from 'react'
 import { ServerContext } from './ServerContext.jsx'
 import { Result } from './Result.jsx'
+import { fetchWithOAuth } from '../utils/fetchWithOAuth.js'
 import './selection.css'
-
-function setItemWithExpiration(key, value, expirationInMinutes) {
-  const now = new Date()
-  const item = {
-    value: value,
-    expiration: now.getTime() + expirationInMinutes * 60 * 1000
-  }
-  localStorage.setItem(key, JSON.stringify(item))
-}
-
-function getItemWithExpiration(key) {
-  const itemStr = localStorage.getItem(key)
-  if (!itemStr) {
-    return null
-  }
-
-  const item = JSON.parse(itemStr)
-  const now = new Date()
-
-  if (now.getTime() > item.expiration) {
-    localStorage.removeItem(key)
-    return null
-  }
-
-  return item.value
-}
 
 export function Search({ handleSelect }) {
   const [results, setResults] = useState()
+  const [input, setInput] = useState()
   const [error, setError] = useState()
   const SERVER_URL = useContext(ServerContext)
 
-  async function getResults(input) {
-    const ACCESS_TOKEN = await getValidAccessToken()
+  async function getResults(accessToken) {
     try {
       await fetch(
-        `${SERVER_URL}/search?input=${input}&ACCESS_TOKEN=${ACCESS_TOKEN}`
+        `${SERVER_URL}/search?input=${input}&ACCESS_TOKEN=${accessToken}`
       )
         .then((res) => {
           if (res.status >= 400) {
@@ -53,40 +28,6 @@ export function Search({ handleSelect }) {
       setError(
         `Could not get search results from server. The following error occurred: ${e}`
       )
-    }
-  }
-
-  async function getValidAccessToken() {
-    if (!getItemWithExpiration('ACCESS_TOKEN')) {
-      const refreshToken = getItemWithExpiration('REFRESH_TOKEN')
-      if (refreshToken) {
-        return await refreshAccessToken(refreshToken)
-      } else {
-        console.error('No refresh token available.')
-        return null
-      }
-    }
-    return getItemWithExpiration('ACCESS_TOKEN')
-  }
-
-  async function refreshAccessToken(refreshToken) {
-    try {
-      const response = await fetch(`${SERVER_URL}/refresh_token`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ REFRESH_TOKEN: refreshToken })
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to refresh access token.')
-      }
-
-      const data = await response.json()
-      setItemWithExpiration('ACCESS_TOKEN', data.ACCESS_TOKEN)
-      return data.ACCESS_TOKEN
-    } catch (error) {
-      console.error('Error refreshing access token:', error)
-      return null
     }
   }
 
@@ -107,8 +48,6 @@ export function Search({ handleSelect }) {
       song.album.images[1].url = ''
     }
 
-    console.log(song)
-
     return {
       uri: song.uri,
       title: song.name,
@@ -119,8 +58,8 @@ export function Search({ handleSelect }) {
   }
 
   const handleSearch = (event) => {
-    let input = event.target.value
-    getResults(input)
+    setInput(event.target.value)
+    fetchWithOAuth(getResults, SERVER_URL)
   }
 
   return (
