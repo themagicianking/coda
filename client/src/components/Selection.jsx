@@ -3,16 +3,9 @@ import { useContext, useEffect, useState } from 'react'
 import { ServerContext } from './ServerContext.jsx'
 import { Search } from './Search.jsx'
 import { SelectedSongList } from './SelectedSongList.jsx'
+import { setItemWithExpiration } from '../utils/localStorage.js'
+import { fetchWithOAuth } from '../utils/fetchWithOAuth.js'
 import './selection.css'
-
-function setItemWithExpiration(key, value, expirationInMinutes) {
-  const now = new Date()
-  const item = {
-    value: value,
-    expiration: now.getTime() + expirationInMinutes * 60 * 1000
-  }
-  localStorage.setItem(key, JSON.stringify(item))
-}
 
 export function Selection() {
   const SERVER_URL = useContext(ServerContext)
@@ -20,23 +13,14 @@ export function Selection() {
   const [error, setError] = useState()
   const navigate = useNavigate()
   const urlParams = new URLSearchParams(window.location.search)
-  const ACCESS_TOKEN = urlParams.get('ACCESS_TOKEN')
-  const REFRESH_TOKEN = urlParams.get('REFRESH_TOKEN')
-
-  // todo: refactor so selection page checks for access token expiration as well
-
-  if (ACCESS_TOKEN) {
-    setItemWithExpiration('ACCESS_TOKEN', ACCESS_TOKEN, 60)
-  }
-
-  if (REFRESH_TOKEN) {
-    setItemWithExpiration('REFRESH_TOKEN', REFRESH_TOKEN, 120)
-  }
 
   useEffect(() => {
     getAllSongs()
+    setItemWithExpiration('ACCESS_TOKEN', urlParams.get('ACCESS_TOKEN'), 60)
+    localStorage.setItem('REFRESH_TOKEN', urlParams.get('REFRESH_TOKEN'))
     if (localStorage.getItem('PLAYLIST_ID') === null) {
-      postPlaylist()
+      console.log(SERVER_URL)
+      fetchWithOAuth(postPlaylist, SERVER_URL)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -62,12 +46,12 @@ export function Selection() {
     }
   }
 
-  async function postPlaylist() {
+  async function postPlaylist(accessToken) {
     try {
       await fetch(`${SERVER_URL}/playlist`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ACCESS_TOKEN: ACCESS_TOKEN })
+        body: JSON.stringify({ ACCESS_TOKEN: accessToken })
       })
         .then((res) => {
           if (res.status >= 400) {

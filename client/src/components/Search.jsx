@@ -1,33 +1,8 @@
 import { useContext, useState } from 'react'
 import { ServerContext } from './ServerContext.jsx'
 import { Result } from './Result.jsx'
+import { getItemWithExpiration, setItemWithExpiration } from '../utils/localStorage.js'
 import './selection.css'
-
-function setItemWithExpiration(key, value, expirationInMinutes) {
-  const now = new Date()
-  const item = {
-    value: value,
-    expiration: now.getTime() + expirationInMinutes * 60 * 1000
-  }
-  localStorage.setItem(key, JSON.stringify(item))
-}
-
-function getItemWithExpiration(key) {
-  const itemStr = localStorage.getItem(key)
-  if (!itemStr) {
-    return null
-  }
-
-  const item = JSON.parse(itemStr)
-  const now = new Date()
-
-  if (now.getTime() > item.expiration) {
-    localStorage.removeItem(key)
-    return null
-  }
-
-  return item.value
-}
 
 export function Search({ handleSelect }) {
   const [results, setResults] = useState()
@@ -106,8 +81,6 @@ export function Search({ handleSelect }) {
       console.error('Error fetching album image:', e)
       song.album.images[1].url = ''
     }
-
-    console.log(song)
 
     return {
       uri: song.uri,
