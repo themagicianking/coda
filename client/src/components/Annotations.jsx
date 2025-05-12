@@ -4,6 +4,7 @@ import { NoteInput } from './NoteInput'
 import { SongInfo } from './SongInfo'
 import { useContext } from 'react'
 import { ServerContext } from './ServerContext'
+import { fetchWithOAuth } from '../utils/fetchWithOAuth'
 import './annotations.css'
 
 function getItemWithExpiration(key) {
@@ -27,6 +28,7 @@ export function Annotations() {
   const SERVER_URL = useContext(ServerContext)
   const [orderNum, setOrderNum] = useState(0)
   const [songs, setSongs] = useState()
+  const [URIS, setURIS] = useState([])
   const [error, setError] = useState()
   const SONGS_POSTED = localStorage.getItem('SONGS_POSTED')
   const navigate = useNavigate()
@@ -75,14 +77,14 @@ export function Annotations() {
     }
   }
 
-  async function addToPlaylist(uris) {
+  async function addToPlaylist() {
     try {
       await fetch(`${SERVER_URL}/add_to_playlist`, {
         method: 'POST',
         body: JSON.stringify({
           ACCESS_TOKEN: getItemWithExpiration('ACCESS_TOKEN'),
           PLAYLIST_ID: localStorage.getItem('PLAYLIST_ID'),
-          TRACK_URIS: uris
+          TRACK_URIS: URIS
         }),
         headers: { 'Content-Type': 'application/json' }
       })
@@ -130,8 +132,8 @@ export function Annotations() {
     if (SONGS_POSTED == 'true') {
       navigate('/playlist')
     } else {
-      const URIS = songs.map((song) => song.uri)
-      addToPlaylist(URIS)
+      setURIS(songs.map((song) => song.uri))
+      fetchWithOAuth(addToPlaylist, SERVER_URL)
     }
     navigate('/playlist')
   }

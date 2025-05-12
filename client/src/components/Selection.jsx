@@ -19,7 +19,6 @@ export function Selection() {
     setItemWithExpiration('ACCESS_TOKEN', urlParams.get('ACCESS_TOKEN'), 60)
     localStorage.setItem('REFRESH_TOKEN', urlParams.get('REFRESH_TOKEN'))
     if (localStorage.getItem('PLAYLIST_ID') === null) {
-      console.log(SERVER_URL)
       fetchWithOAuth(postPlaylist, SERVER_URL)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

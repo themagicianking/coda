@@ -1,19 +1,21 @@
 import { useContext, useState } from 'react'
 import { ServerContext } from './ServerContext.jsx'
 import { Result } from './Result.jsx'
-import { getItemWithExpiration, setItemWithExpiration } from '../utils/localStorage.js'
+// import { getItemWithExpiration, setItemWithExpiration } from '../utils/localStorage.js'
+import { fetchWithOAuth } from '../utils/fetchWithOAuth.js'
 import './selection.css'
 
 export function Search({ handleSelect }) {
   const [results, setResults] = useState()
+  const [input, setInput] = useState()
   const [error, setError] = useState()
   const SERVER_URL = useContext(ServerContext)
 
-  async function getResults(input) {
-    const ACCESS_TOKEN = await getValidAccessToken()
+  async function getResults(accessToken) {
+    // const ACCESS_TOKEN = await getValidAccessToken()
     try {
       await fetch(
-        `${SERVER_URL}/search?input=${input}&ACCESS_TOKEN=${ACCESS_TOKEN}`
+        `${SERVER_URL}/search?input=${input}&ACCESS_TOKEN=${accessToken}`
       )
         .then((res) => {
           if (res.status >= 400) {
@@ -31,39 +33,39 @@ export function Search({ handleSelect }) {
     }
   }
 
-  async function getValidAccessToken() {
-    if (!getItemWithExpiration('ACCESS_TOKEN')) {
-      const refreshToken = getItemWithExpiration('REFRESH_TOKEN')
-      if (refreshToken) {
-        return await refreshAccessToken(refreshToken)
-      } else {
-        console.error('No refresh token available.')
-        return null
-      }
-    }
-    return getItemWithExpiration('ACCESS_TOKEN')
-  }
+  // async function getValidAccessToken() {
+  //   if (!getItemWithExpiration('ACCESS_TOKEN')) {
+  //     const refreshToken = getItemWithExpiration('REFRESH_TOKEN')
+  //     if (refreshToken) {
+  //       return await refreshAccessToken(refreshToken)
+  //     } else {
+  //       console.error('No refresh token available.')
+  //       return null
+  //     }
+  //   }
+  //   return getItemWithExpiration('ACCESS_TOKEN')
+  // }
 
-  async function refreshAccessToken(refreshToken) {
-    try {
-      const response = await fetch(`${SERVER_URL}/refresh_token`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ REFRESH_TOKEN: refreshToken })
-      })
+  // async function refreshAccessToken(refreshToken) {
+  //   try {
+  //     const response = await fetch(`${SERVER_URL}/refresh_token`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ REFRESH_TOKEN: refreshToken })
+  //     })
 
-      if (!response.ok) {
-        throw new Error('Failed to refresh access token.')
-      }
+  //     if (!response.ok) {
+  //       throw new Error('Failed to refresh access token.')
+  //     }
 
-      const data = await response.json()
-      setItemWithExpiration('ACCESS_TOKEN', data.ACCESS_TOKEN)
-      return data.ACCESS_TOKEN
-    } catch (error) {
-      console.error('Error refreshing access token:', error)
-      return null
-    }
-  }
+  //     const data = await response.json()
+  //     setItemWithExpiration('ACCESS_TOKEN', data.ACCESS_TOKEN)
+  //     return data.ACCESS_TOKEN
+  //   } catch (error) {
+  //     console.error('Error refreshing access token:', error)
+  //     return null
+  //   }
+  // }
 
   function formatSong(song) {
     let artist = song.artists[0].name
@@ -92,8 +94,8 @@ export function Search({ handleSelect }) {
   }
 
   const handleSearch = (event) => {
-    let input = event.target.value
-    getResults(input)
+    setInput(event.target.value)
+   fetchWithOAuth(getResults, SERVER_URL)
   }
 
   return (

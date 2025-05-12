@@ -162,6 +162,7 @@ APP.get('/search', async (req, res) => {
     )
       .then((response) => {
         if (response.status >= 400) {
+          console.log('Error fetching search results:', response.statusText)
           throw response.statusText
         }
         return response.json()
