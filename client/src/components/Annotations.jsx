@@ -77,12 +77,12 @@ export function Annotations() {
     }
   }
 
-  async function addToPlaylist() {
+  async function addToPlaylist(accessToken) {
     try {
       await fetch(`${SERVER_URL}/add_to_playlist`, {
         method: 'POST',
         body: JSON.stringify({
-          ACCESS_TOKEN: getItemWithExpiration('ACCESS_TOKEN'),
+          ACCESS_TOKEN: accessToken,
           PLAYLIST_ID: localStorage.getItem('PLAYLIST_ID'),
           TRACK_URIS: URIS
         }),
